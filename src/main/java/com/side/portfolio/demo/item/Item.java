@@ -17,7 +17,7 @@ public class Item {
 
     private Integer quantity;
     private String status;
-    private String remark;
+    private String remark;  //not required
 
     //private String itemImg1;
     //private String itemImg2;
