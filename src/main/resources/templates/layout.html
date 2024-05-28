@@ -45,7 +45,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto"><!-- margin end-auto ; 마진 자동 설정-->
 <!--        <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>-->
 
         <li class="nav-item dropdown">
@@ -54,7 +54,7 @@
             <a class="dropdown-item" th:href="@{/shoplist}">전체상품 보기</a>
             <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>
             <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>
-            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>
+<!--            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>-->
           </ul>
         </li>
 
@@ -64,7 +64,7 @@
             <a class="dropdown-item" th:href="@{/shoplist?categoryKey=1}">한식</a>
             <a class="dropdown-item" th:href="@{/shoplist?categoryKey=2}">중식</a>
             <a class="dropdown-item" th:href="@{/shoplist?categoryKey=3}">일식</a>
-            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>
+<!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>-->
           </div>
         </li>
         <li class="nav-item"><a th:href="@{/event}" class="nav-link">이벤트</a></li>
@@ -79,10 +79,10 @@
           <div class="dropdown-menu">
             <a th:href="@{/customer/custcheckform}" class="dropdown-item" >비밀번호 변경</a>
             <a th:href="@{/customer/orderlist}" class="dropdown-item">나의 주문</a>
-            <a th:href="@{/wish/list}"class="dropdown-item" >찜 내역보기</a>
-            <a th:href="@{/board/reviewlist}"class="dropdown-item" >나의 후기</a>
-            <a th:href="@{/board/qnalist}"class="dropdown-item" >나의 문의</a>
-            <a th:href="@{/customer/signoutForm}"class="dropdown-item">회원 탈퇴</a>
+            <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>
+            <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>
+            <a th:href="@{/board/qnalist}" class="dropdown-item" >나의 문의</a>
+            <a th:href="@{/customer/signoutForm}" class="dropdown-item">회원 탈퇴</a>
           </div>
         </li>
         <li class="nav-item" th:if="${session.custKey != null}" ><a th:href="@{/customer/logout}" class="nav-link" >로그아웃</a></li>
@@ -91,7 +91,7 @@
         <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>
 
       </ul>
-        <!-- 오른쪽으로 이동시킬 버튼 -->
+        <!-- ms-auto ; 버튼 오른쪽으로 이동 -->
         <ul class="navbar-nav ms-auto">
             <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/loginForm}" class="nav-link">로그인</a></li>
             <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/memberForm}" class="nav-link">회원가입</a></li>
@@ -147,7 +147,7 @@
       <div class="col-xl-6">
         <div class="text-center text-white">
           <!-- Page heading-->
-          <h1 class="mb-5">Generate more leads with a professional landing page!</h1>
+          <h1 class="mb-5">Welcome to Kiosk Project!</h1>
           <!-- Signup form-->
           <!-- * * * * * * * * * * * * * * *-->
           <!-- * * SB Forms Contact Form * *-->
@@ -203,26 +203,26 @@
         <div class="row">
             <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
                 <ul class="list-inline mb-2">
-                    <li class="list-inline-item"><a href="#!">About</a></li>
+                    <li class="list-inline-item"><a href="#">About</a></li>
                     <li class="list-inline-item">⋅</li>
-                    <li class="list-inline-item"><a href="#!">Contact</a></li>
+                    <li class="list-inline-item"><a href="#">Contact</a></li>
                     <li class="list-inline-item">⋅</li>
-                    <li class="list-inline-item"><a href="#!">Terms of Use</a></li>
+                    <li class="list-inline-item"><a href="#">Terms of Use</a></li>
                     <li class="list-inline-item">⋅</li>
-                    <li class="list-inline-item"><a href="#!">Privacy Policy</a></li>
+                    <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
                 </ul>
                 <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2023. All Rights Reserved.</p>
             </div>
             <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item me-4">
-                        <a href="#!"><i class="bi-facebook fs-3"></i></a>
+                        <a href="#"><i class="bi-facebook fs-3"></i></a>
                     </li>
                     <li class="list-inline-item me-4">
-                        <a href="#!"><i class="bi-twitter fs-3"></i></a>
+                        <a href="#"><i class="bi-twitter fs-3"></i></a>
                     </li>
                     <li class="list-inline-item">
-                        <a href="#!"><i class="bi-instagram fs-3"></i></a>
+                        <a href="#"><i class="bi-instagram fs-3"></i></a>
                     </li>
                 </ul>
             </div>
