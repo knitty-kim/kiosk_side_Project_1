@@ -20,6 +20,7 @@ public class TeamService {
      * @param team
      * @return
      */
+    @Transactional
     public Long signUp(Team team) {
         validateTeam(team);
         return teamRepository.save(team);
