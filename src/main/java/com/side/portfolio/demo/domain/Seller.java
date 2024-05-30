@@ -1,7 +1,6 @@
 package com.side.portfolio.demo.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Seller {
 
     @Id @GeneratedValue
@@ -44,4 +44,18 @@ public class Seller {
     @OneToMany(mappedBy = "seller")
     private List<Item> items = new ArrayList<>();
 
+    @Builder
+    public Seller(String pw, String name, String phNumber,
+                  String email, String remark, LocalDateTime createdDate,
+                  LocalDateTime modifiedDate, SellerStatus status, Address address) {
+        this.pw = pw;
+        this.name = name;
+        this.phNumber = phNumber;
+        this.email = email;
+        this.remark = remark;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.status = status;
+        this.address = address;
+    }
 }

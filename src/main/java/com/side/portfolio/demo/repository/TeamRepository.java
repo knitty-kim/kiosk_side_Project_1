@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,11 +32,19 @@ public class TeamRepository {
                 .getResultList();
     }
 
-    //조건 조회
-    //임시로 List 리턴
-    public List<Team> findByPhNumber(String phNumber) {
-        return em.createQuery("select t from Team t where t.phNumber = :phNumber", Team.class)
+    //name 조건 조회
+    public Optional<Team> findByName(String name) {
+        List<Team> team = em.createQuery("select t from Team t where t.name = :name", Team.class)
+                .setParameter("name", name)
+                .getResultList();
+        return team.isEmpty() ? Optional.empty() : Optional.of(team.get(0));
+    }
+
+    //phNumber 조건 조회
+    public Optional<Team> findByPhNumber(String phNumber) {
+        List<Team> team = em.createQuery("select t from Team t where t.phNumber = :phNumber", Team.class)
                 .setParameter("phNumber", phNumber)
                 .getResultList();
+        return team.isEmpty() ? Optional.empty() : Optional.of(team.get(0));
     }
 }

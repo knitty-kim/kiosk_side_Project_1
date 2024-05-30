@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<!--<html lang="en" th:fragment="body(content)" xmlns:th="http://www.thymeleaf.org">-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <div th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title>K&Y Kiosk Project</title>
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+
+    <!--추가-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  </div>
+</head>
+
+<body>
+
+<div th:fragment="nav">
+  <!-- Navigation-->
+  <!--<nav class="navbar navbar-light bg-light static-top">-->
+  <!--    <div class="container">-->
+  <!--        <a class="navbar-brand" href="#!">Home</a>-->
+  <!--        <a class="navbar-brand" href="#!">Orders</a>-->
+  <!--        <a class="btn btn-primary" href="#signup">Sign Up</a>-->
+  <!--    </div>-->
+  <!--</nav>-->
+
+  <!-- 임시 네비게이터 -->
+  <nav class="navbar navbar-expand-lg bg-light" th:fragment="main-nav">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/}">Kiosk</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto"><!-- margin end-auto ; 마진 자동 설정-->
+          <!--        <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>-->
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">상품보기</a>
+            <ul class="dropdown-menu">
+              <a class="dropdown-item" th:href="@{/shoplist}">전체상품 보기</a>
+              <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>
+              <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>
+              <!--            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>-->
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">카테고리</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" th:href="@{/shoplist?categoryKey=1}">한식</a>
+              <a class="dropdown-item" th:href="@{/shoplist?categoryKey=2}">중식</a>
+              <a class="dropdown-item" th:href="@{/shoplist?categoryKey=3}">일식</a>
+              <!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>-->
+            </div>
+          </li>
+          <li class="nav-item"><a th:href="@{/event}" class="nav-link">이벤트</a></li>
+          <li class="nav-item"><a th:href="@{/notice}" class="nav-link">공지사항</a></li>
+          <li class="nav-item"><a th:href="@{/about}" class="nav-link">회사소개</a></li>
+
+          <!--        <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/loginForm}" class="nav-link">로그인</a></li>-->
+          <!--        <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/memberForm}" class="nav-link">회원가입</a></li>-->
+
+          <!--        <li class="nav-item dropdown" th:if="${session.custKey != null}">-->
+          <!--          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.username}+'님의 Page'"></a>-->
+          <!--          <div class="dropdown-menu">-->
+          <!--            <a th:href="@{/customer/custcheckform}" class="dropdown-item" >비밀번호 변경</a>-->
+          <!--            <a th:href="@{/customer/orderlist}" class="dropdown-item">나의 주문</a>-->
+          <!--            <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>-->
+          <!--            <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>-->
+          <!--            <a th:href="@{/board/qnalist}" class="dropdown-item" >나의 문의</a>-->
+          <!--            <a th:href="@{/customer/signoutForm}" class="dropdown-item">회원 탈퇴</a>-->
+          <!--          </div>-->
+          <!--        </li>-->
+          <!--        <li class="nav-item" th:if="${session.custKey != null}" ><a th:href="@{/customer/logout}" class="nav-link" >로그아웃</a></li>-->
+
+
+          <!--        <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>-->
+
+        </ul>
+        <!-- ms-auto ; 버튼 오른쪽으로 이동 -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/login}" class="nav-link">로그인</a></li>
+          <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/new}" class="nav-link">회원가입</a></li>
+
+          <li class="nav-item dropdown" th:if="${session.custKey != null}">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.username}+'님의 Page'"></a>
+            <div class="dropdown-menu">
+              <a th:href="@{/templates/team/custcheckform}" class="dropdown-item" >비밀번호 변경</a>
+              <a th:href="@{/templates/team/orderlist}" class="dropdown-item">나의 주문</a>
+              <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>
+              <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>
+              <a th:href="@{/board/qnalist}" class="dropdown-item" >나의 문의</a>
+              <a th:href="@{/templates/team/signoutForm}" class="dropdown-item">회원 탈퇴</a>
+            </div>
+          </li>
+
+          <li class="nav-item" th:if="${session.custKey != null}" ><a th:href="@{/templates/team/logout}" class="nav-link" >로그아웃</a></li>
+
+
+          <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- 임시 네비게이터 끝-->
+</div>
+
+<div th:fragment="header">
+  <!-- Masthead-->
+  <header class="masthead" th:fragment="main-header">
+    <div class="container position-relative">
+      <div class="row justify-content-center">
+        <div class="col-xl-6">
+          <div class="text-center text-white">
+            <!-- Page heading-->
+            <h1 class="mb-5">Welcome to Kiosk Project!</h1>
+            <!-- Signup form-->
+            <!-- * * * * * * * * * * * * * * *-->
+            <!-- * * SB Forms Contact Form * *-->
+            <!-- * * * * * * * * * * * * * * *-->
+            <!-- This form is pre-integrated with SB Forms.-->
+            <!-- To make this form functional, sign up at-->
+            <!-- https://startbootstrap.com/solution/contact-forms-->
+            <!-- to get an API token!-->
+            <form class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
+              <!-- Email address input-->
+              <div class="row">
+                <div class="col">
+                  <input class="form-control form-control-lg" id="emailAddress" type="email" placeholder="Email Address" data-sb-validations="required,email" />
+                  <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Email Address is required.</div>
+                  <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:email">Email Address Email is not valid.</div>
+                </div>
+                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+              </div>
+              <!-- Submit success message-->
+              <!---->
+              <!-- This is what your users will see when the form-->
+              <!-- has successfully submitted-->
+              <div class="d-none" id="submitSuccessMessage">
+                <div class="text-center mb-3">
+                  <div class="fw-bolder">Form submission successful!</div>
+                  <p>To activate this form, sign up at</p>
+                  <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                </div>
+              </div>
+              <!-- Submit error message-->
+              <!---->
+              <!-- This is what your users will see when there is-->
+              <!-- an error submitting the form-->
+              <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div th:fragment="content">
+  <!-- Icons Grid-->
+    <section class="features-icons bg-light text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex"><i class="bi-window m-auto text-primary"></i></div>
+              <h3>Fully Responsive</h3>
+              <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex"><i class="bi-layers m-auto text-primary"></i></div>
+              <h3>Bootstrap 5 Ready</h3>
+              <p class="lead mb-0">Featuring the latest build of the new Bootstrap 5 framework!</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+              <div class="features-icons-icon d-flex"><i class="bi-terminal m-auto text-primary"></i></div>
+              <h3>Easy to Use</h3>
+              <p class="lead mb-0">Ready to use with your own content, or customize the source files!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Showcases-->
+    <section class="showcase">
+      <div class="container-fluid p-0">
+        <div class="row g-0">
+          <div class="col-lg-6 order-lg-2 text-white showcase-img" th:style="'background-image: url(/assets/img/bg-showcase-1.jpg)'"></div>
+          <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+            <h2>Fully Responsive Design</h2>
+            <p class="lead mb-0">When you use a theme created by Start Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-lg-6 text-white showcase-img" th:style="'background-image: url(/assets/img/bg-showcase-2.jpg)'"></div>
+          <div class="col-lg-6 my-auto showcase-text">
+            <h2>Updated For Bootstrap 5</h2>
+            <p class="lead mb-0">Newly improved, and full of great utility classes, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes on Start Bootstrap are now using Bootstrap 5!</p>
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-lg-6 order-lg-2 text-white showcase-img" th:style="'background-image: url(/assets/img/bg-showcase-3.jpg)'"></div>
+          <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+            <h2>Easy to Use & Customize</h2>
+            <p class="lead mb-0">Landing Page is just HTML and CSS with a splash of SCSS for users who demand some deeper customization options. Out of the box, just add your content and images, and your new landing page will be ready to go!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials-->
+    <section class="testimonials text-center bg-light">
+      <div class="container">
+        <h2 class="mb-5">What people are saying...</h2>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+              <img class="img-fluid rounded-circle mb-3" th:src="@{/assets/img/testimonials-1.jpg}" alt="..." />
+              <h5>Margaret E.</h5>
+              <p class="font-weight-light mb-0">"This is fantastic! Thanks so much guys!"</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+              <img class="img-fluid rounded-circle mb-3" th:src="@{/assets/img/testimonials-2.jpg}" alt="..." />
+              <h5>Fred S.</h5>
+              <p class="font-weight-light mb-0">"Bootstrap is amazing. I've been using it to create lots of super nice landing pages."</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+              <img class="img-fluid rounded-circle mb-3" th:src="@{/assets/img/testimonials-3.jpg}" alt="..." />
+              <h5>Sarah W.</h5>
+              <p class="font-weight-light mb-0">"Thanks so much for making these free resources available to us!"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!--    &lt;!&ndash; Call to Action&ndash;&gt;-->
+<!--    <section class="call-to-action text-white text-center" id="signup">-->
+<!--      <div class="container position-relative">-->
+<!--        <div class="row justify-content-center">-->
+<!--          <div class="col-xl-6">-->
+<!--            <h2 class="mb-4">Ready to get started? Sign up now!</h2>-->
+<!--            &lt;!&ndash; Signup form&ndash;&gt;-->
+<!--            &lt;!&ndash; * * * * * * * * * * * * * * *&ndash;&gt;-->
+<!--            &lt;!&ndash; * * SB Forms Contact Form * *&ndash;&gt;-->
+<!--            &lt;!&ndash; * * * * * * * * * * * * * * *&ndash;&gt;-->
+<!--            &lt;!&ndash; This form is pre-integrated with SB Forms.&ndash;&gt;-->
+<!--            &lt;!&ndash; To make this form functional, sign up at&ndash;&gt;-->
+<!--            &lt;!&ndash; https://startbootstrap.com/solution/contact-forms&ndash;&gt;-->
+<!--            &lt;!&ndash; to get an API token!&ndash;&gt;-->
+<!--            <form class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">-->
+<!--              &lt;!&ndash; Email address input&ndash;&gt;-->
+<!--              <div class="row">-->
+<!--                <div class="col">-->
+<!--                  <input class="form-control form-control-lg" id="emailAddressBelow" type="email" placeholder="Email Address" data-sb-validations="required,email" />-->
+<!--                  <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>-->
+<!--                  <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>-->
+<!--                </div>-->
+<!--                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; Submit success message&ndash;&gt;-->
+<!--              &lt;!&ndash;&ndash;&gt;-->
+<!--              &lt;!&ndash; This is what your users will see when the form&ndash;&gt;-->
+<!--              &lt;!&ndash; has successfully submitted&ndash;&gt;-->
+<!--              <div class="d-none" id="submitSuccessMessage">-->
+<!--                <div class="text-center mb-3">-->
+<!--                  <div class="fw-bolder">Form submission successful!</div>-->
+<!--                  <p>To activate this form, sign up at</p>-->
+<!--                  <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; Submit error message&ndash;&gt;-->
+<!--              &lt;!&ndash;&ndash;&gt;-->
+<!--              &lt;!&ndash; This is what your users will see when there is&ndash;&gt;-->
+<!--              &lt;!&ndash; an error submitting the form&ndash;&gt;-->
+<!--              <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
+
+</div>
+
+<div th:fragment="footer">
+  <!-- Footer-->
+  <footer class="footer bg-light" th:fragment="main-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item"><a href="#">About</a></li>
+            <li class="list-inline-item">⋅</li>
+            <li class="list-inline-item"><a href="#">Contact</a></li>
+            <li class="list-inline-item">⋅</li>
+            <li class="list-inline-item"><a href="#">Terms of Use</a></li>
+            <li class="list-inline-item">⋅</li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+          </ul>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2023. All Rights Reserved.</p>
+        </div>
+        <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item me-4">
+              <a href="#"><i class="bi-facebook fs-3"></i></a>
+            </li>
+            <li class="list-inline-item me-4">
+              <a href="#"><i class="bi-twitter fs-3"></i></a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#"><i class="bi-instagram fs-3"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Bootstrap core JS-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>-->
+<!-- Core theme JS-->
+<!--<script th:src="@{/js/scripts.js}"></script>-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!-- * *                               SB Forms JS                               * *-->
+<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!--<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

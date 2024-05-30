@@ -1,7 +1,6 @@
 package com.side.portfolio.demo.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)//무분별한 객체 생성 방지
 public class Team {
 
     @Id @GeneratedValue
@@ -50,4 +50,19 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Order> kiosks = new ArrayList<>();
 
+    @Builder
+    public Team(String pw, String name, int tickets, String phNumber,
+                String email, String remark, LocalDateTime createdDate,
+                LocalDateTime modifiedDate, TeamStatus status, Address address) {
+        this.pw = pw;
+        this.name = name;
+        this.tickets = tickets;
+        this.phNumber = phNumber;
+        this.email = email;
+        this.remark = remark;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.status = status;
+        this.address = address;
+    }
 }

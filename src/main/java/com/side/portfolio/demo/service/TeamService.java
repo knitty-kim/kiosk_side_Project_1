@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,8 +32,8 @@ public class TeamService {
      * @param team
      */
     private void validateTeam(Team team) {
-        List<Team> byPhNumber = teamRepository.findByPhNumber(team.getPhNumber());
-        if (!byPhNumber.isEmpty()) {
+        Optional<Team> byName = teamRepository.findByName(team.getName());
+        if (byName.isPresent()) {
             throw new IllegalStateException("이미 존재하는 팀입니다");
         }
     }
