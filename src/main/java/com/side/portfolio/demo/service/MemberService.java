@@ -47,14 +47,14 @@ public class MemberService {
     /**
      * 전체 회원 조회
      */
-    private List<Member> findMembers() {
+    public List<Member> findMembers() {
         return memberRepository.findAll();
     }
 
     /**
      * 한 회원 조회
      */
-    private Member findMember(Long memberId) {
+    public Member findMember(Long memberId) {
         return memberRepository.find(memberId);
     }
 }

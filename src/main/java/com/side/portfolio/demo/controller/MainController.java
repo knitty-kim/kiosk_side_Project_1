@@ -119,7 +119,7 @@ public class MainController {
                     .status(TeamStatus.DORMANT)
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
-            //임시 address -> remark
+            //TODO 임시 address -> remark
                     .remark(form.getAddress())
                     .build();
 
@@ -137,7 +137,7 @@ public class MainController {
                     .status(SellerStatus.DORMANT)
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
-            //임시 address -> remark
+            //TODO 임시 address -> remark
                     .remark(form.getAddress())
                     .build();
 

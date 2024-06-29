@@ -4,7 +4,6 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
   jpa:
     hibernate:
       ddl-auto: create
@@ -12,10 +11,17 @@ spring:
       hibernate:
         #show_sql: true
         format_sql: true
+    defer-datasource-initialization: true
 
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace

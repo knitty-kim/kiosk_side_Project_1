@@ -3,40 +3,54 @@
 <head>
   <meta charset="utf-8">
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <script>
+    function redirectionHome() {
+      window.location.href = '/';
+    }
+  </script>
 </head>
 <body>
 <div class="container" style="max-width: 600px">
   <div class="py-5 text-center">
     <h2>상품 목록</h2>
   </div>
-  <div class="row">
+  <div class="row mb-3">
     <div class="col">
-      <button class="btn btn-primary float-end"
-              onclick="location.href='addForm.html'"
-              th:onclick="|location.href='@{/basic/items/add}'|" type="button">상품 등록</button>
+      <div class="float-end">
+        <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
+        <button class="btn btn-primary"
+                onclick="location.href='addItem.html'"
+                th:onclick="|location.href='@{/item-list/add}'|" type="button">상품 등록</button>
+      </div>
     </div>
   </div>
-  <hr class="my-4">
+  <hr class="my-0">
   <div>
-    <table class="table">
+    <table class="table table-striped">
       <thead>
       <tr>
         <th>ID</th>
         <th>상품명</th>
         <th>가격</th>
         <th>수량</th>
+        <th>판매자</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="item : ${items}">
         <td><a href="item.html"
-               th:href="@{/basic/items/{itemRId}(itemId=${item.itemRid})}"
-               th:text="${item.itemRid}">상품id</a></td>
+               th:href="@{items/{itemId}/edit(itemId=${item.id})}"
+               th:text="${item.id}">상품 ID</a></td>
         <td><a href="item.html"
-               th:href="@{|/basic/items/${item.itemRid}|}"
-               th:text="${item.itemName}">상품명</a></td>
+               th:href="@{items/{itemId}/edit(itemId=${item.id})}"
+               th:text="${item.name}">상품명</a></td>
         <td th:text="${item.price}">10000</td>
-        <td th:text="${item.quantity}">10</td>
+        <td th:text="${item.qty}">10</td>
+        <td th:text="${item.seller.name}">판매자</td>
+        <td><a href="updateItem.html"
+               th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
+               class="btn btn-primary" role="button">수정</a>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -44,3 +58,27 @@
 </div> <!-- /container -->
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

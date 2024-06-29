@@ -42,16 +42,16 @@ public class TeamService {
      * 전체 팀 조회
      * @return
      */
-    private List<Team> findTeam() {
+    public List<Team> findAll() {
         return teamRepository.findAll();
     }
 
     /**
-     * 한 팀 조회
+     * 팀 단건 조회
      * @param teamId
      * @return
      */
-    private Team find(Long teamId) {
+    public Team find(Long teamId) {
         return teamRepository.find(teamId);
     }
 }

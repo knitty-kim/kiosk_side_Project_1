@@ -1,8 +1,10 @@
 package com.side.portfolio.demo.domain;
 
 import com.side.portfolio.demo.exception.NotEnoughStockException;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
 
@@ -37,6 +40,8 @@ public class Item {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
+    //Builder.Default 미사용 시, 빌더 패턴 적용했을 때, orderItems = null이 된다
+    //@Builder.Default
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -66,23 +71,54 @@ public class Item {
     }
 
     /**
-     * 재고 증가
+     * 수량 변경
      */
-    public void increaseStock(int qty) {
-        this.qty += qty;
-    }
-
-    /**
-     * 재고 감소
-     */
-    public void decreaseStock(int qty) {
-        int resultStock = this.qty - qty;
-        if (resultStock < 0) {
+    public void updateQty(int qty) {
+        if (qty < 0) {
             throw new NotEnoughStockException("quantity can't be under ZERO");
         }
-        this.qty = resultStock;
+        this.qty = qty;
+    }
+    
+    /**
+     * 수량 증가
+     */
+//    public void increaseQty(int qty) {
+//        this.qty += qty;
+//    }
+
+    /**
+     * 수량 감소
+     */
+//    public void decreaseQty(int qty) {
+//        int resultStock = this.qty - qty;
+//        if (resultStock < 0) {
+//            throw new NotEnoughStockException("quantity can't be under ZERO");
+//        }
+//        this.qty = resultStock;
+//    }
+
+    /**
+     * 판매자 변경
+     * @param seller
+     */
+    public void updateSeller(Seller seller) {
+        this.seller = seller;
     }
 
-
-
+    @Builder
+    public Item(String name, int price, int qty, String remark, String img1, String img2,
+                LocalDateTime createdDate, LocalDateTime modifiedDate, Seller seller,
+                List<OrderItem> orderItems) {
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+        this.remark = remark;
+        this.img1 = img1;
+        this.img2 = img2;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.seller = seller;
+        this.orderItems = orderItems;
+    }
 }

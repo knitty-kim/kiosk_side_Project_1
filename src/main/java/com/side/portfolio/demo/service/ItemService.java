@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Item;
+import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,24 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public void saveItem(Item item) {
+    public void save(Item item) {
         itemRepository.save(item);
     }
 
-    public List<Item> findItems() {
+    public List<Item> findAll() {
         return itemRepository.findAll();
     }
 
     public Item findItem(Long id) {
         return itemRepository.find(id);
+    }
+
+    @Transactional
+    public void updateItem(Long id, String name, int price, int qty, Seller seller) {
+        Item item = itemRepository.find(id);
+        item.updateName(name);
+        item.updatePrice(price);
+        item.updateQty(qty);
+        item.updateSeller(seller);
     }
 }

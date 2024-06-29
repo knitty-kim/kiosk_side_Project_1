@@ -16,12 +16,19 @@ public class SellerService {
 
     public final SellerRepository sellerRepository;
 
+    /**
+     * 판매자 가입
+     */
     @Transactional
     public Long signUp(Seller seller) {
         validateSeller(seller);
         return sellerRepository.save(seller);
     }
 
+    /**
+     * 중복 판매자 검증
+     * @param seller
+     */
     private void validateSeller(Seller seller) {
         Optional<Seller> byName = sellerRepository.findByName(seller.getName());
         if (byName.isPresent()) {
@@ -29,11 +36,20 @@ public class SellerService {
         }
     }
 
-    private List<Seller> findSeller() {
+    /**
+     * 전체 판매자 조회
+     * @return
+     */
+    public List<Seller> findAll() {
         return sellerRepository.findAll();
     }
 
-    private Seller find(Long sellerId) {
+    /**
+     * 판매자 단건 조회
+     * @param sellerId
+     * @return
+     */
+    public Seller find(Long sellerId) {
         return sellerRepository.find(sellerId);
     }
 }

@@ -22,20 +22,21 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">상품보기</a>
           <ul class="dropdown-menu">
-            <a class="dropdown-item" th:href="@{/shoplist}">전체상품 보기</a>
-            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>
-            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>
+            <a class="dropdown-item" th:href="@{/item-list}">전체상품 목록</a>
+            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>
+            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>
             <!--            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>-->
           </ul>
         </li>
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">카테고리</a>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">팀/판매자 정보</a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=1}">한식</a>
-            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=2}">중식</a>
-            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=3}">일식</a>
-            <!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>-->
+            <a class="dropdown-item" th:href="@{/team/team-list}">팀 목록</a>
+            <a class="dropdown-item" th:href="@{/seller/seller-list}">판매자 목록</a>
+<!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=2}">중식</a>-->
+<!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=3}">일식</a>-->
+<!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>-->
           </div>
         </li>
         <li class="nav-item"><a th:href="@{/event}" class="nav-link">이벤트</a></li>
