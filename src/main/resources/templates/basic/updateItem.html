@@ -33,6 +33,14 @@
       <input type="number" th:field="*{qty}" class="form-control" placeholder="수량을 입력하세요">
     </div>
     <div class="form-group">
+      <label th:for="status">상태</label>
+      <select th:field="*{status}" class="form-control">
+        <option value="">상태를 선택하세요</option>
+        <option th:each="itemStatus : ${itemStatuses}" th:selected="${itemForm.status} == ${itemStatus}"
+                th:value="${itemStatus}" th:text="${itemStatus}"/>
+      </select>
+    </div>
+    <div class="form-group">
       <label th:for="sellerId">판매자</label>
       <select th:field="*{sellerId}" class="form-control">
         <option value="">판매자를 선택하세요</option>

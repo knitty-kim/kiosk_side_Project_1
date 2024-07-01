@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Item;
+import com.side.portfolio.demo.domain.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,12 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, String name, int price, int qty, Seller seller) {
+    public void updateItem(Long id, String name, int price, int qty, ItemStatus status, Seller seller) {
         Item item = itemRepository.find(id);
         item.updateName(name);
         item.updatePrice(price);
         item.updateQty(qty);
+        item.updateStatus(status);
         item.updateSeller(seller);
     }
 }

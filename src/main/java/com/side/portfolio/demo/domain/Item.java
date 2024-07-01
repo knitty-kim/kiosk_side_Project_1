@@ -29,6 +29,10 @@ public class Item {
     @Column(name = "item_qty")
     private int qty;
 
+    //OPEN, CLOSED
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
+
     private String remark;
     private String img1;
     private String img2;
@@ -79,24 +83,14 @@ public class Item {
         }
         this.qty = qty;
     }
-    
-    /**
-     * 수량 증가
-     */
-//    public void increaseQty(int qty) {
-//        this.qty += qty;
-//    }
 
     /**
-     * 수량 감소
+     * 상태 변경
+     * @param status
      */
-//    public void decreaseQty(int qty) {
-//        int resultStock = this.qty - qty;
-//        if (resultStock < 0) {
-//            throw new NotEnoughStockException("quantity can't be under ZERO");
-//        }
-//        this.qty = resultStock;
-//    }
+    public void updateStatus(ItemStatus status) {
+        this.status = status;
+    }
 
     /**
      * 판매자 변경
@@ -107,12 +101,13 @@ public class Item {
     }
 
     @Builder
-    public Item(String name, int price, int qty, String remark, String img1, String img2,
-                LocalDateTime createdDate, LocalDateTime modifiedDate, Seller seller,
-                List<OrderItem> orderItems) {
+    public Item(String name, int price, int qty, ItemStatus status, String remark,
+                String img1, String img2, LocalDateTime createdDate, LocalDateTime modifiedDate,
+                Seller seller, List<OrderItem> orderItems) {
         this.name = name;
         this.price = price;
         this.qty = qty;
+        this.status = status;
         this.remark = remark;
         this.img1 = img1;
         this.img2 = img2;

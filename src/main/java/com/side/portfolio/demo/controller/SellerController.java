@@ -20,9 +20,8 @@ public class SellerController {
 
     @GetMapping("/seller-list")
     public String sellerList(Model model) {
-        List<Seller> sellers = sellerService.findAll();
-        model.addAttribute("sellers", sellers);
 
+        model.addAttribute("sellers", sellerService.findAll());
         return "basic/sellers";
     }
 

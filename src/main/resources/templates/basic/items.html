@@ -34,23 +34,20 @@
         <th>가격</th>
         <th>수량</th>
         <th>판매자</th>
+        <th>상태</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="item : ${items}">
-        <td><a href="item.html"
-               th:href="@{items/{itemId}/edit(itemId=${item.id})}"
-               th:text="${item.id}">상품 ID</a></td>
-        <td><a href="item.html"
-               th:href="@{items/{itemId}/edit(itemId=${item.id})}"
-               th:text="${item.name}">상품명</a></td>
+        <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
+        <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.name}">상품명</a></td>
         <td th:text="${item.price}">10000</td>
         <td th:text="${item.qty}">10</td>
         <td th:text="${item.seller.name}">판매자</td>
-        <td><a href="updateItem.html"
-               th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
-               class="btn btn-primary" role="button">수정</a>
-        </td>
+        <td class="fw-bolder" th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
+            th:text="${item.status}">상태</td>
+        <td><a th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
+               class="btn btn-primary" role="button">수정</a></td>
       </tr>
       </tbody>
     </table>

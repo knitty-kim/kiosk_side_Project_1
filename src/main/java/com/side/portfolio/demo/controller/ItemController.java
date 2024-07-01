@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Item;
+import com.side.portfolio.demo.domain.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.ItemForm;
 import com.side.portfolio.demo.service.ItemService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,10 +29,8 @@ public class ItemController {
 
     @GetMapping("/item-list")
     public String itemList(Model model) {
-        List<Item> items = itemService.findAll();
 
-        model.addAttribute("items", items);
-
+        model.addAttribute("items", itemService.findAll());
         return "basic/items";
     }
 
@@ -41,11 +41,10 @@ public class ItemController {
      */
     @GetMapping("/item-list/add")
     public String createItemForm(Model model) {
-        List<Seller> sellers = sellerService.findAll();
 
-        model.addAttribute("sellers", sellers);
+        model.addAttribute("itemStatuses", ItemStatus.values());
+        model.addAttribute("sellers", sellerService.findAll());
         model.addAttribute("itemForm", new ItemForm());
-
         return "basic/addItem";
     }
 
@@ -60,6 +59,9 @@ public class ItemController {
                 .name(form.getName())
                 .price(form.getPrice())
                 .qty(form.getQty())
+                .status(form.getStatus())
+                .createdDate(LocalDateTime.now())
+                .modifiedDate(LocalDateTime.now())
                 .seller(sellerService.find(form.getSellerId()))
                 .build();
 
@@ -79,12 +81,12 @@ public class ItemController {
         form.setName(item.getName());
         form.setPrice(item.getPrice());
         form.setQty(item.getQty());
+        form.setStatus(item.getStatus());
         form.setSellerId(item.getSeller().getId());
 
-        List<Seller> sellers = sellerService.findAll();
-
+        model.addAttribute("itemStatuses", ItemStatus.values());
         model.addAttribute("itemForm", form);
-        model.addAttribute("sellers", sellers);
+        model.addAttribute("sellers", sellerService.findAll());
 
         return "basic/updateItem";
     }
@@ -98,7 +100,8 @@ public class ItemController {
     @PostMapping("/items/{itemId}/edit")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemForm itemForm) {
         itemService.updateItem(itemId, itemForm.getName(), itemForm.getPrice(),
-                itemForm.getQty(), sellerService.find(itemForm.getSellerId()));
+                itemForm.getQty(), itemForm.getStatus(), sellerService.find(itemForm.getSellerId()));
+
         return "redirect:/item-list";
     }
 }

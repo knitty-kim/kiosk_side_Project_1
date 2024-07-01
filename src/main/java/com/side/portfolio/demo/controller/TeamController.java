@@ -19,9 +19,8 @@ public class TeamController {
 
     @GetMapping("/team-list")
     public String teamList(Model model) {
-        List<Team> teams = teamService.findAll();
-        model.addAttribute("teams", teams);
 
+        model.addAttribute("teams", teamService.findAll());
         return "basic/teams";
     }
 }
