@@ -149,5 +149,13 @@ public class MainController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/about")
+    public String about(Model model) {
+        log.info("about page");
+        return "about";
+    }
+
+
 }
 

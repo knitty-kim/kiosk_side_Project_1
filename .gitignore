@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/java/com/side/portfolio/demo/frontcontroller/
+/src/main/java/com/side/portfolio/demo/mvc/
