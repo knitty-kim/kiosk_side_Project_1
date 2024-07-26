@@ -1,11 +1,82 @@
 <div align=center>
 	<img src="https://capsule-render.vercel.app/api?type=venom&color=auto&height=200&section=header&text=Kiosk%20Project!&fontSize=80" />
 </div>
-<div align=center>
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+
+
+## 목차
+- [개발 경과](#개발-경과)
+- [프로젝트 설명](#프로젝트-설명)
+- [트러블 슈팅](#트러블-슈팅)
+- [기술 스택](#기술-스택)
+
+<br>
+<br>
+
+
+## 개발 경과
+<details>
+  <summary><b>24.07.25 Thu</b></summary>
+  <div markdown="1">
+    <ul>
+      <li>회사소개 페이지 추가</li>
+      <li>메인 이미지 변경</li>
+<!--       <img src="./docs/주요_기능/포토스팟_콜렉션/1.gif" width=70%> -->
+    </ul>
+  </div>
+</details>
+
+<br>
+<br>
+
+## 프로젝트 설명
+<details>
+  <summary><b>DB 설계</b></summary>
+  <div markdown="1">
+    <ul>
+      <li>이미지</li>
+<!--       <img src="./docs/주요_기능/포토스팟_콜렉션/1.gif" width=70%> -->
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><b>개발 환경</b></summary>
+  <div markdown="1">
+    <ul>
+      <li>이미지</li>
+    </ul>
+  </div>
+</details>
+
+<br>
+<br>
+
+## 트러블 슈팅
+<details>
+  <summary><b>임시</b></summary>
+  <div markdown="1">
+    <ul>
+      <li>이미지</li>
+    </ul>
+  </div>
+</details>
+<br>
+<br>
+
+## 기술 스택
+<!-- <div align=center>
 	<h3>⭐ Tech</h3>
 	<p>📚 Languages & Framworks 📓</p>
-</div>
-<div align="center">
+</div> -->
+<div align="left">
 	<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white" />
 	<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=CSS3&logoColor=white" />
 	<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=JavaScript&logoColor=white" />
@@ -19,17 +90,15 @@
 <!-- 	<img src="https://img.shields.io/badge/Oracle%20SQL-F80000?style=flat&logo=Oracle&logoColor=white" />
 	<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white" /> -->
 </div>
-<br>
-<div align=center>
+<!-- <div align=center>
 	<p>🔨 Tools</p>
-</div>
-<div align=center>
+</div> -->
+<div align=left>
 	<img src="https://img.shields.io/badge/IntelliJ-512BD4?style=flat&logo=intellijidea&logoColor=white" />
 	<img src="https://img.shields.io/badge/Tomcat-F8DC75?style=flat&logo=ApacheTomcat&logoColor=white" />
 <!-- 	<img src="https://img.shields.io/badge/AWS-232F3E?style=flat&logo=AmazonAWS&logoColor=white" /> -->
 	<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white" />
 </div>
-<br>
 
 <!--
 <div align=center>
@@ -49,9 +118,7 @@
 </div>
 -->
 
-<br>
-<br>
-<br>
+
 <br>
 <br>
 <br>
