@@ -37,3 +37,6 @@ out/
 .vscode/
 /src/main/java/com/side/portfolio/demo/frontcontroller/
 /src/main/java/com/side/portfolio/demo/mvc/
+/src/main/java/com/side/portfolio/demo/request/
+/src/main/java/com/side/portfolio/demo/requestmapping/
+/src/main/java/com/side/portfolio/demo/response/

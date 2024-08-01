@@ -34,7 +34,7 @@ public class Team {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    //ACTIVE, DORMANT
+    //ACTIVE, DORMANT, MASTER
     @Enumerated(EnumType.STRING)
     private TeamStatus status;
 

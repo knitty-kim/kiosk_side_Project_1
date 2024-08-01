@@ -30,14 +30,14 @@ public class SellerRepository {
     }
 
     public Optional<Seller> findByName(String name) {
-        List<Seller> seller = em.createQuery("select t from Seller t where t.name = :name", Seller.class)
+        List<Seller> seller = em.createQuery("select s from Seller s where s.name = :name", Seller.class)
                 .setParameter("name", name)
                 .getResultList();
         return seller.isEmpty() ? Optional.empty() : Optional.of(seller.get(0));
     }
 
     public Optional<Seller> findByPhNumber(String phNumber) {
-        List<Seller> seller = em.createQuery("select t from Seller t where t.phNumber = :phNumber", Seller.class)
+        List<Seller> seller = em.createQuery("select s from Seller s where s.phNumber = :phNumber", Seller.class)
                 .setParameter("phNumber", phNumber)
                 .getResultList();
         return seller.isEmpty() ? Optional.empty() : Optional.of(seller.get(0));

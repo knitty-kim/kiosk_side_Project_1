@@ -1,6 +1,9 @@
 package com.side.portfolio.demo.controller;
 
-import com.side.portfolio.demo.domain.*;
+import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.domain.SellerStatus;
+import com.side.portfolio.demo.domain.Team;
+import com.side.portfolio.demo.domain.TeamStatus;
 import com.side.portfolio.demo.dto.LogInForm;
 import com.side.portfolio.demo.dto.SignUpForm;
 import com.side.portfolio.demo.service.LoginService;
@@ -10,14 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -69,7 +68,7 @@ public class MainController {
         log.info("types : " + form.getTypes());
 
         if (form.getTypes().equals("team")) {
-            Team team = loginService.teamLogin(form.getTeamName(), form.getTeamPw());
+            Team team = loginService.teamLogin(form.getName(), form.getPw());
             HttpSession session = request.getSession();
             log.info("teamId : " + team.getId());
             log.info("teamName : " + team.getName());
@@ -78,8 +77,10 @@ public class MainController {
             session.setAttribute("name", team.getName());
 
         } else if (form.getTypes().equals("seller")) {
-            Seller seller = loginService.sellerLogin(form.getSellerName(), form.getSellerPw());
+            Seller seller = loginService.sellerLogin(form.getName(), form.getPw());
             HttpSession session = request.getSession();
+            log.info("sellerId : " + seller.getId());
+            log.info("sellerName : " + seller.getName());
             session.setAttribute("types", "seller");
             session.setAttribute("id", seller.getId());
             session.setAttribute("name", seller.getName());
@@ -151,7 +152,7 @@ public class MainController {
     }
 
     @GetMapping("/about")
-    public String about(Model model) {
+    public String about() {
         log.info("about page");
         return "about";
     }

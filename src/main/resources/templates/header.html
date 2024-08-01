@@ -17,31 +17,38 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto"><!-- margin end-auto ; 마진 자동 설정-->
+
         <!--        <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>-->
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">상품보기</a>
-          <ul class="dropdown-menu">
-            <a class="dropdown-item" th:href="@{/item-list}">전체상품 목록</a>
-<!--            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>-->
-<!--            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>-->
-            <!--            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>-->
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">팀/판매자 정보</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" th:href="@{/team/team-list}">팀 목록</a>
-            <a class="dropdown-item" th:href="@{/seller/seller-list}">판매자 목록</a>
+<!--        <li class="nav-item dropdown">-->
+<!--          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">팀/판매자 정보</a>-->
+<!--          <div class="dropdown-menu">-->
+<!--            <a class="dropdown-item" th:href="@{/team/team-list}">팀 목록</a>-->
+<!--            <a class="dropdown-item" th:href="@{/seller/seller-list}">판매자 목록</a>-->
 <!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=2}">중식</a>-->
 <!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=3}">일식</a>-->
 <!--            <a class="dropdown-item" th:href="@{/shoplist?categoryKey=4}">양식</a>-->
-          </div>
-        </li>
-        <li class="nav-item"><a th:href="@{/event}" class="nav-link">이벤트</a></li>
+<!--          </div>-->
+<!--        </li>-->
+
         <li class="nav-item"><a th:href="@{/notice}" class="nav-link">공지사항</a></li>
         <li class="nav-item"><a th:href="@{/about}" class="nav-link">회사소개</a></li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">상품보기</a>
+            <ul class="dropdown-menu">
+                <a class="dropdown-item" th:href="@{/item-list}">전체상품 목록</a>
+              <!--            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>-->
+              <!--            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>-->
+              <!--            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>-->
+            </ul>
+        </li>
+
+        <li class="nav-item" th:if="${session.name} == 'Korea'"><a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
+
+        <li class="nav-item" th:if="${session.types} != 'seller' and ${session.id != null}">
+            <a th:href="@{/seller/seller-list}" class="nav-link">판매자 목록</a></li>
+
+        <li class="nav-item"><a th:href="@{/qna}" class="nav-link">문의</a></li>
 
         <!--        <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/loginForm}" class="nav-link">로그인</a></li>-->
         <!--        <li class="nav-item" th:if="${session.custKey == null}" ><a th:href="@{/customer/memberForm}" class="nav-link">회원가입</a></li>-->
@@ -71,10 +78,10 @@
         <li class="nav-item dropdown" th:if="${session.id != null}">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.name}+'님의 Page'"></a>
           <div class="dropdown-menu">
-            <a th:href="@{/templates/team/custcheckform}" class="dropdown-item" >비밀번호 변경</a>
+<!--            <a th:href="@{/templates/team/custcheckform}" class="dropdown-item" >비밀번호 변경</a>-->
             <a th:href="@{/templates/team/orderlist}" class="dropdown-item">나의 주문</a>
-            <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>
-            <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>
+<!--            <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>-->
+<!--            <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>-->
             <a th:href="@{/board/qnalist}" class="dropdown-item" >나의 문의</a>
             <a th:href="@{/templates/team/signoutForm}" class="dropdown-item">회원 탈퇴</a>
           </div>

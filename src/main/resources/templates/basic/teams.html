@@ -40,7 +40,7 @@
       </tr>
       </thead>
       <tbody>
-        <tr th:each="team : ${teams}">
+        <tr th:each="team : ${teams}" th:if="${team.status.toString()} != 'MASTER'">
           <td><a th:href="@{/basic/team/{teamId}(teamId=${team.id})}"
                  th:text="${team.id}">팀 ID</a></td>
           <td><a th:href="@{/basic/team/${team.id}}"
