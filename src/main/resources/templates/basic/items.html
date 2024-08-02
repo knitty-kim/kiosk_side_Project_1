@@ -10,7 +10,7 @@
   </script>
 </head>
 <body>
-<div class="container" style="max-width: 600px">
+<div class="container" style="max-width: 700px">
   <div class="py-5 text-center">
     <h2>상품 목록</h2>
   </div>
@@ -35,12 +35,13 @@
         <th>수량</th>
         <th>판매자</th>
         <th>상태</th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="item : ${items}">
         <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
-        <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.name}">상품명</a></td>
+        <td class="w-25"><a class="text-wrap" th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.name}">상품명</a></td>
         <td th:text="${item.price}">10000</td>
         <td th:text="${item.qty}">10</td>
         <td th:text="${item.seller.name}">판매자</td>
@@ -52,30 +53,18 @@
       </tbody>
     </table>
   </div>
+
+  <!-- 페이징 바 -->
+  <div class="row" id="pageSection">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>
+        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+          <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+        </li>
+        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>
+      </ul>
+  </div>
+
 </div> <!-- /container -->
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

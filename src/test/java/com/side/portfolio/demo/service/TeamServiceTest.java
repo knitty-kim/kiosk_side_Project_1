@@ -21,8 +21,8 @@ class TeamServiceTest {
     @DisplayName("팀 가입")
     public void signUp() throws Exception {
         //given
-        Team team = new Team();
-        team.setName("Arizona");
+        Team team = Team.builder()
+                .name("Arizona").build();
 
         //when
         Long savedId = teamService.signUp(team);
@@ -35,10 +35,10 @@ class TeamServiceTest {
     @DisplayName("연락처 중복 팀 예외")
     public void validateTeam() throws Exception {
         //given
-        Team team1 = new Team();
-        team1.setPhNumber("520-621-2211");
-        Team team2 = new Team();
-        team2.setPhNumber("520-621-2211");
+        Team team1 = Team.builder()
+                .phNumber("520-621-2211").build();
+        Team team2 = Team.builder()
+                .phNumber("520-621-2211").build();
 
         //when
         teamService.signUp(team1);
@@ -46,4 +46,5 @@ class TeamServiceTest {
         //then
         assertThrows(IllegalStateException.class, () -> teamService.signUp(team2));
     }
+
 }

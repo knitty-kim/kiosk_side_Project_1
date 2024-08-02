@@ -3,8 +3,11 @@ package com.side.portfolio.demo.service;
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.repository.ItemJpaRepository;
 import com.side.portfolio.demo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ItemJpaRepository itemJpaRepository;
 
     @Transactional
     public void save(Item item) {
@@ -28,6 +32,11 @@ public class ItemService {
 
     public Item findItem(Long id) {
         return itemRepository.find(id);
+    }
+
+    public Page<Item> findByPagination(Pageable pageable){
+        Page<Item> result = itemJpaRepository.findAll(pageable);
+        return result;
     }
 
     @Transactional

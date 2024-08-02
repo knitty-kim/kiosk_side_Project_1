@@ -35,6 +35,18 @@ public class ItemRepository {
     }
 
     /**
+     * 페이지네이션
+     * @param limit
+     * @return
+     */
+    public List<Item> findByPagination(int offset, int limit) {
+        return em.createQuery("select i from Item i order by i.id asc")
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    /**
      * 상품 단건 조회
      * @param id
      * @return
@@ -43,5 +55,13 @@ public class ItemRepository {
         return em.find(Item.class, id);
     }
 
+    /**
+     * 아이템 카운트
+     * @return
+     */
+    public Long count() {
+        return em.createQuery("select count(i) from Item i", Long.class)
+                .getSingleResult();
+    }
 }
 

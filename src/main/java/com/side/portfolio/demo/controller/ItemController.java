@@ -2,13 +2,15 @@ package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.ItemStatus;
-import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.ItemForm;
 import com.side.portfolio.demo.service.ItemService;
-import com.side.portfolio.demo.service.MemberService;
 import com.side.portfolio.demo.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -28,9 +29,23 @@ public class ItemController {
     public final SellerService sellerService;
 
     @GetMapping("/item-list")
-    public String itemList(Model model) {
+    public String itemList(Model model,
+                           @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        model.addAttribute("items", itemService.findAll());
+        Page<Item> items = itemService.findByPagination(pageable);
+        model.addAttribute("items", items);
+
+        model.addAttribute("prev", items.getPageable().previousOrFirst().getPageNumber());
+        model.addAttribute("next", items.getPageable().next().getPageNumber());
+
+        model.addAttribute("hasPrev", items.hasPrevious());
+        model.addAttribute("hasNext", items.hasNext());
+
+        int groupSize = 3; //화면에 보여질 페이지 개수
+        int curPageGrp = (int) Math.floor((double) items.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
+        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
+        model.addAttribute("endPage", Math.min(items.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
+
         return "basic/items";
     }
 

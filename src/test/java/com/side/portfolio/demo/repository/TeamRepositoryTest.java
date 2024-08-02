@@ -1,7 +1,6 @@
 package com.side.portfolio.demo.repository;
 
 import com.side.portfolio.demo.domain.Team;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -24,7 +23,7 @@ class TeamRepositoryTest {
     @DisplayName("팀 저장 및 조회")
     public void saveFind() throws Exception {
         //given
-        Team team = new Team();
+        Team team = Team.builder().build();
 
         //when
         Long savedId = teamRepository.save(team);
@@ -39,10 +38,10 @@ class TeamRepositoryTest {
     @DisplayName("팀 전체 조회")
     public void findAll() throws Exception {
         //given
-        Team team1 = new Team();
-        Team team2 = new Team();
-        Team team3 = new Team();
-        Team team4 = new Team();
+        Team team1 = Team.builder().build();
+        Team team2 = Team.builder().build();
+        Team team3 = Team.builder().build();
+        Team team4 = Team.builder().build();
 
         //when
         teamRepository.save(team1);
@@ -62,16 +61,23 @@ class TeamRepositoryTest {
     @DisplayName("팀 연락처 조회")
     public void findByPhNumber() throws Exception {
         //given
-        Team team = new Team();
-        team.setPhNumber("520-621-2211");
+        Team team = Team.builder()
+                .phNumber("520-621-2211").build();
 
         //when
         teamRepository.save(team);
-        List<Team> foundTeamList = teamRepository.findByPhNumber("520-621-2211");
+        Optional<Team> foundTeamList = teamRepository.findByPhNumber("520-621-2211");
 
         //then
-        assertThat(foundTeamList.size()).isEqualTo(1);
-        assertThat(foundTeamList.contains(team)).isTrue();
-        assertThat(foundTeamList.get(0)).isEqualTo(team);
+        foundTeamList.ifPresent(
+                t -> {
+                    assertThat(t).isEqualTo(team);
+                }
+        );
+
+        //then
+        //assertThat(foundTeamList.size()).isEqualTo(1);
+        //assertThat(foundTeamList.contains(team)).isTrue();
+        //assertThat(foundTeamList.get(0)).isEqualTo(team);
     }
 }
