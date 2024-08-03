@@ -25,8 +25,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ItemController {
 
-    public final ItemService itemService;
-    public final SellerService sellerService;
+    private final ItemService itemService;
+    private final SellerService sellerService;
 
     @GetMapping("/item-list")
     public String itemList(Model model,

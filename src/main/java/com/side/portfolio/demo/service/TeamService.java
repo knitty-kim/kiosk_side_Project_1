@@ -1,8 +1,13 @@
 package com.side.portfolio.demo.service;
 
+import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.Team;
+import com.side.portfolio.demo.repository.ItemJpaRepository;
+import com.side.portfolio.demo.repository.TeamJpaRepository;
 import com.side.portfolio.demo.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +20,7 @@ import java.util.Optional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final TeamJpaRepository teamJpaRepository;
 
     /**
      * 팀 가입
@@ -44,6 +50,11 @@ public class TeamService {
      */
     public List<Team> findAll() {
         return teamRepository.findAll();
+    }
+
+    public Page<Team> findByPagination(Pageable pageable) {
+        Page<Team> result = teamJpaRepository.findAll(pageable);
+        return result;
     }
 
     /**
