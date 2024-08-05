@@ -10,7 +10,7 @@
   </script>
 </head>
 <body>
-<div class="container" style="max-width: 900px">
+<div class="container" style="max-width: 1000px">
   <div class="py-5 text-center">
     <h2>팀 목록</h2>
   </div>
@@ -62,7 +62,7 @@
   <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
       <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{team-list(page=${prev})}">Prev</a></li>
-      <li class="page-item" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
         <a class="page-link" th:href="@{team-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
       </li>
       <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{team-list(page=${next})}">Next</a></li>

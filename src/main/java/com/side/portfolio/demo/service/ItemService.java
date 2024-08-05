@@ -34,6 +34,11 @@ public class ItemService {
         return itemRepository.find(id);
     }
 
+    /**
+     * 아이템 페이지네이션
+     * @param pageable
+     * @return
+     */
     public Page<Item> findByPagination(Pageable pageable){
         Page<Item> result = itemJpaRepository.findAll(pageable);
         return result;

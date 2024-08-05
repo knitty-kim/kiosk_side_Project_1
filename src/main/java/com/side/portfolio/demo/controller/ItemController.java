@@ -30,7 +30,7 @@ public class ItemController {
 
     @GetMapping("/item-list")
     public String itemList(Model model,
-                           @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
         Page<Item> items = itemService.findByPagination(pageable);
         model.addAttribute("items", items);
@@ -45,6 +45,8 @@ public class ItemController {
         int curPageGrp = (int) Math.floor((double) items.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
         model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
         model.addAttribute("endPage", Math.min(items.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
+
+        model.addAttribute("curPage", items.getNumber());
 
         return "basic/items";
     }

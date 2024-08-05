@@ -21,9 +21,7 @@ public class TeamController {
 
     @GetMapping("/team-list")
     public String teamList(Model model,
-                           @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-//        model.addAttribute("teams", teamService.findAll());
+                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
         Page<Team> teams = teamService.findByPagination(pageable);
         model.addAttribute("teams", teams);
@@ -38,6 +36,8 @@ public class TeamController {
         int curPageGrp = (int) Math.floor((double) teams.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
         model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
         model.addAttribute("endPage", Math.min(teams.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
+
+        model.addAttribute("curPage", teams.getNumber());
 
         return "basic/teams";
     }

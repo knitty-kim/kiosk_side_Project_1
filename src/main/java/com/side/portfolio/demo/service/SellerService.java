@@ -1,8 +1,13 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.domain.Team;
+import com.side.portfolio.demo.repository.SellerJpaRepository;
 import com.side.portfolio.demo.repository.SellerRepository;
+import com.side.portfolio.demo.repository.TeamJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +19,8 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SellerService {
 
-    public final SellerRepository sellerRepository;
+    private final SellerRepository sellerRepository;
+    private final SellerJpaRepository sellerJpaRepository;
 
     /**
      * 판매자 가입
@@ -44,6 +50,16 @@ public class SellerService {
         return sellerRepository.findAll();
     }
 
+    /**
+     * 판매자 페이지네이션
+     * @param pageable
+     * @return
+     */
+    public Page<Seller> findByPagination(Pageable pageable) {
+        Page<Seller> result = sellerJpaRepository.findAll(pageable);
+        return result;
+    }
+    
     /**
      * 판매자 단건 조회
      * @param sellerId

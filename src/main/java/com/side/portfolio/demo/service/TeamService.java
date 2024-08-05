@@ -52,6 +52,11 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
+    /**
+     * 팀 페이지네이션
+     * @param pageable
+     * @return
+     */
     public Page<Team> findByPagination(Pageable pageable) {
         Page<Team> result = teamJpaRepository.findAll(pageable);
         return result;
