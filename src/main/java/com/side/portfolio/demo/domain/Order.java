@@ -1,7 +1,6 @@
 package com.side.portfolio.demo.domain;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter @Setter
+@Getter
 public class Order {
 
     @Id @GeneratedValue
@@ -40,7 +39,6 @@ public class Order {
     private Delivery delivery;
 
     //==연관관계 편의 메서드==//
-    //비즈니스 중심이 되는 곳에 정의하는 것이 좋다
     public void setTeam(Team team) {
         this.team = team;
         team.getOrders().add(this);
@@ -59,5 +57,57 @@ public class Order {
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.setOrder(this);
+    }
+
+    public void setStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    //==연관관계 편의 메서드 끝==//
+
+    //정적 팩토리 메서드
+    public static Order makeOrder(Team team, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setTeam(team);
+        order.setDelivery(delivery);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDERED);
+        order.setCreatedDate(LocalDateTime.now());
+
+        return order;
+    }
+
+    //주문 취소 메서드
+    public void cancelOrder() {
+        if (delivery.getStatus() == DeliveryStatus.DELIVERING) {
+            throw new IllegalStateException("can't cancel Order : delivery status is DELIVERING");
+        } else if (delivery.getStatus() == DeliveryStatus.DELIVERED) {
+            throw new IllegalStateException("can't cancel Order : delivery status is DELIVERED");
+        } else if (delivery.getStatus() == DeliveryStatus.CANCELED) {
+            throw new IllegalStateException("can't cancel Order : delivery status is CANCELED");
+        }
+
+        this.setStatus(OrderStatus.CANCELED);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancelOrderItem();
+        }
+    }
+
+    //주문 전체 가격 조회
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
     }
 }

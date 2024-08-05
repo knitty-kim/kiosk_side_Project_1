@@ -47,7 +47,7 @@ public class SellerService {
      * @return
      */
     public List<Seller> findAll() {
-        return sellerRepository.findAll();
+        return sellerJpaRepository.findAll();
     }
 
     /**

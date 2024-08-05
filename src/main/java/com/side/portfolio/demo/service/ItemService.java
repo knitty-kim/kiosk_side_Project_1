@@ -30,8 +30,8 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public Item findItem(Long id) {
-        return itemRepository.find(id);
+    public Item findById(Long id) {
+        return itemJpaRepository.findById(id).get();
     }
 
     /**

@@ -49,11 +49,11 @@ public class Item {
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "item")
+    private List<Cart> carts = new ArrayList<>();
+
     //==비즈니스 로직==//
     //도메인 주도 설계 ; 도메인이 비즈니스 로직의 주도권을 가지는 설계
-    //이런 설계는 서비스의 많은 로직이 엔티티로 이동하게 되며,
-    //서비스는 엔티티를 호출하는 정도의 얇은 비즈니스 로직을 가지게 됨
-    //이렇게 하면 information expert pattern 지키면서 개발할 수 있다
     //*** 엔티티 한 곳에서 처리가능하면 엔티티에서 처리
     //*** 엔티티의 처리 범위를 넘어가면 서비스에서 처리
 
@@ -79,11 +79,31 @@ public class Item {
      */
     public void updateQty(int qty) {
         if (qty < 0) {
-            throw new NotEnoughStockException("quantity can't be under ZERO");
+            throw new NotEnoughStockException("quantity can't be below ZERO");
         }
         this.qty = qty;
     }
 
+    /**
+     * 수량 추가
+     * @param qty
+     */
+    public void plusQty(int qty) {
+        this.qty += qty;
+    }
+
+    /**
+     * 수량 감소
+     * @param qty
+     */
+    public void minusQty(int qty) {
+        int tempQty = this.qty - qty;
+        if (tempQty < 0) {
+            throw new NotEnoughStockException("can't subtract Quantity below ZERO");
+        }
+        this.qty = tempQty;
+    }
+    
     /**
      * 상태 변경
      * @param status
@@ -99,6 +119,8 @@ public class Item {
     public void updateSeller(Seller seller) {
         this.seller = seller;
     }
+
+
 
     @Builder
     public Item(String name, int price, int qty, ItemStatus status, String remark,

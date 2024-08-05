@@ -27,4 +27,26 @@ public class OrderItem {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+    //정적 팩토리 메서드
+    public static OrderItem makeOrderItem(Item item, int orderPrice, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setOrderPrice(orderPrice);
+        orderItem.setCount(count);
+        item.minusQty(count);
+        return orderItem;
+    }
+
+    //비즈니스 로직 메서드
+    //주문상품 취소
+    public void cancelOrderItem() {
+        getItem().plusQty(count);
+    }
+
+    //조회 메서드
+    //주문상품 전체 가격 조회
+    public int getTotalPrice() {
+        return getOrderPrice() * getCount();
+    }
 }

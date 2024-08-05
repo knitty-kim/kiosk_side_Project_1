@@ -50,6 +50,9 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Order> kiosks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "team")
+    private List<Cart> carts = new ArrayList<>();
+
     @Builder
     public Team(String pw, String name, int tickets, String phNumber,
                 String email, String remark, LocalDateTime createdDate,

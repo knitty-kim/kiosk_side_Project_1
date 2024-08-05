@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MainController {
 
-    public final TeamService teamService;
-    public final SellerService sellerService;
-    public final LoginService loginService;
+    private final TeamService teamService;
+    private final SellerService sellerService;
+    private final LoginService loginService;
 
     @GetMapping("/")
     public String main(HttpServletRequest request, Model model) {

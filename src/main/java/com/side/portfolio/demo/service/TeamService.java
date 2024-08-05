@@ -49,7 +49,7 @@ public class TeamService {
      * @return
      */
     public List<Team> findAll() {
-        return teamRepository.findAll();
+        return teamJpaRepository.findAll();
     }
 
     /**
@@ -67,7 +67,9 @@ public class TeamService {
      * @param teamId
      * @return
      */
-    public Team find(Long teamId) {
-        return teamRepository.find(teamId);
+    public Team findById(Long teamId) {
+        return teamJpaRepository.findById(teamId).get();
     }
+
+
 }

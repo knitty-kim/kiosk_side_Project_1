@@ -92,7 +92,7 @@ public class ItemController {
      */
     @GetMapping("/items/{itemId}/edit")
     public String updateItemForm(@PathVariable Long itemId, Model model) {
-        Item item = itemService.findItem(itemId);
+        Item item = itemService.findById(itemId);
         ItemForm form = new ItemForm();
         form.setId(itemId);
         form.setName(item.getName());
