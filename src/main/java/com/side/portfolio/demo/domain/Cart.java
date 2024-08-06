@@ -1,15 +1,13 @@
 package com.side.portfolio.demo.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +40,14 @@ public class Cart {
         return cart;
     }
 
+    @Builder
+    public Cart(Team team, Item item, int price, int qty,
+                LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        this.team = team;
+        this.item = item;
+        this.price = price;
+        this.qty = qty;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+    }
 }

@@ -1,12 +1,15 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
+import com.side.portfolio.demo.repository.CartJpaRepository;
 import com.side.portfolio.demo.repository.ItemJpaRepository;
 import com.side.portfolio.demo.repository.OrderJpaRepository;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class OrderService {
     private final OrderJpaRepository orderJpaRepository;
     private final ItemJpaRepository itemJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
+    private final CartJpaRepository cartJpaRepository;
 
     /**
      * 주문 생성
@@ -27,10 +31,11 @@ public class OrderService {
     @Transactional
     public Long makeOrder(Long teamId, Long itemId, int count) {
         
-        //팀, 상품 정보 조회
+        //팀, 상품, 장바구니 정보 조회
         Team team = teamJpaRepository.findById(teamId).get();
         Item item = itemJpaRepository.findById(itemId).get();
-
+//        List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
+        
         //배송정보 생성
         Delivery delivery = new Delivery();
         delivery.setAddress(team.getAddress());

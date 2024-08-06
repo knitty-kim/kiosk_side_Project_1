@@ -39,12 +39,12 @@ public class ItemRepository {
      * @param limit
      * @return
      */
-    public List<Item> findByPagination(int offset, int limit) {
-        return em.createQuery("select i from Item i order by i.id asc")
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
+//    public List<Item> findByPagination(int offset, int limit) {
+//        return em.createQuery("select i from Item i order by i.id asc")
+//                .setFirstResult(offset)
+//                .setMaxResults(limit)
+//                .getResultList();
+//    }
 
     /**
      * 상품 단건 조회

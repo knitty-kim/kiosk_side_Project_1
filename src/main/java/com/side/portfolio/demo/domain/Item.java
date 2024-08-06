@@ -120,8 +120,6 @@ public class Item {
         this.seller = seller;
     }
 
-
-
     @Builder
     public Item(String name, int price, int qty, ItemStatus status, String remark,
                 String img1, String img2, LocalDateTime createdDate, LocalDateTime modifiedDate,

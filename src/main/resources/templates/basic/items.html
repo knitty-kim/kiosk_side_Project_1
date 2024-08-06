@@ -1,70 +1,133 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <script>
-    function redirectionHome() {
-      window.location.href = '/';
-    }
-  </script>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script>
+        function redirectionHome() {
+            window.location.href = '/';
+        }
+
+        //수량 유효성 검사
+        function countCheck(id) {
+            if (Number($("#" + id).val()) <= 0) {
+                $("#" + id).addClass("is-invalid");
+                $("#" + id).focus();
+            } else {
+
+            }
+        }
+
+        //담기 버튼, 유효성 검사
+        function toCart(button) {
+            if ($('input.is-invalid').length > 0) {
+                alert("유효하지 않은 값이 있습니다!");
+                return;
+            } else {
+                let parentTr = $(button).closest('tr');
+                let qtyId = 'inputCnt' + parentTr.find('td:eq(0)').text();
+                console.log(qtyId);
+                let data = {
+                    teamId : $("#sessionId").val(),
+                    itemId : parentTr.find('td:eq(0)').text(),
+                    price : parentTr.find('td:eq(2)').text(),
+                    qty : $("#" + qtyId).val()
+                }
+
+                $.ajax({
+                    url: '/cart-list',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        window.location.href = '/cart-list';
+
+                    },
+                    error: function(error) {
+                        console.error('Error sending data', error);
+
+
+                    }
+                });
+            }
+        }
+
+    </script>
 </head>
 <body>
-<div class="container" style="max-width: 800px">
-  <div class="py-5 text-center">
-    <h2>상품 목록</h2>
-  </div>
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-        <button class="btn btn-primary"
-                onclick="location.href='addItem.html'"
-                th:onclick="|location.href='@{/item-list/add}'|" type="button">상품 등록</button>
-      </div>
+<div class="container" style="max-width: 900px">
+    <div class="py-5 text-center">
+        <h2>상품 목록</h2>
     </div>
-  </div>
-  <hr class="my-0">
-  <div>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>상품명</th>
-        <th>가격</th>
-        <th>수량</th>
-        <th>판매자</th>
-        <th>상태</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="item : ${items}">
-        <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
-        <td class="w-25"><a class="text-wrap" th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.name}">상품명</a></td>
-        <td th:text="${item.price}">10000</td>
-        <td th:text="${item.qty}">10</td>
-        <td th:text="${item.seller.name}">판매자</td>
-        <td class="fw-bolder" th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
-            th:text="${item.status}">상태</td>
-        <td><a th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
-               class="btn btn-primary" role="button">수정</a></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="float-end">
+                <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
+                <button class="btn btn-primary" onclick="location.href='addItem.html'"
+                        th:if="${session.types == 'master'}"
+                        th:onclick="|location.href='@{/item-list/add}'|"
+                        type="button">상품 등록</button>
+                <button class="btn btn-primary" th:onclick="|location.href='@{/cart-list}'|"
+                        type="button">장바구니</button>
+            </div>
+        </div>
+    </div>
+    <hr class="my-0">
+    <td>
+        <input type="hidden" id="sessionId" th:value="${session.id}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th>판매자</th>
+                <th>상태</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
+                <td class="w-25"><a class="text-wrap" th:href="@{items/{itemId}/edit(itemId=${item.id})}"
+                                    th:text="${item.name}">상품명</a></td>
+                <td th:number="${item.price}">10000</td>
+                <td th:number="${item.qty}">10</td>
+                <td th:text="${item.seller.name}">판매자</td>
+                <td class="fw-bolder"
+                    th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
+                    th:text="${item.status}">상태/td>
+                <td class="input-group" th:if="${session.types == 'team'}">
+                    <input type="number" class="form-control" onchange="countCheck(this.id)" th:id="inputCnt+${item.id}"
+                           th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
+                    <div class="invalid-tooltip">수량은 0 이하일 수 없습니다</div>
+                    <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
+                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button></td>
+                <td><a th:if="${session.types == 'master'}" th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
+                       class="btn btn-primary" role="button">수정</a></td>
+            </tr>
+            </tbody>
+        </table>
+</div>
 
-  <!-- 페이징 바 -->
-  <div class="row" id="pageSection">
-      <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>
-        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-          <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+<!-- 페이징 바 -->
+<div class="row" id="pageSection">
+    <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}"
+                                 th:href="@{/item-list(page=${prev})}">Prev</a></li>
+        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+            <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
         </li>
-        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>
-      </ul>
-  </div>
+        <li class="page-item"><a class="page-link" th:if="${hasNext == true}"
+                                 th:href="@{/item-list(page=${next})}">Next</a></li>
+    </ul>
+</div>
 
 </div> <!-- /container -->
+<!--jQuery-->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 </body>
 </html>

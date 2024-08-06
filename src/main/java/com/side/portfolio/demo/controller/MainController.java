@@ -34,19 +34,14 @@ public class MainController {
     public String main(HttpServletRequest request, Model model) {
         log.info("Main Controller");
 
-        //세션이 없으면 main
         HttpSession session = request.getSession(false);
-        if (session == null) {
+        if (loginService.validateSession(session) == false) {
             return "main";
         }
 
         String types = (String) session.getAttribute("types");
         Long id = (Long) session.getAttribute("id");
         String name = (String) session.getAttribute("name");
-        log.info(types);
-        if (id == null) {
-            return "main";
-        }
 
         model.addAttribute("types", types);
         model.addAttribute("id", id);
@@ -70,9 +65,18 @@ public class MainController {
         if (form.getTypes().equals("team")) {
             Team team = loginService.teamLogin(form.getName(), form.getPw());
             HttpSession session = request.getSession();
+
+            //마스터로 로그인 시, 세션에 types = master
+            if (team.getId().equals(1L)) {
+                session.setAttribute("types", "master");
+            } else {
+                session.setAttribute("types", "team");
+            }
+
+            log.info("teamTypes : " + session.getAttribute("types"));
             log.info("teamId : " + team.getId());
             log.info("teamName : " + team.getName());
-            session.setAttribute("types", "team");
+
             session.setAttribute("id", team.getId());
             session.setAttribute("name", team.getName());
 
