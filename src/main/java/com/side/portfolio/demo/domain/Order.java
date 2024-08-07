@@ -73,7 +73,7 @@ public class Order {
     //==연관관계 편의 메서드 끝==//
 
     //정적 팩토리 메서드
-    public static Order makeOrder(Team team, Delivery delivery, OrderItem... orderItems) {
+    public static Order makeOrder(Team team, Delivery delivery, List<OrderItem> orderItems) {
         Order order = new Order();
         order.setTeam(team);
         order.setDelivery(delivery);

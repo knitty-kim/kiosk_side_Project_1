@@ -43,7 +43,7 @@
             </ul>
         </li>
 
-        <li class="nav-item" th:if="${session.name} == 'Korea'"><a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
+        <li class="nav-item" th:if="${session.types} == 'master'"><a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
 
         <li class="nav-item" th:if="${session.types} != 'seller' and ${session.id != null}">
             <a th:href="@{/seller/seller-list}" class="nav-link">판매자 목록</a></li>
@@ -70,13 +70,14 @@
         <!--        <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>-->
 
       </ul>
-      <!-- ms-auto ; 버튼 오른쪽으로 이동 -->
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item" th:if="${session.id == null}" ><a th:href="@{/login}" class="nav-link">로그인</a></li>
-        <li class="nav-item" th:if="${session.id == null}" ><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
 
-        <li class="nav-item dropdown" th:if="${session.id != null}">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.name}+'님의 Page'"></a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" th:if="${session.id} == null" ><a th:href="@{/login}" class="nav-link">로그인</a></li>
+        <li class="nav-item" th:if="${session.id} == null" ><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
+
+        <li class="nav-item dropdown" th:if="${session.types} == 'team' or ${session.types} == 'master'">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false" th:text="${session.name}+'님의 Page'"></a>
           <div class="dropdown-menu">
             <a th:href="@{/templates/team/orderlist}" class="dropdown-item">나의 주문</a>
             <a th:href="@{/cart-list}" class="dropdown-item">장바구니</a>
@@ -85,9 +86,9 @@
           </div>
         </li>
 
+
         <form th:if="${session.id != null}" class="nav-item" action="/logout" method="post">
-          <button type="submit" class="btn btn-link nav-link">로그아웃</button>
-        </form>
+          <button type="submit" class="btn btn-link nav-link">로그아웃</button></form>
 
         <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>
       </ul>

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,28 +25,30 @@ public class OrderService {
     /**
      * 주문 생성
      * @param teamId
-     * @param itemId
-     * @param count
      * @return
      */
     @Transactional
-    public Long makeOrder(Long teamId, Long itemId, int count) {
+    public Long makeOrder(Long teamId) {
         
-        //팀, 상품, 장바구니 정보 조회
+        //팀, 장바구니 정보 조회
         Team team = teamJpaRepository.findById(teamId).get();
-        Item item = itemJpaRepository.findById(itemId).get();
-//        List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
-        
+        List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
+        //주문상품 생성
+        for (Cart cart : carts) {
+            Item item = itemJpaRepository.findById(cart.getItem().getId()).get();
+            orderItems.add(OrderItem.makeOrderItem(item, cart.getPrice(), cart.getQty()));
+        }
+
         //배송정보 생성
         Delivery delivery = new Delivery();
         delivery.setAddress(team.getAddress());
         delivery.setStatus(DeliveryStatus.PROCESSED);
 
-        //주문상품 생성
-        OrderItem orderItem = OrderItem.makeOrderItem(item, item.getPrice(), count);
-
         //주문 생성
-        Order order = Order.makeOrder(team, delivery, orderItem);
+        Order order = Order.makeOrder(team, delivery, orderItems);
 
         //주문 저장
         orderJpaRepository.save(order);

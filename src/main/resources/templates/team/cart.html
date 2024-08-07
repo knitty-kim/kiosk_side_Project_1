@@ -41,11 +41,22 @@
       <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
         <td><a href="#" th:text="${cart.getItem().id}">상품 ID</a></td>
         <td class="w-25"><a class="text-wrap" href="#" th:text="${cart.getItem().name}">상품명</a></td>
-        <td th:text="${cart.price}">10000</td>
-        <td th:text="${cart.qty}">10</td>
+        <td th:text="${#numbers.formatInteger(cart.price, 1, 'DEFAULT')}">10000</td>
+
+        <!-- TODO 추후 장바구니 내에서 수량변경 가능하도록 수정!-->
+        <td th:text="${#numbers.formatInteger(cart.qty, 1, 'DEFAULT')}">10</td>
+
         <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
-        <td><a href="#"
-               class="btn btn-primary" role="button">제거</a></td>
+        <td><button class="btn btn-primary" type="button" onclick="location.href='team/cart.html'"
+                    th:onclick="|location.href='@{/cart-list/remove/{cartId}(cartId=${cart.id})}'|">제거</button></td>
+      </tr>
+      <tr>
+        <td>합산</td>
+        <td></td>
+        <td th:text="${#numbers.formatInteger(totalPrice, 1, 'DEFAULT')}">합산 가격</td>
+        <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
+        <td></td>
+        <td></td>
       </tr>
       </tbody>
     </table>
@@ -63,13 +74,13 @@
   </div>
 
   <!-- 페이징 바 -->
-<!--  <div class="row" id="pageSection">-->
+<!--  <div class="row" id="pageSection" th:style="${paging == true ? 'display:block' : 'display:none'}">-->
 <!--      <ul class="pagination justify-content-center">-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>-->
+<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/cart-list(page=${prev})}">Prev</a></li>-->
 <!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
-<!--          <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
+<!--          <a class="page-link" th:href="@{/cart-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
 <!--        </li>-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>-->
+<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/cart-list(page=${next})}">Next</a></li>-->
 <!--      </ul>-->
 <!--  </div>-->
 

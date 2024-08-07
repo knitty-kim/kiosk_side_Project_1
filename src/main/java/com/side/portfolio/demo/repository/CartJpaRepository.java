@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface CartJpaRepository extends JpaRepository<Cart, Long> {
 
     Page<Cart> findByTeam_Id(Long teamId, Pageable pageable);
+    List<Cart> findByTeam_Id(Long teamId);
+    List<Cart> findByTeam_IdAndItem_Id(Long teamId, Long itemId);
 }

@@ -34,18 +34,18 @@ public class MainController {
     public String main(HttpServletRequest request, Model model) {
         log.info("Main Controller");
 
-        HttpSession session = request.getSession(false);
-        if (loginService.validateSession(session) == false) {
-            return "main";
-        }
-
-        String types = (String) session.getAttribute("types");
-        Long id = (Long) session.getAttribute("id");
-        String name = (String) session.getAttribute("name");
-
-        model.addAttribute("types", types);
-        model.addAttribute("id", id);
-        model.addAttribute("name", name);
+//        HttpSession session = request.getSession(false);
+//        if (loginService.validateSession(session) == false) {
+//            return "main";
+//        }
+//
+//        String types = (String) session.getAttribute("types");
+//        Long id = (Long) session.getAttribute("id");
+//        String name = (String) session.getAttribute("name");
+//
+//        model.addAttribute("types", types);
+//        model.addAttribute("id", id);
+//        model.addAttribute("name", name);
 
         return "main";
     }

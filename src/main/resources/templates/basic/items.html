@@ -14,19 +14,20 @@
                 $("#" + id).addClass("is-invalid");
                 $("#" + id).focus();
             } else {
-
+                $("#" + id).removeClass("is-invalid");
             }
         }
 
         //담기 버튼, 유효성 검사
         function toCart(button) {
             if ($('input.is-invalid').length > 0) {
-                alert("유효하지 않은 값이 있습니다!");
+                alert("check invalid value!");
                 return;
+
             } else {
                 let parentTr = $(button).closest('tr');
                 let qtyId = 'inputCnt' + parentTr.find('td:eq(0)').text();
-                console.log(qtyId);
+
                 let data = {
                     teamId : $("#sessionId").val(),
                     itemId : parentTr.find('td:eq(0)').text(),
@@ -35,12 +36,19 @@
                 }
 
                 $.ajax({
-                    url: '/cart-list',
+                    url: '/cart-list/createCart',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(response) {
-                        window.location.href = '/cart-list';
+
+                        if (response[0] == true) {
+                            window.location.href = '/item-list';
+                            //TODO 나중에 장바구니로 이동할건지 물어보고 이동!
+                            // window.location.href = '/cart-list';
+                        } else {
+                            alert(response[1]);
+                        }
 
                     },
                     error: function(error) {
@@ -55,7 +63,7 @@
     </script>
 </head>
 <body>
-<div class="container" style="max-width: 900px">
+<div class="container-fluid">
     <div class="py-5 text-center">
         <h2>상품 목록</h2>
     </div>
@@ -63,11 +71,11 @@
         <div class="col">
             <div class="float-end">
                 <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-                <button class="btn btn-primary" onclick="location.href='addItem.html'"
-                        th:if="${session.types == 'master'}"
+                <button class="btn btn-primary" th:if="${session.types == 'master'}"
                         th:onclick="|location.href='@{/item-list/add}'|"
                         type="button">상품 등록</button>
-                <button class="btn btn-primary" th:onclick="|location.href='@{/cart-list}'|"
+                <button class="btn btn-primary"
+                        th:onclick="|location.href='@{/cart-list}'|"
                         type="button">장바구니</button>
             </div>
         </div>
@@ -99,12 +107,15 @@
                 <td class="fw-bolder"
                     th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
                     th:text="${item.status}">상태/td>
-                <td class="input-group" th:if="${session.types == 'team'}">
-                    <input type="number" class="form-control" onchange="countCheck(this.id)" th:id="inputCnt+${item.id}"
+
+                <td class="input-group" th:if="${session.types != 'seller'}">
+                    <input type="number" class="form-control" onchange="countCheck(this.id)"
+                           th:id="inputCnt+${item.id}"
                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
                     <div class="invalid-tooltip">수량은 0 이하일 수 없습니다</div>
                     <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
                             th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button></td>
+
                 <td><a th:if="${session.types == 'master'}" th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
                        class="btn btn-primary" role="button">수정</a></td>
             </tr>

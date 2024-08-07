@@ -28,10 +28,31 @@ public class CartService {
         return cartJpaRepository.findAll();
     }
 
-    //팀 ID로 조회한 장바구니 정보
+    //팀 ID로 장바구니 조회 + 페이징
     public Page<Cart> findByTeamId(Long teamId, Pageable pageable) {
         Page<Cart> carts = cartJpaRepository.findByTeam_Id(teamId, pageable);
         return carts;
+    }
+
+    public List<Cart> findByTeamId(Long teamId) {
+        List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
+        return carts;
+    }
+
+    //상품이 이미 담겼는지 확인
+    public Boolean isInCart(Long teamId, Long ItemId) {
+        List<Cart> carts = cartJpaRepository.findByTeam_IdAndItem_Id(teamId, ItemId);
+        if (carts.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Transactional
+
+    public void remove(Long cartId) {
+        cartJpaRepository.deleteById(cartId);
     }
 
 }
