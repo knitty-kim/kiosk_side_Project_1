@@ -43,7 +43,7 @@
             </ul>
         </li>
 
-        <li class="nav-item" th:if="${session.types} == 'master'"><a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
+        <li class="nav-item" th:if="${session.types} == 'master'"><a th:href="@{/templates/pay/team-list}" class="nav-link">팀 목록</a></li>
 
         <li class="nav-item" th:if="${session.types} != 'seller' and ${session.id != null}">
             <a th:href="@{/seller/seller-list}" class="nav-link">판매자 목록</a></li>
@@ -79,10 +79,10 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false" th:text="${session.name}+'님의 Page'"></a>
           <div class="dropdown-menu">
-            <a th:href="@{/templates/team/orderlist}" class="dropdown-item">나의 주문</a>
+            <a th:href="@{/templates/pay/orderlist}" class="dropdown-item">나의 주문</a>
             <a th:href="@{/cart-list}" class="dropdown-item">장바구니</a>
-            <a th:href="@{/templates/team/qnalist}" class="dropdown-item" >나의 문의</a>
-            <a th:href="@{/templates/team/signout}" class="dropdown-item">회원 탈퇴</a>
+            <a th:href="@{/templates/basic/qnalist}" class="dropdown-item" >나의 문의</a>
+            <a th:href="@{/templates/basic/signout}" class="dropdown-item">회원 탈퇴</a>
           </div>
         </li>
 

@@ -7,6 +7,14 @@
     function redirectionHome() {
       window.location.href = '/';
     }
+
+    function assureOrder() {
+      if (confirm("정말 주문하시겠습니까?")) {
+        location.href = '/order';
+      } else {
+        return false;
+      }
+    }
   </script>
 </head>
 <body>
@@ -47,7 +55,7 @@
         <td th:text="${#numbers.formatInteger(cart.qty, 1, 'DEFAULT')}">10</td>
 
         <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
-        <td><button class="btn btn-primary" type="button" onclick="location.href='team/cart.html'"
+        <td><button class="btn btn-primary" type="button"
                     th:onclick="|location.href='@{/cart-list/remove/{cartId}(cartId=${cart.id})}'|">제거</button></td>
       </tr>
       <tr>
@@ -65,7 +73,7 @@
   <div class="row mb-3">
     <div class="col">
       <div class="float-end">
-        <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">주문</button>
+        <button class="btn btn-secondary me-2" onclick="assureOrder()" type="button">주문</button>
         <!--        <button class="btn btn-primary"-->
         <!--                onclick="location.href='addItem.html'"-->
         <!--                th:onclick="|location.href='@{/item-list/add}'|" type="button">상품 등록</button>-->

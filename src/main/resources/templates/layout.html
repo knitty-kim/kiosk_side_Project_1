@@ -104,16 +104,16 @@
           <li class="nav-item dropdown" th:if="${session.custKey != null}">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.username}+'님의 Page'"></a>
             <div class="dropdown-menu">
-              <a th:href="@{/templates/team/custcheckform}" class="dropdown-item" >비밀번호 변경</a>
-              <a th:href="@{/templates/team/orderlist}" class="dropdown-item">나의 주문</a>
+              <a th:href="@{/templates/pay/custcheckform}" class="dropdown-item" >비밀번호 변경</a>
+              <a th:href="@{/templates/pay/orderlist}" class="dropdown-item">나의 주문</a>
               <a th:href="@{/wish/list}" class="dropdown-item" >찜 내역보기</a>
               <a th:href="@{/board/reviewlist}" class="dropdown-item" >나의 후기</a>
               <a th:href="@{/board/qnalist}" class="dropdown-item" >나의 문의</a>
-              <a th:href="@{/templates/team/signoutForm}" class="dropdown-item">회원 탈퇴</a>
+              <a th:href="@{/templates/pay/signoutForm}" class="dropdown-item">회원 탈퇴</a>
             </div>
           </li>
 
-          <li class="nav-item" th:if="${session.custKey != null}" ><a th:href="@{/templates/team/logout}" class="nav-link" >로그아웃</a></li>
+          <li class="nav-item" th:if="${session.custKey != null}" ><a th:href="@{/templates/pay/logout}" class="nav-link" >로그아웃</a></li>
 
 
           <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>

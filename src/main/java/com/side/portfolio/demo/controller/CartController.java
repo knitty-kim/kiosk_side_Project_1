@@ -72,7 +72,6 @@ public class CartController {
 //            model.addAttribute("curPage", carts.getNumber());
 
             List<Cart> carts = cartService.findByTeamId(teamId);
-
             model.addAttribute("carts", carts);
 
             Integer totalPrice = carts
@@ -90,7 +89,7 @@ public class CartController {
             model.addAttribute("totalQty", totalQty);
 
         }
-        return "team/cart";
+        return "pay/cart";
     }
 
     //장바구니에 상품 담기

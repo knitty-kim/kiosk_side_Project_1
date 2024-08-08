@@ -106,8 +106,17 @@ public class Order {
     public int getTotalPrice() {
         int totalPrice = 0;
         for (OrderItem orderItem : orderItems) {
-            totalPrice += orderItem.getTotalPrice();
+            totalPrice += orderItem.getFinalPrice();
         }
         return totalPrice;
+    }
+
+    //주문 전체 수량 조회
+    public int getTotalQty() {
+        int totalQty = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalQty += orderItem.getCount();
+        }
+        return totalQty;
     }
 }

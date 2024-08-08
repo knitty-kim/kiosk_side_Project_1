@@ -1,10 +1,7 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
-import com.side.portfolio.demo.repository.CartJpaRepository;
-import com.side.portfolio.demo.repository.ItemJpaRepository;
-import com.side.portfolio.demo.repository.OrderJpaRepository;
-import com.side.portfolio.demo.repository.TeamJpaRepository;
+import com.side.portfolio.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,7 @@ import java.util.List;
 public class OrderService {
 
     private final OrderJpaRepository orderJpaRepository;
-    private final ItemJpaRepository itemJpaRepository;
+    private final OrderItemJpaRepository orderItemJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
     private final CartJpaRepository cartJpaRepository;
 
@@ -33,12 +30,14 @@ public class OrderService {
         //팀, 장바구니 정보 조회
         Team team = teamJpaRepository.findById(teamId).get();
         List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
-        List<OrderItem> orderItems = new ArrayList<>();
 
         //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
+
         //주문상품 생성
+        List<OrderItem> orderItems = new ArrayList<>();
         for (Cart cart : carts) {
-            Item item = itemJpaRepository.findById(cart.getItem().getId()).get();
+//            Item item = itemJpaRepository.findById(cart.getItem().getId()).get();
+            Item item = cart.getItem();
             orderItems.add(OrderItem.makeOrderItem(item, cart.getPrice(), cart.getQty()));
         }
 
@@ -52,6 +51,7 @@ public class OrderService {
 
         //주문 저장
         orderJpaRepository.save(order);
+
         return order.getId();
     }
 
@@ -64,4 +64,17 @@ public class OrderService {
         Order order = orderJpaRepository.findById(orderId).get();
         order.cancelOrder();
     }
+
+    public Order findByOrderId(Long orderId) {
+        Order order = orderJpaRepository.findById(orderId).get();
+        return order;
+    }
+
+    //주문 ID로 주문 상품 조회
+    public List<OrderItem> findOrderItemByOrderId(Long orderId) {
+        List<OrderItem> orderItems = orderItemJpaRepository.findByOrder_Id(orderId);
+        return orderItems;
+    }
+
+
 }
