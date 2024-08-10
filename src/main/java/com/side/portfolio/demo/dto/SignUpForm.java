@@ -12,8 +12,8 @@ public class SignUpForm {
 
     /**
      * 커맨드 객체(Command Object)
-     * 쉽게 말해 "VO 또는 DTO" 와 같다
-     * 즉, Getter, Setter 필수
+     * "VO 또는 DTO" 와 같다
+     * Getter, Setter 필수
      *
      * xxForm과 같은 작명법은 화면단에서 서버로 넘어온
      * Form 객체임을 명확히 할 수 있다!
@@ -33,6 +33,12 @@ public class SignUpForm {
     @NotBlank(message = "메일은 필수입니다")
     private String email;
 
-    @NotBlank(message = "주소는 필수입니다")
-    private String address;
+    @NotBlank(message = "City는 필수입니다")
+    private String city;
+
+    @NotBlank(message = "Street은 필수입니다")
+    private String street;
+
+    @NotBlank(message = "Zipcode는 필수입니다")
+    private String zipcode;
 }

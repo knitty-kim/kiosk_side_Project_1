@@ -27,10 +27,6 @@ public class Order {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -44,13 +40,10 @@ public class Order {
         team.getOrders().add(this);
     }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-        seller.getOrders().add(this);
-    }
-
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
+        orderItem.setCreatedDate(LocalDateTime.now());
+        orderItem.setModifiedDate(LocalDateTime.now());
         orderItem.setOrder(this);
     }
 
@@ -77,11 +70,14 @@ public class Order {
         Order order = new Order();
         order.setTeam(team);
         order.setDelivery(delivery);
+
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }
+
         order.setStatus(OrderStatus.ORDERED);
         order.setCreatedDate(LocalDateTime.now());
+        order.setModifiedDate(LocalDateTime.now());
 
         return order;
     }
@@ -103,8 +99,8 @@ public class Order {
     }
 
     //주문 전체 가격 조회
-    public int getTotalPrice() {
-        int totalPrice = 0;
+    public float getTotalPrice() {
+        float totalPrice = 0;
         for (OrderItem orderItem : orderItems) {
             totalPrice += orderItem.getFinalPrice();
         }

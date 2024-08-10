@@ -74,10 +74,10 @@ public class CartController {
             List<Cart> carts = cartService.findByTeamId(teamId);
             model.addAttribute("carts", carts);
 
-            Integer totalPrice = carts
+            Float totalPrice = carts
                     .stream()
                     .map(Cart::getPrice)
-                    .reduce(0, Integer::sum);
+                    .reduce((float) 0, Float::sum);
 
             Integer totalQty = carts
                     .stream()
@@ -107,7 +107,7 @@ public class CartController {
             Cart cart = Cart.builder()
                     .team(teamService.findById(form.getTeamId()))
                     .item(itemService.findById(form.getItemId()))
-                    .price(form.getPrice() * form.getQty())
+                    .price(Float.valueOf(form.getPrice()) * form.getQty())
                     .qty(form.getQty())
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())

@@ -9,7 +9,7 @@ public class ItemForm {
 
     private Long id;
     private String name;
-    private int price;
+    private float price;
     private int qty;
     private ItemStatus status;
     private Long sellerId;

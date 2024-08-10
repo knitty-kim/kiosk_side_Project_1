@@ -9,5 +9,5 @@ public class CartForm {
     private Long teamId;
     private Long itemId;
     private int qty;
-    private int price;
+    private float price;
 }

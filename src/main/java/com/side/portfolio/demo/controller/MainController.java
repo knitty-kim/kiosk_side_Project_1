@@ -1,9 +1,6 @@
 package com.side.portfolio.demo.controller;
 
-import com.side.portfolio.demo.domain.Seller;
-import com.side.portfolio.demo.domain.SellerStatus;
-import com.side.portfolio.demo.domain.Team;
-import com.side.portfolio.demo.domain.TeamStatus;
+import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.dto.LogInForm;
 import com.side.portfolio.demo.dto.SignUpForm;
 import com.side.portfolio.demo.service.LoginService;
@@ -116,6 +113,8 @@ public class MainController {
         //@Validated ; 스프링 검증 어노테이션
         if (form.getTypes().equals("team")) {
 
+            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+
             Team team = Team.builder()
                     .name(form.getName())
                     .pw(form.getPw())
@@ -124,8 +123,7 @@ public class MainController {
                     .status(TeamStatus.DORMANT)
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
-            //TODO 임시 address -> remark
-                    .remark(form.getAddress())
+                    .address(address)
                     .build();
 
             teamService.signUp(team);
@@ -133,6 +131,8 @@ public class MainController {
             return "redirect:/";
 
         } else if (form.getTypes().equals("seller")) {
+
+            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
 
             Seller seller = Seller.builder()
                     .name(form.getName())
@@ -142,8 +142,7 @@ public class MainController {
                     .status(SellerStatus.DORMANT)
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
-            //TODO 임시 address -> remark
-                    .remark(form.getAddress())
+                    .address(address)
                     .build();
 
             sellerService.signUp(seller);

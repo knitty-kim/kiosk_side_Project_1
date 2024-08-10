@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Service
@@ -18,12 +20,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ItemService {
 
-    private final ItemRepository itemRepository;
     private final ItemJpaRepository itemJpaRepository;
 
     @Transactional
     public void save(Item item) {
-        itemRepository.save(item);
+        itemJpaRepository.save(item);
     }
 
     public List<Item> findAll() {
@@ -45,12 +46,13 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, String name, int price, int qty, ItemStatus status, Seller seller) {
-        Item item = itemRepository.find(id);
+    public void updateItem(Long itemId, String name, float price, int qty, ItemStatus status, Seller seller) {
+        Item item = itemJpaRepository.findById(itemId).get();
         item.updateName(name);
         item.updatePrice(price);
         item.updateQty(qty);
         item.updateStatus(status);
         item.updateSeller(seller);
     }
+
 }

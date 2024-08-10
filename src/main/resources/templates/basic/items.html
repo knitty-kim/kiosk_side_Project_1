@@ -101,8 +101,8 @@
                 <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
                 <td class="w-25"><a class="text-wrap" th:href="@{items/{itemId}/edit(itemId=${item.id})}"
                                     th:text="${item.name}">상품명</a></td>
-                <td th:number="${item.price}">10000</td>
-                <td th:number="${item.qty}">10</td>
+                <td th:text="${item.price}">10</td>
+                <td th:text="${item.qty}">10</td>
                 <td th:text="${item.seller.name}">판매자</td>
                 <td class="fw-bolder"
                     th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"

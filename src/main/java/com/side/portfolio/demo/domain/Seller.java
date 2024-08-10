@@ -38,8 +38,8 @@ public class Seller {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "seller")
-    private List<Order> orders = new ArrayList<>();
+//    @OneToMany(mappedBy = "seller")
+//    private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "seller")
     private List<Item> items = new ArrayList<>();

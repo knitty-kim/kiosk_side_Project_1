@@ -52,7 +52,7 @@ public class OrderController {
             List<OrderItem> orderItems = order.getOrderItems();
 
             //주문 총 가격
-            int totalPrice = order.getTotalPrice();
+            float totalPrice = order.getTotalPrice();
             //주문 총 수량
             int totalQty = order.getTotalQty();
 

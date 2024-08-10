@@ -22,19 +22,18 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private int orderPrice;
+    private float orderPrice;
     private int count;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
     //정적 팩토리 메서드
-    public static OrderItem makeOrderItem(Item item, int orderPrice, int count) {
+    public static OrderItem makeOrderItem(Item item, float orderPrice, int count) {
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
         orderItem.setOrderPrice(orderPrice);
         orderItem.setCount(count);
-        item.minusQty(count);
         return orderItem;
     }
 
@@ -46,7 +45,7 @@ public class OrderItem {
 
     //조회 메서드
     //주문상품 전체 가격 조회
-    public int getFinalPrice() {
+    public float getFinalPrice() {
         return getOrderPrice() * getCount();
     }
 }

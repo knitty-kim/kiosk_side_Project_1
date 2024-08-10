@@ -32,24 +32,28 @@
       <tr>
         <th>ID</th>
         <th>상품명</th>
-        <th>가격</th>
+        <th>총 가격</th>
         <th>수량</th>
         <th>판매자</th>
-<!--        <th>상태</th>-->
-<!--        <th></th>-->
+        <th></th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="orderItem : ${orderItems}">
         <td><a href="#" th:text="${orderItem.id}">상품 ID</a></td>
         <td class="w-25"><a class="text-wrap" href="#" th:text="${orderItem.getItem().name}">상품명</a></td>
-        <td th:text="${orderItem.getOrderPrice()}">10000</td>
-        <td th:text="${orderItem.getCount()}">10</td>
+        <td th:text="${#numbers.formatDecimal(orderItem.getOrderPrice(), 1, 2)}">10000</td>
+        <td th:text="${#numbers.formatInteger(orderItem.getCount(), 1, 'DEFAULT')}">10</td>
         <td th:text="${orderItem.getItem().getSeller().name}">판매자</td>
-<!--        <td class="fw-bolder" th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"-->
-<!--            th:text="${item.status}">상태</td>-->
-<!--        <td><a th:href="@{/items/{itemId}/edit(itemId=${item.id})}"-->
-<!--               class="btn btn-primary" role="button">수정</a></td>-->
+        <td></td>
+      </tr>
+      <tr>
+        <td>합산</td>
+        <td></td>
+        <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
+        <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
+        <td></td>
+        <td></td>
       </tr>
       </tbody>
     </table>

@@ -1,10 +1,8 @@
 package com.side.portfolio.demo.domain;
 
 import com.side.portfolio.demo.exception.NotEnoughStockException;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
@@ -24,7 +23,7 @@ public class Item {
     private String name;
 
     @Column(name = "item_price")
-    private int price;
+    private float price;
 
     @Column(name = "item_qty")
     private int qty;
@@ -67,7 +66,7 @@ public class Item {
     /**
      * 가격 변경
      */
-    public void updatePrice(int price) {
+    public void updatePrice(float price) {
         if (price < 0) {
             throw new IllegalArgumentException("price can't be under ZERO");
         }
@@ -90,6 +89,7 @@ public class Item {
      */
     public void plusQty(int qty) {
         this.qty += qty;
+        this.modifiedDate = LocalDateTime.now();
     }
 
     /**
@@ -102,6 +102,7 @@ public class Item {
             throw new NotEnoughStockException("can't subtract Quantity below ZERO");
         }
         this.qty = tempQty;
+        this.modifiedDate = LocalDateTime.now();
     }
     
     /**
@@ -121,7 +122,7 @@ public class Item {
     }
 
     @Builder
-    public Item(String name, int price, int qty, ItemStatus status, String remark,
+    public Item(String name, float price, int qty, ItemStatus status, String remark,
                 String img1, String img2, LocalDateTime createdDate, LocalDateTime modifiedDate,
                 Seller seller, List<OrderItem> orderItems) {
         this.name = name;

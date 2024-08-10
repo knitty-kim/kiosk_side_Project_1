@@ -49,7 +49,7 @@
       <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
         <td><a href="#" th:text="${cart.getItem().id}">상품 ID</a></td>
         <td class="w-25"><a class="text-wrap" href="#" th:text="${cart.getItem().name}">상품명</a></td>
-        <td th:text="${#numbers.formatInteger(cart.price, 1, 'DEFAULT')}">10000</td>
+        <td th:text="${#numbers.formatDecimal(cart.price, 1, 2)}">10000</td>
 
         <!-- TODO 추후 장바구니 내에서 수량변경 가능하도록 수정!-->
         <td th:text="${#numbers.formatInteger(cart.qty, 1, 'DEFAULT')}">10</td>
@@ -61,7 +61,7 @@
       <tr>
         <td>합산</td>
         <td></td>
-        <td th:text="${#numbers.formatInteger(totalPrice, 1, 'DEFAULT')}">합산 가격</td>
+        <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
         <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
         <td></td>
         <td></td>

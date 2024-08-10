@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class OrderService {
     private final OrderItemJpaRepository orderItemJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
     private final CartJpaRepository cartJpaRepository;
+    private final ItemJpaRepository itemJpaRepository;
 
     /**
      * 주문 생성
@@ -33,11 +35,17 @@ public class OrderService {
 
         //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
 
-        //주문상품 생성
         List<OrderItem> orderItems = new ArrayList<>();
         for (Cart cart : carts) {
-//            Item item = itemJpaRepository.findById(cart.getItem().getId()).get();
-            Item item = cart.getItem();
+
+            //상품 정보 조회
+            Long itemId = cart.getItem().getId();
+            Item item = itemJpaRepository.findById(itemId).get();
+
+            //상품 재고 변경
+            item.minusQty(cart.getQty());
+
+            //주문 상품 생성
             orderItems.add(OrderItem.makeOrderItem(item, cart.getPrice(), cart.getQty()));
         }
 
