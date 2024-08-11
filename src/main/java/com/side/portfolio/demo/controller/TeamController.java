@@ -23,7 +23,7 @@ public class TeamController {
     public String teamList(Model model,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        Page<Team> teams = teamService.findByPagination(pageable);
+        Page<Team> teams = teamService.findAll(pageable);
         model.addAttribute("teams", teams);
 
         model.addAttribute("prev", teams.getPageable().previousOrFirst().getPageNumber());

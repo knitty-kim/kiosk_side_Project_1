@@ -1,8 +1,8 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Member;
-import com.side.portfolio.demo.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.side.portfolio.demo.repository.MemberJpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,25 +10,17 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class MemberService {
 
-    //컴파일 시, 세팅 강제하도록 final
-    private final MemberRepository memberRepository;
-
-    //@RequiredArgsConstructor 로 대체 가능
-    @Autowired//<- 생략 가능
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
+    private final MemberJpaRepository memberJpaRepository;
 
     /**
      * 회원가입
      */
-    @Transactional(readOnly = false)
-    public Long signUp(Member member) {
-        validateMember(member);
-        return memberRepository.save(member);
+    @Transactional
+    public void signUp(Member member) {
+        memberJpaRepository.save(member);
     }
 
     /**
@@ -38,23 +30,25 @@ public class MemberService {
      * @param member
      */
     private void validateMember(Member member) {
-        List<Member> byPhNumber = memberRepository.findByPhNumber(member.getPhNumber());
+        List<Member> byPhNumber = memberJpaRepository.findByPhNumber(member.getPhNumber());
         if (!byPhNumber.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다");
         }
     }
 
-    /**
-     * 전체 회원 조회
-     */
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
+    public List<Member> findAll() {
+        return memberJpaRepository.findAll();
     }
 
-    /**
-     * 한 회원 조회
-     */
-    public Member findMember(Long memberId) {
-        return memberRepository.find(memberId);
+    public Member findById(Long memberId) {
+        return memberJpaRepository.findById(memberId).get();
+    }
+
+    public List<Member> findByName(String name) {
+        return memberJpaRepository.findByName(name);
+    }
+
+    public List<Member> findByPhNumber(String phNumber) {
+        return memberJpaRepository.findByPhNumber(phNumber);
     }
 }

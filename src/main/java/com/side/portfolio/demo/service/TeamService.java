@@ -1,8 +1,6 @@
 package com.side.portfolio.demo.service;
 
-import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.Team;
-import com.side.portfolio.demo.repository.ItemJpaRepository;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
 import com.side.portfolio.demo.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,20 +42,13 @@ public class TeamService {
         }
     }
 
-    /**
-     * 전체 팀 조회
-     * @return
-     */
+    //팀 전체 조회
     public List<Team> findAll() {
         return teamJpaRepository.findAll();
     }
 
-    /**
-     * 팀 페이지네이션
-     * @param pageable
-     * @return
-     */
-    public Page<Team> findByPagination(Pageable pageable) {
+    //팀 전체 페이징 조회
+    public Page<Team> findAll(Pageable pageable) {
         Page<Team> result = teamJpaRepository.findAll(pageable);
         return result;
     }

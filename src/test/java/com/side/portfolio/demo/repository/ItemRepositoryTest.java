@@ -20,9 +20,6 @@ public class ItemRepositoryTest {
     EntityManager em;
 
     @Autowired
-    ItemRepository itemRepository;
-
-    @Autowired
     ItemJpaRepository itemJpaRepository;
 
     @Test

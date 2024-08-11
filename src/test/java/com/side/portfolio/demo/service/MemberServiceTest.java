@@ -1,22 +1,21 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Member;
-import com.side.portfolio.demo.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-//@Rollback(value = false)
 class MemberServiceTest {
 
     @Autowired MemberService memberService;
-    @Autowired MemberRepository memberRepository;
 
     @Test
     @DisplayName("회원가입")
@@ -27,10 +26,12 @@ class MemberServiceTest {
         member.setName("Robert");
 
         //When
-        Long savedId = memberService.signUp(member);
+        memberService.signUp(member);
+        List<Member> members = memberService.findByName(member.getName());
 
         //Then
-        assertEquals(member, memberRepository.find(savedId));
+        assertFalse(members.isEmpty());
+        assertEquals(member, members.get(0));
 
     }
     

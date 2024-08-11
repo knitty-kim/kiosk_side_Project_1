@@ -4,13 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
 public class OrderItem {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "order_item_id")
     private Long id;
 
@@ -22,30 +24,50 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private float orderPrice;
+    private BigDecimal orderPrice;
     private int count;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    //정적 팩토리 메서드
-    public static OrderItem makeOrderItem(Item item, float orderPrice, int count) {
+    //주문상품 생성
+    public static OrderItem createOrderItem(Item item, BigDecimal orderPrice, int count) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item);
-        orderItem.setOrderPrice(orderPrice);
-        orderItem.setCount(count);
+        orderItem.setUpItem(item);
+        orderItem.setUpOrderPrice(orderPrice);
+        orderItem.setUpCount(count);
         return orderItem;
     }
 
-    //비즈니스 로직 메서드
     //주문상품 취소
     public void cancelOrderItem() {
-        getItem().plusQty(count);
+        getItem().addQty(count);
     }
 
-    //조회 메서드
-    //주문상품 전체 가격 조회
-    public float getFinalPrice() {
-        return getOrderPrice() * getCount();
+    //==변경 메서드 시작==//
+    public void setUpOrder(Order order) {
+        this.order = order;
     }
+
+    public void setUpItem(Item item) {
+        this.item = item;
+    }
+
+    public void setUpOrderPrice(BigDecimal orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public void setUpCount(int count) {
+        this.count = count;
+    }
+
+    public void setUpCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setUpModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    //==변경 메서드 끝==//
+
 }

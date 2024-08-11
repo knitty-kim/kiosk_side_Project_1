@@ -3,6 +3,7 @@ package com.side.portfolio.demo.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,13 +27,13 @@ public class Cart {
     private int qty;
 
     @Column(name = "cart_price")
-    private float price;
+    private BigDecimal price;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
     //정적 팩토리 메서드
-    public static Cart makeCart(Item item, float itemPrice, int qty) {
+    public static Cart makeCart(Item item, BigDecimal itemPrice, int qty) {
         Cart cart = new Cart();
         cart.setItem(item);
         cart.setPrice(itemPrice);
@@ -41,7 +42,7 @@ public class Cart {
     }
 
     @Builder
-    public Cart(Team team, Item item, float price, int qty,
+    public Cart(Team team, Item item, BigDecimal price, int qty,
                 LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.team = team;
         this.item = item;

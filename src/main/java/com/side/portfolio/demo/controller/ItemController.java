@@ -56,7 +56,7 @@ public class ItemController {
      * @param model
      * @return
      */
-    @GetMapping("/item-list/add")
+    @GetMapping("/items/add")
     public String createItemForm(Model model) {
 
         model.addAttribute("itemStatuses", ItemStatus.values());
@@ -70,7 +70,7 @@ public class ItemController {
      * @param form
      * @return
      */
-    @PostMapping("/item-list/add")
+    @PostMapping("/items/add")
     public String createItem(ItemForm form) {
         Item item = Item.builder()
                 .name(form.getName())
@@ -79,10 +79,10 @@ public class ItemController {
                 .status(form.getStatus())
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
-                .seller(sellerService.find(form.getSellerId()))
+                .seller(sellerService.findById(form.getSellerId()))
                 .build();
 
-        itemService.save(item);
+        itemService.createItem(item);
 
         return "redirect:/item-list";
     }
@@ -90,7 +90,7 @@ public class ItemController {
     /**
      * 상품 수정 폼
      */
-    @GetMapping("/items/{itemId}/edit")
+    @GetMapping("/items/edit/{itemId}")
     public String updateItemForm(@PathVariable Long itemId, Model model) {
         Item item = itemService.findById(itemId);
         ItemForm form = new ItemForm();
@@ -114,10 +114,10 @@ public class ItemController {
      * @param itemForm
      * @return
      */
-    @PostMapping("/items/{itemId}/edit")
+    @PostMapping("/items/edit/{itemId}")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemForm itemForm) {
         itemService.updateItem(itemId, itemForm.getName(), itemForm.getPrice(),
-                itemForm.getQty(), itemForm.getStatus(), sellerService.find(itemForm.getSellerId()));
+                itemForm.getQty(), itemForm.getStatus(), sellerService.findById(itemForm.getSellerId()));
 
         return "redirect:/item-list";
     }

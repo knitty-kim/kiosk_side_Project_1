@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <script>
+    function redirectionHome() {
+      window.location.href = '/';
+    }
+  </script>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="py-5 text-center">
+    <h2>주문 목록</h2>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <div class="float-end">
+        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
+                type="button">홈</button>
+        <button class="btn btn-primary me-1"
+                th:if="${session.types == 'master'}"
+                th:onclick="|location.href='@{/items/add}'|"
+                type="button">상품 등록</button>
+        <button class="btn btn-primary me-1"
+                th:onclick="|location.href='@{/item-list}'|"
+                type="button">상품 목록</button>
+        <button class="btn btn-success"
+                th:onclick="|location.href='@{/order-list}'|"
+                type="button">주문 목록</button>
+        <button class="btn btn-warning"
+                th:onclick="|location.href='@{/cart-list}'|"
+                type="button">장바구니</button>
+      </div>
+    </div>
+  </div>
+  <hr class="my-0">
+  <div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>주문 ID</th>
+        <th>주문일</th>
+        <th>주문 상태</th>
+        <th>결제 금액</th>
+        <th>총 수량</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>Zipcode</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="order : ${orders}">
+        <td><a th:href="@{orders/{orderId}(orderId=${order.getId()})}" th:text="${order.getId()}">주문 ID</a></td>
+        <td th:text="${#temporals.format(order.getCreatedDate, 'yyyy-MM-dd HH:mm')}">주문일</td>
+        <td class="fw-bolder" th:classappend="${order.getStatus().toString() == 'ORDERED'} ? 'text-success' : 'text-secondary'"
+            th:text="${order.getStatus()}">주문 상태</td>
+        <td th:text="${#numbers.formatDecimal(order.calTotalPrice(), 1, 2)}">100000</td>
+        <td th:text="${#numbers.formatInteger(order.calTotalQty(), 1, 'DEFAULT')}">10</td>
+        <td th:text="${order.getDelivery().getAddress().getStreet()}">Street</td>
+        <td th:text="${order.getDelivery().getAddress().getCity()}">City</td>
+        <td th:text="${order.getDelivery().getAddress().getZipcode()}">Zipcode</td>
+        <td><button class="btn btn-primary" type="button"
+                    th:onclick="|location.href='@{orders/{orderId}(orderId=${order.getId()})}'|">자세히</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 페이징 바 -->
+  <div class="row" id="pageSection">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/order-list(page=${prev})}">Prev</a></li>
+        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+          <a class="page-link" th:href="@{/order-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+        </li>
+        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/order-list(page=${next})}">Next</a></li>
+      </ul>
+  </div>
+
+</div> <!-- /container -->
+</body>
+</html>

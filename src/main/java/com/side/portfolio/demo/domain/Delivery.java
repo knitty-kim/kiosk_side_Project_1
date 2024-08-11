@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
 public class Delivery {
 
     @Id @GeneratedValue
@@ -23,4 +23,15 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
+    public void setUpAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setUpOrder(Order order) {
+        this.order = order;
+    }
+
+    public void setUpStatus(DeliveryStatus status) {
+        this.status = status;
+    }
 }

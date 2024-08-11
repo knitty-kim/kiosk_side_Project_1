@@ -16,7 +16,7 @@
     <h2>상품 등록 폼</h2>
   </div>
   <h4 class="mb-3">상품 입력</h4>
-  <form role="form" th:action="@{/item-list/add}" th:object="${itemForm}" method="post">
+  <form role="form" th:action="@{/items/add}" th:object="${itemForm}" method="post">
     <div class="form-group">
       <label th:for="name">상품명</label>
       <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요">
@@ -50,7 +50,6 @@
       </div>
       <div class="col">
         <button class="w-100 btn btn-secondary btn-lg"
-                onclick="location.href='items.html'"
                 th:onclick="|location.href='@{/item-list}'|" type="button">취소</button>
       </div>
     </div>

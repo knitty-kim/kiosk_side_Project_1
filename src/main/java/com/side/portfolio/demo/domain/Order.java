@@ -3,13 +3,14 @@ package com.side.portfolio.demo.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
 @Getter
+@Table(name = "orders")
 public class Order {
 
     @Id @GeneratedValue
@@ -34,55 +35,24 @@ public class Order {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    //==연관관계 편의 메서드==//
-    public void setTeam(Team team) {
-        this.team = team;
-        team.getOrders().add(this);
-    }
-
-    public void addOrderItem(OrderItem orderItem) {
-        orderItems.add(orderItem);
-        orderItem.setCreatedDate(LocalDateTime.now());
-        orderItem.setModifiedDate(LocalDateTime.now());
-        orderItem.setOrder(this);
-    }
-
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        delivery.setOrder(this);
-    }
-
-    public void setStatus(OrderStatus orderStatus) {
-        this.status = orderStatus;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setModifiedDate(LocalDateTime modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-    //==연관관계 편의 메서드 끝==//
-
-    //정적 팩토리 메서드
-    public static Order makeOrder(Team team, Delivery delivery, List<OrderItem> orderItems) {
+    //주문 생성
+    public static Order createOrder(Team team, Delivery delivery, List<OrderItem> orderItems) {
         Order order = new Order();
-        order.setTeam(team);
-        order.setDelivery(delivery);
+        order.setUpTeam(team);
+        order.setUpDelivery(delivery);
 
         for (OrderItem orderItem : orderItems) {
-            order.addOrderItem(orderItem);
+            order.setUpOrderItem(orderItem);
         }
 
-        order.setStatus(OrderStatus.ORDERED);
-        order.setCreatedDate(LocalDateTime.now());
-        order.setModifiedDate(LocalDateTime.now());
+        order.setUpStatus(OrderStatus.ORDERED);
+        order.setUpCreatedDate(LocalDateTime.now());
+        order.setUpModifiedDate(LocalDateTime.now());
 
         return order;
     }
 
-    //주문 취소 메서드
+    //주문 취소
     public void cancelOrder() {
         if (delivery.getStatus() == DeliveryStatus.DELIVERING) {
             throw new IllegalStateException("can't cancel Order : delivery status is DELIVERING");
@@ -92,27 +62,61 @@ public class Order {
             throw new IllegalStateException("can't cancel Order : delivery status is CANCELED");
         }
 
-        this.setStatus(OrderStatus.CANCELED);
+        this.setUpStatus(OrderStatus.CANCELED);
         for (OrderItem orderItem : orderItems) {
             orderItem.cancelOrderItem();
         }
     }
 
-    //주문 전체 가격 조회
-    public float getTotalPrice() {
-        float totalPrice = 0;
+    //주문 전체 가격 계산
+    public BigDecimal calTotalPrice() {
+        BigDecimal totalPrice = new BigDecimal("0");
         for (OrderItem orderItem : orderItems) {
-            totalPrice += orderItem.getFinalPrice();
+            totalPrice = totalPrice.add(orderItem.getOrderPrice());
         }
         return totalPrice;
     }
 
     //주문 전체 수량 조회
-    public int getTotalQty() {
+    public int calTotalQty() {
         int totalQty = 0;
         for (OrderItem orderItem : orderItems) {
             totalQty += orderItem.getCount();
         }
         return totalQty;
     }
+
+    //==연관관계 편의 메서드==//
+    public void setUpTeam(Team team) {
+        this.team = team;
+        team.getOrders().add(this);
+    }
+
+    public void setUpOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setUpCreatedDate(LocalDateTime.now());
+        orderItem.setUpModifiedDate(LocalDateTime.now());
+        orderItem.setUpOrder(this);
+    }
+
+    public void setUpDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setUpOrder(this);
+    }
+    //==연관관계 편의 메서드 끝==//
+
+    //==변경 메서드 시작==//
+    public void setUpStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
+    }
+
+    public void setUpCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setUpModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    //==변경 메서드 끝==//
+
 }

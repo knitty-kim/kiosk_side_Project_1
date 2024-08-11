@@ -6,10 +6,8 @@ import com.side.portfolio.demo.service.CartService;
 import com.side.portfolio.demo.service.ItemService;
 import com.side.portfolio.demo.service.LoginService;
 import com.side.portfolio.demo.service.TeamService;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,12 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -74,10 +70,10 @@ public class CartController {
             List<Cart> carts = cartService.findByTeamId(teamId);
             model.addAttribute("carts", carts);
 
-            Float totalPrice = carts
+            BigDecimal totalPrice = carts
                     .stream()
                     .map(Cart::getPrice)
-                    .reduce((float) 0, Float::sum);
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             Integer totalQty = carts
                     .stream()
@@ -93,7 +89,7 @@ public class CartController {
     }
 
     //장바구니에 상품 담기
-    @PostMapping("/cart-list/createCart")
+    @PostMapping("/carts/add")
     @ResponseBody
     public List<Object> createCart(@RequestBody CartForm form) {
 
@@ -107,7 +103,7 @@ public class CartController {
             Cart cart = Cart.builder()
                     .team(teamService.findById(form.getTeamId()))
                     .item(itemService.findById(form.getItemId()))
-                    .price(Float.valueOf(form.getPrice()) * form.getQty())
+                    .price(form.getPrice().multiply(new BigDecimal(form.getQty())).setScale(2, RoundingMode.CEILING))
                     .qty(form.getQty())
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
@@ -123,10 +119,10 @@ public class CartController {
     }
 
     //장바구니에서 상품 제거
-    @GetMapping("/cart-list/remove/{cartId}")
+    @GetMapping("/carts/remove/{cartId}")
     public String removeCart(@PathVariable Long cartId) {
 
-        cartService.remove(cartId);
+        cartService.deleteById(cartId);
         return "redirect:/cart-list";
     }
 

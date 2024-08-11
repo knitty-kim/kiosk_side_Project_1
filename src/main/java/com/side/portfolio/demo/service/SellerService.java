@@ -1,10 +1,8 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
-import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
 import com.side.portfolio.demo.repository.SellerRepository;
-import com.side.portfolio.demo.repository.TeamJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,35 +17,30 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SellerService {
 
-    private final SellerRepository sellerRepository;
     private final SellerJpaRepository sellerJpaRepository;
 
     /**
      * 판매자 가입
      */
     @Transactional
-    public Long signUp(Seller seller) {
-        validateSeller(seller);
-        return sellerRepository.save(seller);
+    public void signUp(Seller seller) {
+        sellerJpaRepository.save(seller);
     }
 
-    /**
-     * 중복 판매자 검증
-     * @param seller
-     */
+    //판매자 중복 가입 검증
     private void validateSeller(Seller seller) {
-        Optional<Seller> byName = sellerRepository.findByName(seller.getName());
-        if (byName.isPresent()) {
+        List<Seller> sellers = sellerJpaRepository.findByName(seller.getName());
+        if (sellers.size() > 0) {
             throw new IllegalStateException("이미 존재하는 판매자입니다");
         }
     }
 
-    /**
-     * 전체 판매자 조회
-     * @return
-     */
     public List<Seller> findAll() {
         return sellerJpaRepository.findAll();
+    }
+
+    public Seller findById(Long sellerId) {
+        return sellerJpaRepository.findById(sellerId).get();
     }
 
     /**
@@ -60,12 +53,7 @@ public class SellerService {
         return result;
     }
     
-    /**
-     * 판매자 단건 조회
-     * @param sellerId
-     * @return
-     */
-    public Seller find(Long sellerId) {
-        return sellerRepository.find(sellerId);
-    }
+
+
+
 }

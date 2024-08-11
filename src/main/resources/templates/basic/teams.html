@@ -10,7 +10,7 @@
   </script>
 </head>
 <body>
-<div class="container" style="max-width: 1000px">
+<div class="container-fluid">
   <div class="py-5 text-center">
     <h2>팀 목록</h2>
   </div>
@@ -36,7 +36,10 @@
         <th>생성일</th>
         <th>수정일</th>
         <th>상태</th>
-        <th>remark</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>Zipcode</th>
+<!--        <th>비고</th>-->
       </tr>
       </thead>
       <tbody>
@@ -52,7 +55,10 @@
           <td th:text="${#temporals.format(team.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
           <td class="fw-bolder" th:classappend="${team.status.toString() == 'ACTIVE'} ? 'text-success' : 'text-secondary'"
               th:text="${team.status}">상태</td>
-          <td th:text="${team.remark}">비고</td>
+          <td th:text="${team.getAddress().getStreet()}">Street</td>
+          <td th:text="${team.getAddress().getCity()}">City</td>
+          <td th:text="${team.getAddress().getZipcode()}">Zipcode</td>
+<!--          <td th:text="${team.remark}">비고</td>-->
         </tr>
       </tbody>
     </table>

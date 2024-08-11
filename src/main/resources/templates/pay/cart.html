@@ -4,13 +4,21 @@
   <meta charset="utf-8">
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <script>
+    window.onload = function () {
+
+    };
+
     function redirectionHome() {
       window.location.href = '/';
     }
 
     function assureOrder() {
+      if ([[${carts.size <= 0}]]) {
+        alert("1개 이상인 경우에만 주문 가능합니다");
+        return false;
+      }
       if (confirm("정말 주문하시겠습니까?")) {
-        location.href = '/order';
+        location.href = '/orders/add';
       } else {
         return false;
       }
@@ -25,10 +33,20 @@
   <div class="row mb-3">
     <div class="col">
       <div class="float-end">
-        <button class="btn btn-secondary me-2" onclick="redirectionHome()"
+        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                 type="button">홈</button>
-        <button class="btn btn-primary" th:onclick="|location.href='@{/item-list}'|"
+        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+                th:onclick="|location.href='@{/items/add}'|"
+                type="button">상품 등록</button>
+        <button class="btn btn-primary me-1"
+                th:onclick="|location.href='@{/item-list}'|"
                 type="button">상품 목록</button>
+        <button class="btn btn-success"
+                th:onclick="|location.href='@{/order-list}'|"
+                type="button">주문 목록</button>
+        <button class="btn btn-warning"
+                th:onclick="|location.href='@{/cart-list}'|"
+                type="button">장바구니</button>
       </div>
     </div>
   </div>
@@ -56,7 +74,7 @@
 
         <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
         <td><button class="btn btn-primary" type="button"
-                    th:onclick="|location.href='@{/cart-list/remove/{cartId}(cartId=${cart.id})}'|">제거</button></td>
+                    th:onclick="|location.href='@{/carts/remove/{cartId}(cartId=${cart.id})}'|">제거</button></td>
       </tr>
       <tr>
         <td>합산</td>
@@ -74,9 +92,6 @@
     <div class="col">
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="assureOrder()" type="button">주문</button>
-        <!--        <button class="btn btn-primary"-->
-        <!--                onclick="location.href='addItem.html'"-->
-        <!--                th:onclick="|location.href='@{/item-list/add}'|" type="button">상품 등록</button>-->
       </div>
     </div>
   </div>

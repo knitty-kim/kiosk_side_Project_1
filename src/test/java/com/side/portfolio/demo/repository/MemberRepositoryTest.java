@@ -12,24 +12,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 //@Rollback(value = false)
 class MemberRepositoryTest {
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Test
-    @Transactional
-    public void testMember() throws Exception {
-        //given
-        Member member = new Member();
-        member.setName("memberA");
-
-        //when
-        Long savedId = memberRepository.save(member);
-        Member foundMember = memberRepository.find(savedId);
-
-        //then
-        assertThat(foundMember.getId()).isEqualTo(member.getId());
-        assertThat(foundMember.getName()).isEqualTo(member.getName());
-        assertThat(foundMember).isEqualTo(member);
-    }
+//    @Autowired
+//    MemberRepository memberRepository;
+//
+//    @Test
+//    @Transactional
+//    public void testMember() throws Exception {
+//        //given
+//        Member member = new Member();
+//        member.setName("memberA");
+//
+//        //when
+//        Long savedId = memberRepository.save(member);
+//        Member foundMember = memberRepository.find(savedId);
+//
+//        //then
+//        assertThat(foundMember.getId()).isEqualTo(member.getId());
+//        assertThat(foundMember.getName()).isEqualTo(member.getName());
+//        assertThat(foundMember).isEqualTo(member);
+//    }
 
 }

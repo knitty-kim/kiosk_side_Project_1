@@ -1,8 +1,11 @@
 package com.side.portfolio.demo.repository;
 
 import com.side.portfolio.demo.domain.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
 
+    Page<Order> findByTeam_Id(Long teamId, Pageable pageable);
 }

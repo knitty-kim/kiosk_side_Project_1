@@ -10,16 +10,34 @@
   </script>
 </head>
 <body>
-<div class="container" style="max-width: 800px">
+<div class="container" style="max-width: 1000px">
   <div class="py-5 text-center">
     <h2>주문 내역</h2>
   </div>
   <div class="row mb-3">
     <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-2" onclick="redirectionHome()"
+      <div class="float-start d-inline mt-3">
+        <p class="d-inline me-lg-3">
+          주문 ID : <strong class="text-white bg-dark" th:text="${order.getId()}"></strong>
+        </p>
+        <p class="d-inline">
+          배송 상태 : <strong class="text-white bg-dark" th:text="${delivery.getStatus().toString()}"></strong>
+        </p>
+      </div>
+
+      <div class="float-end d-inline">
+        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                 type="button">홈</button>
-        <button class="btn btn-primary"
+        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+                th:onclick="|location.href='@{/items/add}'|"
+                type="button">상품 등록</button>
+        <button class="btn btn-primary me-1"
+                th:onclick="|location.href='@{/item-list}'|"
+                type="button">상품 목록</button>
+        <button class="btn btn-success me-1"
+                th:onclick="|location.href='@{/order-list}'|"
+                type="button">주문 목록</button>
+        <button class="btn btn-warning"
                 th:onclick="|location.href='@{/cart-list}'|"
                 type="button">장바구니</button>
       </div>
@@ -30,7 +48,7 @@
     <table class="table table-striped">
       <thead>
       <tr>
-        <th>ID</th>
+        <th>상품 ID</th>
         <th>상품명</th>
         <th>총 가격</th>
         <th>수량</th>
@@ -40,11 +58,11 @@
       </thead>
       <tbody>
       <tr th:each="orderItem : ${orderItems}">
-        <td><a href="#" th:text="${orderItem.id}">상품 ID</a></td>
-        <td class="w-25"><a class="text-wrap" href="#" th:text="${orderItem.getItem().name}">상품명</a></td>
+        <td><a href="#" th:text="${orderItem.getItem().getId()}">상품 ID</a></td>
+        <td class="w-25"><a class="text-wrap" href="#" th:text="${orderItem.getItem().getName()}">상품명</a></td>
         <td th:text="${#numbers.formatDecimal(orderItem.getOrderPrice(), 1, 2)}">10000</td>
         <td th:text="${#numbers.formatInteger(orderItem.getCount(), 1, 'DEFAULT')}">10</td>
-        <td th:text="${orderItem.getItem().getSeller().name}">판매자</td>
+        <td th:text="${orderItem.getItem().getSeller().getName()}">판매자</td>
         <td></td>
       </tr>
       <tr>
@@ -58,17 +76,6 @@
       </tbody>
     </table>
   </div>
-
-<!--  &lt;!&ndash; 페이징 바 &ndash;&gt;-->
-<!--  <div class="row" id="pageSection">-->
-<!--      <ul class="pagination justify-content-center">-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>-->
-<!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
-<!--          <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
-<!--        </li>-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>-->
-<!--      </ul>-->
-<!--  </div>-->
 
 </div> <!-- /container -->
 </body>

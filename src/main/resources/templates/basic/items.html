@@ -36,15 +36,16 @@
                 }
 
                 $.ajax({
-                    url: '/cart-list/createCart',
+                    url: '/carts/add',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(response) {
 
                         if (response[0] == true) {
-                            window.location.href = '/item-list';
                             //TODO 나중에 장바구니로 이동할건지 물어보고 이동!
+                            //TODO 장바구니 미이동시, 현재 페이지에 머무르도록 수정 필요!
+                            window.location.href = '/item-list';
                             // window.location.href = '/cart-list';
                         } else {
                             alert(response[1]);
@@ -70,11 +71,18 @@
     <div class="row mb-3">
         <div class="col">
             <div class="float-end">
-                <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-                <button class="btn btn-primary" th:if="${session.types == 'master'}"
-                        th:onclick="|location.href='@{/item-list/add}'|"
+                <button class="btn btn-secondary me-1" onclick="redirectionHome()"
+                        type="button">홈</button>
+                <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+                        th:onclick="|location.href='@{/items/add}'|"
                         type="button">상품 등록</button>
-                <button class="btn btn-primary"
+                <button class="btn btn-primary me-1"
+                        th:onclick="|location.href='@{/item-list}'|"
+                        type="button">상품 목록</button>
+                <button class="btn btn-success me-1"
+                        th:onclick="|location.href='@{/order-list}'|"
+                        type="button">주문 목록</button>
+                <button class="btn btn-warning"
                         th:onclick="|location.href='@{/cart-list}'|"
                         type="button">장바구니</button>
             </div>
@@ -86,7 +94,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>상품 ID</th>
                 <th>상품명</th>
                 <th>가격</th>
                 <th>수량</th>
@@ -98,9 +106,12 @@
             </thead>
             <tbody>
             <tr th:each="item : ${items}">
-                <td><a th:href="@{items/{itemId}/edit(itemId=${item.id})}" th:text="${item.id}">상품 ID</a></td>
-                <td class="w-25"><a class="text-wrap" th:href="@{items/{itemId}/edit(itemId=${item.id})}"
-                                    th:text="${item.name}">상품명</a></td>
+                <!--TODO 상품 상세로 url 연결!-->
+                <td><a href="#" th:text="${item.id}">상품 ID</a></td>
+
+                <!--TODO 상품 상세로 url 연결!-->
+                <td class="w-25"><a class="text-wrap" href="#" th:text="${item.name}">상품명</a></td>
+
                 <td th:text="${item.price}">10</td>
                 <td th:text="${item.qty}">10</td>
                 <td th:text="${item.seller.name}">판매자</td>
@@ -108,7 +119,7 @@
                     th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
                     th:text="${item.status}">상태/td>
 
-                <td class="input-group" th:if="${session.types != 'seller'}">
+                <td class="input-group" th:if="${session.types == 'team' or session.types == 'master'}">
                     <input type="number" class="form-control" onchange="countCheck(this.id)"
                            th:id="inputCnt+${item.id}"
                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
@@ -116,8 +127,9 @@
                     <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
                             th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button></td>
 
-                <td><a th:if="${session.types == 'master'}" th:href="@{/items/{itemId}/edit(itemId=${item.id})}"
-                       class="btn btn-primary" role="button">수정</a></td>
+                <td th:if="${session.types == 'master'}">
+                    <a class="btn btn-primary" role="button"
+                       th:href="@{/items/edit/{itemId}(itemId=${item.id})}">수정</a></td>
             </tr>
             </tbody>
         </table>
@@ -126,14 +138,11 @@
 <!-- 페이징 바 -->
 <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}"
-                                 th:href="@{/item-list(page=${prev})}">Prev</a></li>
-        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
-            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>
+        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
             <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
         </li>
-        <li class="page-item"><a class="page-link" th:if="${hasNext == true}"
-                                 th:href="@{/item-list(page=${next})}">Next</a></li>
+        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>
     </ul>
 </div>
 

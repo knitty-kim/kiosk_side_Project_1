@@ -4,15 +4,13 @@ import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.ItemJpaRepository;
-import com.side.portfolio.demo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -23,7 +21,7 @@ public class ItemService {
     private final ItemJpaRepository itemJpaRepository;
 
     @Transactional
-    public void save(Item item) {
+    public void createItem(Item item) {
         itemJpaRepository.save(item);
     }
 
@@ -31,8 +29,8 @@ public class ItemService {
         return itemJpaRepository.findAll();
     }
 
-    public Item findById(Long id) {
-        return itemJpaRepository.findById(id).get();
+    public Item findById(Long itemId) {
+        return itemJpaRepository.findById(itemId).get();
     }
 
     /**
@@ -46,13 +44,13 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long itemId, String name, float price, int qty, ItemStatus status, Seller seller) {
-        Item item = itemJpaRepository.findById(itemId).get();
-        item.updateName(name);
-        item.updatePrice(price);
-        item.updateQty(qty);
-        item.updateStatus(status);
-        item.updateSeller(seller);
+    public void updateItem(Long id, String name, BigDecimal price, int qty, ItemStatus status, Seller seller) {
+        Item item = itemJpaRepository.findById(id).get();
+        item.setUpName(name);
+        item.setUpPrice(price);
+        item.setUpQty(qty);
+        item.setUpStatus(status);
+        item.setUpSeller(seller);
     }
 
 }

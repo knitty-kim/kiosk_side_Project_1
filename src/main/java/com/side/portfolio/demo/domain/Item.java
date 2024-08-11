@@ -2,16 +2,15 @@ package com.side.portfolio.demo.domain;
 
 import com.side.portfolio.demo.exception.NotEnoughStockException;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
@@ -23,7 +22,7 @@ public class Item {
     private String name;
 
     @Column(name = "item_price")
-    private float price;
+    private BigDecimal price;
 
     @Column(name = "item_qty")
     private int qty;
@@ -51,52 +50,38 @@ public class Item {
     @OneToMany(mappedBy = "item")
     private List<Cart> carts = new ArrayList<>();
 
-    //==비즈니스 로직==//
-    //도메인 주도 설계 ; 도메인이 비즈니스 로직의 주도권을 가지는 설계
-    //*** 엔티티 한 곳에서 처리가능하면 엔티티에서 처리
-    //*** 엔티티의 처리 범위를 넘어가면 서비스에서 처리
+    //==연관관계 편의 메서드 시작==//
+    public void setUpSeller(Seller seller) {
+        this.seller = seller;
+        seller.getItems().add(this);
+    }
+    //==연관관계 편의 메서드 끝==//
 
-    /**
-     * 상품명 변경
-     */
-    public void updateName(String name) {
+    //==변경 메서드 시작==//
+    public void setUpName(String name) {
         this.name = name;
     }
 
-    /**
-     * 가격 변경
-     */
-    public void updatePrice(float price) {
-        if (price < 0) {
+    public void setUpPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("price can't be under ZERO");
         }
         this.price = price;
     }
 
-    /**
-     * 수량 변경
-     */
-    public void updateQty(int qty) {
+    public void setUpQty(int qty) {
         if (qty < 0) {
             throw new NotEnoughStockException("quantity can't be below ZERO");
         }
         this.qty = qty;
     }
 
-    /**
-     * 수량 추가
-     * @param qty
-     */
-    public void plusQty(int qty) {
+    public void addQty(int qty) {
         this.qty += qty;
         this.modifiedDate = LocalDateTime.now();
     }
 
-    /**
-     * 수량 감소
-     * @param qty
-     */
-    public void minusQty(int qty) {
+    public void subtractQty(int qty) {
         int tempQty = this.qty - qty;
         if (tempQty < 0) {
             throw new NotEnoughStockException("can't subtract Quantity below ZERO");
@@ -105,24 +90,13 @@ public class Item {
         this.modifiedDate = LocalDateTime.now();
     }
     
-    /**
-     * 상태 변경
-     * @param status
-     */
-    public void updateStatus(ItemStatus status) {
+    public void setUpStatus(ItemStatus status) {
         this.status = status;
     }
-
-    /**
-     * 판매자 변경
-     * @param seller
-     */
-    public void updateSeller(Seller seller) {
-        this.seller = seller;
-    }
+    //==변경 메서드 끝==//
 
     @Builder
-    public Item(String name, float price, int qty, ItemStatus status, String remark,
+    public Item(String name, BigDecimal price, int qty, ItemStatus status, String remark,
                 String img1, String img2, LocalDateTime createdDate, LocalDateTime modifiedDate,
                 Seller seller, List<OrderItem> orderItems) {
         this.name = name;

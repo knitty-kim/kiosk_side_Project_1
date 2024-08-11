@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -32,7 +31,7 @@ class OrderServiceTest {
         Cart cart = Cart.builder()
                 .team(teamService.findById(10L))
                 .item(itemService.findById(2L))
-                .price(10000 * 2)
+                .price(new BigDecimal("10000").multiply(new BigDecimal("2")))
                 .qty(2)
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
@@ -40,16 +39,16 @@ class OrderServiceTest {
         cartService.save(cart);
 
         List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(OrderItem.makeOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));
+        orderItems.add(OrderItem.createOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));
 
         //when
-        Long orderId = orderService.makeOrder(team.getId());
+        Long orderId = orderService.createOrder(team.getId());
         Order foundOrder = orderJpaRepository.findById(orderId).get();
 
         //then
         Assertions.assertEquals(OrderStatus.ORDERED, foundOrder.getStatus());
         Assertions.assertEquals(1, foundOrder.getOrderItems().size());
-        Assertions.assertEquals(40000, foundOrder.getTotalPrice());
+        Assertions.assertEquals(40000, foundOrder.calTotalPrice());
     }
 
     @Test
@@ -60,7 +59,7 @@ class OrderServiceTest {
         Cart cart = Cart.builder()
                 .team(team)
                 .item(itemService.findById(2L))
-                .price(10000 * 2)
+                .price(new BigDecimal("10000").multiply(new BigDecimal("2")))
                 .qty(2)
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
@@ -68,11 +67,11 @@ class OrderServiceTest {
         cartService.save(cart);
 
         List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(OrderItem.makeOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));
+        orderItems.add(OrderItem.createOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));
 
         //when
-        Long orderId = orderService.makeOrder(10L);
-        Order order = orderService.findByOrderId(orderId);
+        Long orderId = orderService.createOrder(10L);
+        Order order = orderService.findById(orderId);
 
         //then
         System.out.println("OrderItem 에서 orderId 로 조회=====================================");
@@ -84,4 +83,5 @@ class OrderServiceTest {
         System.out.println(orderItems2);
         Assertions.assertEquals(orderItems1, orderItems2);
     }
+
 }
