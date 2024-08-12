@@ -32,7 +32,7 @@ public class ItemController {
     public String itemList(Model model,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        Page<Item> items = itemService.findByPagination(pageable);
+        Page<Item> items = itemService.findAll(pageable);
         model.addAttribute("items", items);
 
         model.addAttribute("prev", items.getPageable().previousOrFirst().getPageNumber());
@@ -72,6 +72,7 @@ public class ItemController {
      */
     @PostMapping("/items/add")
     public String createItem(ItemForm form) {
+
         Item item = Item.builder()
                 .name(form.getName())
                 .price(form.getPrice())
@@ -90,8 +91,9 @@ public class ItemController {
     /**
      * 상품 수정 폼
      */
-    @GetMapping("/items/edit/{itemId}")
+    @GetMapping("/items/update/{itemId}")
     public String updateItemForm(@PathVariable Long itemId, Model model) {
+
         Item item = itemService.findById(itemId);
         ItemForm form = new ItemForm();
         form.setId(itemId);
@@ -114,7 +116,7 @@ public class ItemController {
      * @param itemForm
      * @return
      */
-    @PostMapping("/items/edit/{itemId}")
+    @PostMapping("/items/update/{itemId}")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemForm itemForm) {
         itemService.updateItem(itemId, itemForm.getName(), itemForm.getPrice(),
                 itemForm.getQty(), itemForm.getStatus(), sellerService.findById(itemForm.getSellerId()));

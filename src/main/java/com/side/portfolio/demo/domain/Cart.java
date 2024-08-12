@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Getter @Setter
+@Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
 
@@ -31,15 +30,6 @@ public class Cart {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-
-    //정적 팩토리 메서드
-    public static Cart makeCart(Item item, BigDecimal itemPrice, int qty) {
-        Cart cart = new Cart();
-        cart.setItem(item);
-        cart.setPrice(itemPrice);
-        cart.setQty(qty);
-        return cart;
-    }
 
     @Builder
     public Cart(Team team, Item item, BigDecimal price, int qty,

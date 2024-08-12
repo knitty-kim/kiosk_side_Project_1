@@ -5,7 +5,6 @@
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <script>
     window.onload = function () {
-
     };
 
     function redirectionHome() {
@@ -23,6 +22,44 @@
         return false;
       }
     }
+
+    function deleteCart(cartId) {
+      $.ajax({
+        url: '/carts/delete/' + cartId,
+        type: 'POST',
+        data: {},
+        success: function (response) {
+          if (response == "OK") {
+            location.href = '/cart-list';
+          }
+        },
+        error: function (error) {
+          console.error('Error sending data', error);
+        }
+      });
+
+    }
+
+    function deleteCarts(teamId) {
+      if (confirm('장바구니를 모두 비우시겠습니까?')) {
+
+        $.ajax({
+          url: '/carts/deleteAll/' + teamId,
+          type: 'POST',
+          data: {},
+          success: function (response) {
+            if (response == "OK") {
+              location.href = '/cart-list';
+            }
+          },
+          error: function (error) {
+            console.error('Error sending data', error);
+          }
+        });
+
+      }
+    }
+
   </script>
 </head>
 <body>
@@ -41,7 +78,7 @@
         <button class="btn btn-primary me-1"
                 th:onclick="|location.href='@{/item-list}'|"
                 type="button">상품 목록</button>
-        <button class="btn btn-success"
+        <button class="btn btn-success me-1"
                 th:onclick="|location.href='@{/order-list}'|"
                 type="button">주문 목록</button>
         <button class="btn btn-warning"
@@ -65,16 +102,19 @@
       </thead>
       <tbody>
       <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
-        <td><a href="#" th:text="${cart.getItem().id}">상품 ID</a></td>
-        <td class="w-25"><a class="text-wrap" href="#" th:text="${cart.getItem().name}">상품명</a></td>
-        <td th:text="${#numbers.formatDecimal(cart.price, 1, 2)}">10000</td>
+        <!--TODO 상품 상세로 url 연결!-->
+        <td><a href="#" th:text="${cart.getItem().getId()}">상품 ID</a></td>
 
-        <!-- TODO 추후 장바구니 내에서 수량변경 가능하도록 수정!-->
-        <td th:text="${#numbers.formatInteger(cart.qty, 1, 'DEFAULT')}">10</td>
+        <!--TODO 상품 상세로 url 연결!-->
+        <td class="w-25"><a class="text-wrap" href="#" th:text="${cart.getItem().getName()}">상품명</a></td>
+
+        <td th:text="${#numbers.formatDecimal(cart.getPrice(), 1, 2)}">10000</td>
+
+        <!-- TODO 추후 장바구니 내에서 수량 변경 가능하도록 수정!-->
+        <td th:text="${#numbers.formatInteger(cart.getQty(), 1, 'DEFAULT')}">10</td>
 
         <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
-        <td><button class="btn btn-primary" type="button"
-                    th:onclick="|location.href='@{/carts/remove/{cartId}(cartId=${cart.id})}'|">제거</button></td>
+        <td><button class="btn btn-primary" type="button" th:onclick="deleteCart('[[${cart.getId()}]]')">비우기</button></td>
       </tr>
       <tr>
         <td>합산</td>
@@ -91,6 +131,7 @@
   <div class="row mb-3">
     <div class="col">
       <div class="float-end">
+        <button class="btn btn-secondary me-1" th:onclick="deleteCarts('[[${session.id}]]')" type="button">모두 비우기</button>
         <button class="btn btn-secondary me-2" onclick="assureOrder()" type="button">주문</button>
       </div>
     </div>

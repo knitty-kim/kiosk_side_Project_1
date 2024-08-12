@@ -34,7 +34,6 @@ public class OrderService {
         Team team = teamJpaRepository.findById(teamId).get();
         List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
 
-        //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (Cart cart : carts) {
@@ -44,13 +43,14 @@ public class OrderService {
             Item item = itemJpaRepository.findById(itemId).get();
 
             //상품 재고 변경
+            //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
             item.subtractQty(cart.getQty());
 
             //주문 상품 생성
             orderItems.add(OrderItem.createOrderItem(item, cart.getPrice(), cart.getQty()));
 
-            //장바구니 비우기
-
+            //장바구니 모두 비우기
+            cartJpaRepository.deleteAllByTeam_Id(teamId);
         }
 
         //배송정보 생성
@@ -67,10 +67,7 @@ public class OrderService {
         return order.getId();
     }
 
-    /**
-     * 주문 취소
-     * @param orderId
-     */
+    //주문 취소
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderJpaRepository.findById(orderId).get();

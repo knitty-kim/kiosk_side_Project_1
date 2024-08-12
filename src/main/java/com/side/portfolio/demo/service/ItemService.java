@@ -29,22 +29,21 @@ public class ItemService {
         return itemJpaRepository.findAll();
     }
 
-    public Item findById(Long itemId) {
-        return itemJpaRepository.findById(itemId).get();
-    }
-
-    /**
-     * 아이템 페이지네이션
-     * @param pageable
-     * @return
-     */
-    public Page<Item> findByPagination(Pageable pageable){
+    public Page<Item> findAll(Pageable pageable){
         Page<Item> result = itemJpaRepository.findAll(pageable);
         return result;
     }
 
+    public Item findById(Long itemId) {
+        return itemJpaRepository.findById(itemId).get();
+    }
+
+
+    //상품 수정
     @Transactional
     public void updateItem(Long id, String name, BigDecimal price, int qty, ItemStatus status, Seller seller) {
+        //빌더 패턴을 사용중이나,
+        //수정 시에는 기존 객체의 필드를 SET 해야하므로 setUp.. 메서드 사용
         Item item = itemJpaRepository.findById(id).get();
         item.setUpName(name);
         item.setUpPrice(price);

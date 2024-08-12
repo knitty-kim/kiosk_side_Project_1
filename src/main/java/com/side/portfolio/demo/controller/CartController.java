@@ -51,6 +51,8 @@ public class CartController {
         Long teamId = (Long) session.getAttribute("id");
 
         if (types.equals("team") || types.equals("master")) {
+
+            //TODO - 페이징 보류
 //            Page<Cart> carts = cartService.findByTeamId(teamId, pageable);
 //            model.addAttribute("carts", carts);
 //
@@ -89,17 +91,23 @@ public class CartController {
     }
 
     //장바구니에 상품 담기
-    @PostMapping("/carts/add")
     @ResponseBody
+    @PostMapping("/carts/add")
     public List<Object> createCart(@RequestBody CartForm form) {
+        log.info("createCart");
 
         List<Object> result = new ArrayList<>();
 
         if (cartService.isInCart(form.getTeamId(), form.getItemId())) {
             result.add(false);
             result.add("already in cart!");
-
         } else {
+
+            //"정적 팩토리 메서드"가 아닌 "빌더" 사용
+            //1. 이미 존재하는 Team, Item 을 사용해 Cart 를 생성하므로, 연관관계 편의 메서드가 필요없음
+            //2. 가독성이 좋음
+            //3. 맥락에 독립적인 테스트에 용이
+            
             Cart cart = Cart.builder()
                     .team(teamService.findById(form.getTeamId()))
                     .item(itemService.findById(form.getItemId()))
@@ -109,7 +117,7 @@ public class CartController {
                     .modifiedDate(LocalDateTime.now())
                     .build();
 
-            cartService.save(cart);
+            cartService.createCart(cart);
 
             result.add(true);
             result.add("cart-list");
@@ -118,33 +126,19 @@ public class CartController {
         return result;
     }
 
-    //장바구니에서 상품 제거
-    @GetMapping("/carts/remove/{cartId}")
-    public String removeCart(@PathVariable Long cartId) {
-
+    //장바구니 상품 비우기
+    @ResponseBody
+    @PostMapping("/carts/delete/{cartId}")
+    public String deleteCart(@PathVariable Long cartId) {
         cartService.deleteById(cartId);
-        return "redirect:/cart-list";
+        return "OK";
     }
 
-//    @GetMapping("/cart-list/preOrder")
-//    public String preOrder(Model model, HttpServletRequest request) {
-//
-//        log.info("preOrder!!");
-//
-//        HttpSession session = request.getSession(false);
-//        if (loginService.validateSession(session) == false) {
-//            log.info("inValid Session!!");
-//            return "main";
-//        }
-//
-//        String types = (String) session.getAttribute("types");
-//        Long teamId = (Long) session.getAttribute("id");
-//
-//        if (types.equals("team") || types.equals("master")) {
-//            List<Cart> totalCarts = cartService.findByTeamId(teamId);
-//            model.addAttribute("carts", totalCarts);
-//        }
-//
-//        return "team/cart";
-//    }
+    //장바구니 모든 상품 비우기
+    @ResponseBody
+    @PostMapping("/carts/deleteAll/{teamId}")
+    public String deleteCarts(@PathVariable Long teamId) {
+        cartService.deleteAllByTeamId(teamId);
+        return "OK";
+    }
 }

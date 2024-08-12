@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,9 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final LoginService loginService;
     private final OrderService orderService;
-    private final CartService cartService;
 
     //주문 목록
     @GetMapping("/order-list")
@@ -58,10 +58,10 @@ public class OrderController {
 
             int endPage = Math.min(orders.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1);
             if (endPage == -1) {
-                model.addAttribute("endPage", 0);
-            } else {
-                model.addAttribute("endPage", endPage);
+                endPage = 0;
             }
+
+            model.addAttribute("endPage", endPage);
 
             model.addAttribute("curPage", orders.getNumber());
         }
@@ -69,14 +69,10 @@ public class OrderController {
         return "pay/orders";
     }
 
-    /**
-     * 주문 등록
-     * @param model
-     * @param request
-     * @return
-     */
+    //주문 등록
     @GetMapping("/orders/add")
     public String createOrder(Model model, HttpServletRequest request) {
+
         log.info("createOrder");
 
         //TODO 유효 계정인지 확인
@@ -117,8 +113,11 @@ public class OrderController {
         return "pay/order";
     }
 
+    //상세 주문 내역
     @GetMapping("/orders/{orderId}")
     public String readOrder(@PathVariable Long orderId, Model model) {
+
+        log.info("readOrder");
 
         //주문 조회
         Order order = orderService.findById(orderId);
@@ -143,4 +142,13 @@ public class OrderController {
 
         return "pay/order";
     }
+
+    //상세 주문 취소
+    @ResponseBody
+    @PostMapping("/orders/delete/{orderId}")
+    public String deleteOrder(@PathVariable Long orderId) {
+        orderService.cancelOrder(orderId);
+        return "OK";
+    }
+
 }

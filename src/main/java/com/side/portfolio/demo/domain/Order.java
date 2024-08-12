@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Getter
+@Entity @Getter
 @Table(name = "orders")
 public class Order {
 
@@ -62,10 +61,14 @@ public class Order {
             throw new IllegalStateException("can't cancel Order : delivery status is CANCELED");
         }
 
-        this.setUpStatus(OrderStatus.CANCELED);
         for (OrderItem orderItem : orderItems) {
             orderItem.cancelOrderItem();
         }
+
+        this.delivery.setUpStatus(DeliveryStatus.CANCELED);
+        this.setUpStatus(OrderStatus.CANCELED);
+        this.setUpModifiedDate(LocalDateTime.now());
+
     }
 
     //주문 전체 가격 계산

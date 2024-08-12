@@ -4,9 +4,46 @@
   <meta charset="utf-8">
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <script>
+    window.onload = function () {
+    };
+
     function redirectionHome() {
       window.location.href = '/';
     }
+
+    function deleteOrder(orderId) {
+
+      let canceled = '[[${delivery.getStatus().toString()}]]';
+
+      if (canceled == "CANCELED") {
+        alert("이미 취소된 주문입니다!");
+        return false;
+      } else if (canceled == "DELIVERING" || canceled == "DELIVERED") {
+        alert("배송중이거나 배송 완료된 주문은 취소할수없습니다!");
+        return false;
+      }
+
+      if (confirm("현재 주문을 취소하시겠습니까?")) {
+        let order_id = orderId;
+
+        $.ajax({
+          url: '/orders/delete/' + order_id,
+          type: 'POST',
+          data: {},
+          success: function (response) {
+            if (response == "OK") {
+              location.href = '/orders/' + order_id;
+            }
+          },
+          error: function (error) {
+            console.error('Error sending data', error);
+          }
+        });
+
+      }
+
+    }
+
   </script>
 </head>
 <body>
@@ -19,9 +56,10 @@
       <div class="float-start d-inline mt-3">
         <p class="d-inline me-lg-3">
           주문 ID : <strong class="text-white bg-dark" th:text="${order.getId()}"></strong>
-        </p>
+      </p>
         <p class="d-inline">
-          배송 상태 : <strong class="text-white bg-dark" th:text="${delivery.getStatus().toString()}"></strong>
+          배송 상태 : <strong th:text="${delivery.getStatus()}"
+                          th:class="${delivery.getStatus().toString() == 'CANCELED'} ? 'text-danger bg-dark' : 'text-white bg-dark'"></strong>
         </p>
       </div>
 
@@ -77,6 +115,16 @@
     </table>
   </div>
 
+  <div class="row mb-3">
+    <div class="col">
+      <div class="float-end">
+        <button class="btn btn-secondary me-2" th:onclick="deleteOrder('[[${order.id}]]')" type="button">주문 취소</button>
+      </div>
+    </div>
+  </div>
+
 </div> <!-- /container -->
+<!--jQuery-->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 </body>
 </html>

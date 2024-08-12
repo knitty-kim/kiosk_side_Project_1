@@ -42,6 +42,7 @@ public class OrderItem {
     //주문상품 취소
     public void cancelOrderItem() {
         getItem().addQty(count);
+        setUpModifiedDate(LocalDateTime.now());
     }
 
     //==변경 메서드 시작==//

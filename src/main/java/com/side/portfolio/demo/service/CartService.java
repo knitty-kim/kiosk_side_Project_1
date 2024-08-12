@@ -18,12 +18,8 @@ public class CartService {
     private final CartJpaRepository cartJpaRepository;
 
     @Transactional
-    public void save(Cart cart) {
+    public void createCart(Cart cart) {
         cartJpaRepository.save(cart);
-    }
-
-    public List<Cart> findAll() {
-        return cartJpaRepository.findAll();
     }
 
     //팀 ID로 장바구니 페이징 조회
@@ -38,7 +34,7 @@ public class CartService {
         return carts;
     }
 
-    //상품이 이미 담겼는지 확인
+    //상품이 장바구니에 있는지 확인
     public Boolean isInCart(Long teamId, Long ItemId) {
         List<Cart> carts = cartJpaRepository.findByTeam_IdAndItem_Id(teamId, ItemId);
         if (carts.isEmpty()) {
@@ -48,9 +44,21 @@ public class CartService {
         }
     }
 
+    //장바구니 제거
     @Transactional
     public void deleteById(Long cartId) {
         cartJpaRepository.deleteById(cartId);
+    }
+
+    //팀 ID의 모든 장바구니 제거
+    @Transactional
+    public void deleteAllByTeamId(Long teamId) {
+        cartJpaRepository.deleteAllByTeam_Id(teamId);
+    }
+
+    //DB 내 장바구니 전체 조회
+    public List<Cart> findAll() {
+        return cartJpaRepository.findAll();
     }
 
 }
