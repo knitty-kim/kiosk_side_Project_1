@@ -11,7 +11,9 @@
 <nav class="navbar navbar-expand-lg bg-light" th:fragment="common-nav">
   <div class="container">
     <a class="navbar-brand" th:href="@{/}">Kiosk</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -45,7 +47,8 @@
 
         <li class="nav-item"><a th:href="@{/item-list}" class="nav-link">전체 상품</a></li>
 
-        <li class="nav-item" th:if="${session.types} == 'master'"><a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
+        <li class="nav-item" th:if="${session.types} == 'master'">
+          <a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
 
         <li class="nav-item" th:if="${session.types} != 'seller' and ${session.id != null}">
             <a th:href="@{/seller/seller-list}" class="nav-link">판매자 목록</a></li>
@@ -74,8 +77,8 @@
       </ul>
 
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" th:if="${session.id} == null" ><a th:href="@{/login}" class="nav-link">로그인</a></li>
-        <li class="nav-item" th:if="${session.id} == null" ><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
+        <li class="nav-item" th:if="${session.isEmpty()}" ><a th:href="@{/login}" class="nav-link">로그인</a></li>
+        <li class="nav-item" th:if="${session.isEmpty()}" ><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
 
         <li class="nav-item dropdown" th:if="${session.types} == 'team' or ${session.types} == 'master'">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -92,7 +95,8 @@
         <form th:if="${session.id != null}" class="nav-item" action="/logout" method="post">
           <button type="submit" class="btn btn-link nav-link">로그아웃</button></form>
 
-        <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link"><span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>
+        <li class="nav-item cta cta-colored" id="cart"><a th:href="@{/cart/list}" class="nav-link">
+          <span class="icon-shopping_cart" th:text="${cartCnt}">[]</span></a></li>
       </ul>
     </div>
   </div>

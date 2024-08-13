@@ -36,7 +36,7 @@ class OrderServiceTest {
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
                 .build();
-        cartService.save(cart);
+        cartService.createCart(cart);
 
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(OrderItem.createOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));
@@ -64,7 +64,7 @@ class OrderServiceTest {
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
                 .build();
-        cartService.save(cart);
+        cartService.createCart(cart);
 
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(OrderItem.createOrderItem(cart.getItem(), cart.getPrice(), cart.getQty()));

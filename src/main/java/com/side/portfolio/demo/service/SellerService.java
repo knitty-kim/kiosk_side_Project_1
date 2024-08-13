@@ -29,8 +29,8 @@ public class SellerService {
 
     //판매자 중복 가입 검증
     private void validateSeller(Seller seller) {
-        List<Seller> sellers = sellerJpaRepository.findByName(seller.getName());
-        if (sellers.size() > 0) {
+        Optional<Seller> sellers = sellerJpaRepository.findByName(seller.getName());
+        if (sellers.isPresent()) {
             throw new IllegalStateException("이미 존재하는 판매자입니다");
         }
     }

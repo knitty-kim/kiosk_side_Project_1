@@ -22,7 +22,7 @@ class ItemControllerTest {
     public void itemList() throws Exception {
         //given
         PageRequest pageRequest = PageRequest.of(1, 3);
-        Page<Item> items = itemService.findByPagination(pageRequest);
+        Page<Item> items = itemService.findAll(pageRequest);
 
         //when
         int totalPages = items.getTotalPages(); //총 페이지 수

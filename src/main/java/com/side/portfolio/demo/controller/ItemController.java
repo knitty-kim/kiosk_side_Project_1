@@ -2,7 +2,10 @@ package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.ItemStatus;
+import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.dto.ItemCreateForm;
 import com.side.portfolio.demo.dto.ItemForm;
+import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.service.ItemService;
 import com.side.portfolio.demo.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +16,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -58,10 +66,9 @@ public class ItemController {
      */
     @GetMapping("/items/add")
     public String createItemForm(Model model) {
-
         model.addAttribute("itemStatuses", ItemStatus.values());
         model.addAttribute("sellers", sellerService.findAll());
-        model.addAttribute("itemForm", new ItemForm());
+        model.addAttribute("itemCreateForm", new ItemCreateForm());
         return "basic/addItem";
     }
 
@@ -71,12 +78,21 @@ public class ItemController {
      * @return
      */
     @PostMapping("/items/add")
-    public String createItem(ItemForm form) {
+    public String createItem(Model model,
+                             @Validated @ModelAttribute ItemCreateForm form,
+                             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            model.addAttribute("itemStatuses", ItemStatus.values());
+            model.addAttribute("sellers", sellerService.findAll());
+            return "basic/addItem";
+        }
 
         Item item = Item.builder()
                 .name(form.getName())
-                .price(form.getPrice())
-                .qty(form.getQty())
+                .price(new BigDecimal(form.getPrice()))
+                .qty(Integer.valueOf(form.getQty()))
                 .status(form.getStatus())
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
@@ -95,31 +111,35 @@ public class ItemController {
     public String updateItemForm(@PathVariable Long itemId, Model model) {
 
         Item item = itemService.findById(itemId);
-        ItemForm form = new ItemForm();
-        form.setId(itemId);
+        ItemUpdateForm form = new ItemUpdateForm();
         form.setName(item.getName());
-        form.setPrice(item.getPrice());
-        form.setQty(item.getQty());
+        form.setPrice(String.valueOf(item.getPrice()));
+        form.setQty(String.valueOf(item.getQty()));
         form.setStatus(item.getStatus());
         form.setSellerId(item.getSeller().getId());
 
         model.addAttribute("itemStatuses", ItemStatus.values());
-        model.addAttribute("itemForm", form);
+        model.addAttribute("itemUpdateForm", form);
         model.addAttribute("sellers", sellerService.findAll());
 
         return "basic/updateItem";
     }
 
-    /**
-     * 상품 수정
-     * @param itemId
-     * @param itemForm
-     * @return
-     */
+    //상품 수정
     @PostMapping("/items/update/{itemId}")
-    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemForm itemForm) {
-        itemService.updateItem(itemId, itemForm.getName(), itemForm.getPrice(),
-                itemForm.getQty(), itemForm.getStatus(), sellerService.findById(itemForm.getSellerId()));
+    public String updateItem(Model model, @PathVariable Long itemId,
+                             @Validated @ModelAttribute ItemUpdateForm form,
+                             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            model.addAttribute("itemStatuses", ItemStatus.values());
+            model.addAttribute("sellers", sellerService.findAll());
+            return "basic/updateItem";
+        }
+
+        itemService.updateItem(itemId, form.getName(), new BigDecimal(form.getPrice()),
+                Integer.valueOf(form.getQty()), form.getStatus(), sellerService.findById(form.getSellerId()));
 
         return "redirect:/item-list";
     }

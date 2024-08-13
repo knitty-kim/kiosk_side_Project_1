@@ -1,9 +1,7 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.*;
-import com.side.portfolio.demo.dto.LogInForm;
 import com.side.portfolio.demo.dto.SignUpForm;
-import com.side.portfolio.demo.service.LoginService;
 import com.side.portfolio.demo.service.SellerService;
 import com.side.portfolio.demo.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
@@ -25,79 +22,23 @@ public class MainController {
 
     private final TeamService teamService;
     private final SellerService sellerService;
-    private final LoginService loginService;
+//    private final LoginService loginService;
 
     @GetMapping("/")
-    public String main(HttpServletRequest request, Model model) {
+    public String main(HttpServletRequest request) {
         log.info("Main Controller");
 
 //        HttpSession session = request.getSession(false);
-//        if (loginService.validateSession(session) == false) {
+//
+//        Long id = (Long) session.getAttribute(LOGIN_ID);
+//        String types = (String) session.getAttribute(LOGIN_TYPES);
+//        String name = (String) session.getAttribute(LOGIN_NAME);
+//
+//        if (session == null || id == null || types == null || name == null) {
 //            return "main";
 //        }
-//
-//        String types = (String) session.getAttribute("types");
-//        Long id = (Long) session.getAttribute("id");
-//        String name = (String) session.getAttribute("name");
-//
-//        model.addAttribute("types", types);
-//        model.addAttribute("id", id);
-//        model.addAttribute("name", name);
 
         return "main";
-    }
-
-    @GetMapping("/login")
-    public String logInForm(Model model) {
-        log.info("login Page");
-        model.addAttribute("logInForm", new LogInForm());
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String logIn(LogInForm form, HttpServletRequest request) {
-        log.info("submit logInForm!!");
-        log.info("types : " + form.getTypes());
-
-        if (form.getTypes().equals("team")) {
-            Team team = loginService.teamLogin(form.getName(), form.getPw());
-            HttpSession session = request.getSession();
-
-            //마스터로 로그인 시, 세션에 types = master
-            if (team.getId().equals(1L)) {
-                session.setAttribute("types", "master");
-            } else {
-                session.setAttribute("types", "team");
-            }
-
-            log.info("teamTypes : " + session.getAttribute("types"));
-            log.info("teamId : " + team.getId());
-            log.info("teamName : " + team.getName());
-
-            session.setAttribute("id", team.getId());
-            session.setAttribute("name", team.getName());
-
-        } else if (form.getTypes().equals("seller")) {
-            Seller seller = loginService.sellerLogin(form.getName(), form.getPw());
-            HttpSession session = request.getSession();
-            log.info("sellerId : " + seller.getId());
-            log.info("sellerName : " + seller.getName());
-            session.setAttribute("types", "seller");
-            session.setAttribute("id", seller.getId());
-            session.setAttribute("name", seller.getName());
-
-        }
-
-        return "main";
-    }
-
-    @PostMapping("/logout")
-    public String logOut(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return "redirect:/";
     }
 
     @GetMapping("/signup")
@@ -109,8 +50,7 @@ public class MainController {
 
     @PostMapping("/signup")
     public String signUp(@Valid SignUpForm form) {
-        //@Valid ; 자바 표준 검증 어노테이션
-        //@Validated ; 스프링 검증 어노테이션
+
         if (form.getTypes().equals("team")) {
 
             Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());

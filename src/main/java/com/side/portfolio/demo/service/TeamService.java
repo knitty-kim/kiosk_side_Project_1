@@ -53,14 +53,14 @@ public class TeamService {
         return result;
     }
 
-    /**
-     * 팀 단건 조회
-     * @param teamId
-     * @return
-     */
+    //팀 ID 조회
     public Team findById(Long teamId) {
         return teamJpaRepository.findById(teamId).get();
     }
 
+    //팀 Name 조회
+    public Optional<Team> findByName(String name) {
+        return teamJpaRepository.findByName(name);
+    }
 
 }

@@ -13,40 +13,53 @@
 <body>
 <div class="container">
   <div class="py-5 text-center">
-    <h2>상품 수정 폼</h2>
+    <h2>상품 수정</h2>
   </div>
-  <h4 class="mb-3">상품 입력</h4>
-  <form role="form" th:object="${itemForm}" method="post">
+
+  <!--글로벌 오류 메시지-->
+  <!--  <div th:if="${#fields.hasGlobalErrors()}">-->
+  <!--    <p class="field-error mb-3" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+  <!--  </div>-->
+
+  <form role="form" th:object="${itemUpdateForm}" method="post">
     <!-- id -->
-    <input type="hidden" th:field="*{id}"/>
-1
+    <!--<input type="hidden" th:field="*{id}"/>-->
+
     <div class="form-group">
       <label th:for="name">상품명</label>
-      <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요">
+      <input class="form-control" type="text"
+             th:errorclass="is-invalid" th:field="*{name}" placeholder="상품명을 입력하세요">
+      <div class="invalid-feedback" th:errors="*{name}">상품명 오류</div>
     </div>
     <div class="form-group">
       <label th:for="price">가격</label>
-      <input type="number" th:field="*{price}" class="form-control" placeholder="가격을 입력하세요">
+      <input class="form-control" type="number" step="0.01"
+             th:errorclass="is-invalid" th:field="*{price}" placeholder="가격을 입력하세요">
+      <div class="invalid-feedback" th:errors="*{price}">가격 오류</div>
     </div>
     <div class="form-group">
       <label th:for="qty">수량</label>
-      <input type="number" th:field="*{qty}" class="form-control" placeholder="수량을 입력하세요">
+      <input class="form-control" type="number"
+             th:errorclass="is-invalid" th:field="*{qty}" placeholder="수량을 입력하세요">
+      <div class="invalid-feedback" th:errors="*{qty}">수량 오류</div>
     </div>
     <div class="form-group">
       <label th:for="status">상태</label>
       <select th:field="*{status}" class="form-control">
         <option value="">상태를 선택하세요</option>
-        <option th:each="itemStatus : ${itemStatuses}" th:selected="${itemForm.status} == ${itemStatus}"
-                th:value="${itemStatus}" th:text="${itemStatus}"/>
+        <option th:each="itemStatus : ${itemStatuses}" th:value="${itemStatus}" th:text="${itemStatus}"
+                th:selected="${itemUpdateForm.status} == ${itemStatus}"/>
       </select>
+      <div class="invalid-feedback" th:errors="*{status}">상태 오류</div>
     </div>
     <div class="form-group">
       <label th:for="sellerId">판매자</label>
       <select th:field="*{sellerId}" class="form-control">
         <option value="">판매자를 선택하세요</option>
         <option th:each="seller : ${sellers}" th:value="${seller.id}" th:text="${seller.name}"
-                th:selected="${seller.getId()} == ${itemForm.getSellerId()}"/>
+                th:selected="${seller.getId()} == ${itemUpdateForm.getSellerId()}"/>
       </select>
+      <div class="invalid-feedback" th:errors="*{sellerId}">판매자 오류</div>
     </div>
     <hr class="my-4">
     <div class="row">

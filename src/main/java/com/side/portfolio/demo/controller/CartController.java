@@ -42,10 +42,10 @@ public class CartController {
         //TODO
         // - 세션 확인을 반복하지 않도록 리팩토링 필요!!
         HttpSession session = request.getSession(false);
-        if (loginService.validateSession(session) == false) {
-            log.info("inValid Session!!");
-            return "main";
-        }
+//        if (loginService.validateSession(session) == false) {
+//            log.info("inValid Session!!");
+//            return "main";
+//        }
 
         String types = (String) session.getAttribute("types");
         Long teamId = (Long) session.getAttribute("id");
