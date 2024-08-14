@@ -19,6 +19,7 @@
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
         <button class="btn btn-secondary"
+                th:if="${session.types} == 'master'"
                 th:onclick="|location.href='@{/team/team-list}'|" type="button">팀 목록</button>
       </div>
     </div>
@@ -40,10 +41,8 @@
       </thead>
       <tbody>
         <tr th:each="seller : ${sellers}">
-          <td><a th:href="@{/basic/seller/{sellerId}(sellerId=${seller.id})}"
-                 th:text="${seller.id}">판매자 ID</a></td>
-          <td><a th:href="@{/basic/seller/${seller.id}}"
-                 th:text="${seller.name}">판매자 명</a></td>
+          <td><a href="#" th:text="${seller.id}">판매자 ID</a></td>
+          <td><a href="#" th:text="${seller.name}">판매자 명</a></td>
           <td th:text="${seller.phNumber}">333-333-3333</td>
           <td th:text="${seller.email}">us@us.or</td>
           <td th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>

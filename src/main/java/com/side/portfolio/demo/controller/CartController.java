@@ -4,7 +4,7 @@ import com.side.portfolio.demo.domain.Cart;
 import com.side.portfolio.demo.dto.CartForm;
 import com.side.portfolio.demo.service.CartService;
 import com.side.portfolio.demo.service.ItemService;
-import com.side.portfolio.demo.service.LoginService;
+import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final LoginService loginService;
+    private final LogInService loginService;
     private final TeamService teamService;
     private final ItemService itemService;
 

@@ -30,11 +30,19 @@ spring:
   messages:
     basename: validation-errors
 
+
 server:
   servlet:
     session:
       timeout: 1800
       tracking-modes: cookie
+
+#  error:
+#    include-exception: true
+#    include-message: always
+#    include-stacktrace: always
+#    include-binding-errors: always
+#    path: /error
 
 logging.level:
   org.hibernate.SQL: debug

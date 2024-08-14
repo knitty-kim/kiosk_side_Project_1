@@ -3,15 +3,13 @@ package com.side.portfolio.demo.controller;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.LogInForm;
-import com.side.portfolio.demo.service.LoginService;
+import com.side.portfolio.demo.service.LogInService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,32 +19,49 @@ import static com.side.portfolio.demo.SessionConst.*;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class LogInController {
 
-    private final LoginService loginService;
+    private final LogInService loginService;
 
     @GetMapping("/login")
-    public String logInForm(Model model) {
+    public String logInForm(Model model, @RequestParam(defaultValue = "/") String redirectURI,
+                            HttpServletRequest request) {
+
         log.info("login Page");
+        log.info("redirectURI={}", redirectURI);
+
+        //세션에 redirectURI 를 담아 POST 까지 전달
+        request.getSession().setAttribute("redirectURI", redirectURI);
         model.addAttribute("logInForm", new LogInForm());
+
         return "login";
+
     }
 
     @PostMapping("/login")
     public String logIn(LogInForm form, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
+
+        String redirectURI = (String) request.getSession().getAttribute("redirectURI");
         log.info("submit logInForm!!");
         log.info("types : " + form.getTypes());
+        log.info("redirectURI : " + redirectURI);
 
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
+        if (form.getTypes() == null) {
+            bindingResult.reject("Type is required",
+                    "팀 또는 판매자를 선택해야합니다!");
             return "login";
         }
 
         if (form.getTypes().equals("team")) {
 
             Team team = loginService.teamLogin(form.getName(), form.getPw());
+            if (team == null) {
+                bindingResult.reject("ID or PW is Not Matched",
+                        "아이디 또는 비밀번호가 맞지 않습니다!");
+                return "login";
+            }
+
             HttpSession session = request.getSession();
 
             //마스터로 로그인 시, 세션에 types = master
@@ -63,11 +78,15 @@ public class LoginController {
             log.info("teamId : " + team.getId());
             log.info("teamName : " + team.getName());
 
-            return "redirect:" + redirectURL;
-
         } else if (form.getTypes().equals("seller")) {
 
             Seller seller = loginService.sellerLogin(form.getName(), form.getPw());
+            if (seller == null) {
+                bindingResult.reject("ID or PW is Not Matched",
+                        "아이디 또는 비밀번호가 맞지 않습니다!");
+                return "login";
+            }
+
             HttpSession session = request.getSession();
 
             session.setAttribute(LOGIN_TYPES, "seller");
@@ -78,11 +97,10 @@ public class LoginController {
             log.info("sellerId : " + seller.getId());
             log.info("sellerName : " + seller.getName());
 
-            return "redirect:" + redirectURL;
-
         }
 
-        return "main";
+        return "redirect:" + redirectURI;
+
     }
 
     @PostMapping("/logout")
@@ -93,5 +111,6 @@ public class LoginController {
         }
 
         return "redirect:/";
+
     }
 }

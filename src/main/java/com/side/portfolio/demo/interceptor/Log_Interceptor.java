@@ -13,11 +13,10 @@ import java.util.UUID;
 import static com.side.portfolio.demo.SessionConst.LOG_ID;
 
 @Slf4j
-public class LogInterceptor implements HandlerInterceptor {
+public class Log_Interceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
@@ -26,29 +25,27 @@ public class LogInterceptor implements HandlerInterceptor {
 
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
+            log.info("preHandle handler={}", handler);
             log.info("preHandle handlerMethod={}", handlerMethod.getMethod().getName());
         } else if (handler instanceof ResourceHttpRequestHandler) {
             ResourceHttpRequestHandler requestHandler = (ResourceHttpRequestHandler) handler;
+            log.info("preHandle handler={}", handler);
             log.info("preHandle requestHandler={}", requestHandler);
         }
 
-        log.info("preHandle [{}], [{}], [{}]", logId, requestURI, handler);
+        log.info("preHandle [{}], [{}]", logId, requestURI);
         return true;
     }
 
     @Override
-    public void postHandle(HttpServletRequest request,
-                           HttpServletResponse response,
-                           Object handler,
-                           ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response,
+                           Object handler, ModelAndView modelAndView) throws Exception {
         log.info("postHandle [{}]", modelAndView);
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler,
-                                Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+                                Object handler, Exception ex) throws Exception {
         String requestURI = request.getRequestURI();
         String logId = (String) request.getAttribute(LOG_ID);
 

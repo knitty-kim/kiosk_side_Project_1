@@ -19,17 +19,16 @@
       <div class="float-end">
         <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                 type="button">홈</button>
-        <button class="btn btn-primary me-1"
-                th:if="${session.types == 'master'}"
+        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
                 th:onclick="|location.href='@{/items/add}'|"
                 type="button">상품 등록</button>
         <button class="btn btn-primary me-1"
                 th:onclick="|location.href='@{/item-list}'|"
                 type="button">상품 목록</button>
-        <button class="btn btn-success me-1"
+        <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
                 th:onclick="|location.href='@{/order-list}'|"
                 type="button">주문 목록</button>
-        <button class="btn btn-warning"
+        <button class="btn btn-warning" th:if="${session.types != 'seller'}"
                 th:onclick="|location.href='@{/cart-list}'|"
                 type="button">장바구니</button>
       </div>

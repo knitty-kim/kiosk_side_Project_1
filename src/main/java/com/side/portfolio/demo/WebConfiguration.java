@@ -1,7 +1,7 @@
 package com.side.portfolio.demo;
 
-import com.side.portfolio.demo.interceptor.LogInCheckInterceptor;
-import com.side.portfolio.demo.interceptor.LogInterceptor;
+import com.side.portfolio.demo.interceptor.LogIn_Interceptor;
+import com.side.portfolio.demo.interceptor.Log_Interceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,15 +11,19 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor())
+        
+        //로그 인터셉터
+        registry.addInterceptor(new Log_Interceptor())
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/assets/**", "/css/**", "/*.ico", "/error");
 
-        registry.addInterceptor(new LogInCheckInterceptor())
+        //로그인 인터셉터
+        registry.addInterceptor(new LogIn_Interceptor())
                 .order(2)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/assets/**", "/css/**", "/*.ico", "/error",
-                        "/", "/login", "/logout");
+                        "/", "/login", "/logout",
+                        "/signup", "/about");
     }
 }

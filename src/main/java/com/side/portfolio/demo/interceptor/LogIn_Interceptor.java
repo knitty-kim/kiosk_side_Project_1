@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import static com.side.portfolio.demo.SessionConst.LOGIN_ID;
 
 @Slf4j
-public class LogInCheckInterceptor implements HandlerInterceptor {
+public class LogIn_Interceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -18,12 +18,12 @@ public class LogInCheckInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        log.info("LogInCheckInterceptor requestURI={}", requestURI);
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(LOGIN_ID) == null) {
             log.info("invalid User Request!");
-            log.info("redirect to LogIn page!");
-            response.sendRedirect("/login?redirectURL=" + requestURI);
+            log.info("redirect to LogIn page with RedirectURL!");
+            response.sendRedirect("/login?redirectURI=" + requestURI);
             return false;
         }
 
