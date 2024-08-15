@@ -2,9 +2,7 @@ package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.ItemStatus;
-import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.ItemCreateForm;
-import com.side.portfolio.demo.dto.ItemForm;
 import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.service.ItemService;
 import com.side.portfolio.demo.service.SellerService;
@@ -22,11 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Controller
