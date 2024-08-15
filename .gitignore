@@ -1,7 +1,9 @@
 HELP.md
 .gradle
 application.yml
-.sql
+application-test.yml
+data.sql
+validation-errors.properties
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
