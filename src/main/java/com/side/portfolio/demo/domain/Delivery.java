@@ -1,7 +1,7 @@
 package com.side.portfolio.demo.domain;
 
+import com.side.portfolio.demo.status.DeliveryStatus;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+
+    .notice-content img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <!-- Notice Title -->
+  <div class="row">
+    <div class="col text-center">
+      <h2 class="mb-3" th:text="${notice.title}">Notice Title</h2>
+    </div>
+  </div>
+
+  <!-- Notice Meta Information -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <p><strong>작성자 :</strong> Master</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+      <p th:utext="'<strong>등록일 :</strong> ' + ${#temporals.format(notice.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+      <p th:utext="'<strong>수정일 :</strong> ' + ${#temporals.format(notice.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
+      <p th:utext="'<strong>조회수 :</strong> ' + ${notice.viewCnt}"></p>
+    </div>
+  </div>
+
+  <!-- Notice Content -->
+  <div class="row mb-4">
+    <div class="col notice-content">
+      <!-- Images included in the content -->
+      <img th:if="${notice.getImg1()}" th:src="|/images/${notice.getImg1()}|">
+      <img th:if="${notice.getImg2()}" th:src="|/images/${notice.getImg2()}|">
+      <img th:if="${notice.getImg3()}" th:src="|/images/${notice.getImg3()}|">
+      <img th:if="${notice.getImg4()}" th:src="|/images/${notice.getImg4()}|">
+      <img th:if="${notice.getImg5()}" th:src="|/images/${notice.getImg5()}|">
+      <img th:if="${notice.getImg6()}" th:src="|/images/${notice.getImg6()}|">
+
+      <p th:text="${notice.getContent()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et suscipit eros.
+        Sed nec venenatis quam. Cras auctor dapibus nunc sit amet malesuada. Phasellus at suscipit enim.
+        Nam euismod pharetra turpis a aliquam. Quisque at lorem id turpis ornare faucibus at non felis.</p>
+    </div>
+  </div>
+
+<!--  &lt;!&ndash; Notice Images &ndash;&gt;-->
+<!--  <div class="row mb-4">-->
+<!--    <div class="col">-->
+<!--      <h5>Images</h5>-->
+<!--      <div class="row">-->
+<!--        <div class="col-md-4 mb-3">-->
+<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 1">-->
+<!--        </div>-->
+<!--        <div class="col-md-4 mb-3">-->
+<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 2">-->
+<!--        </div>-->
+<!--        <div class="col-md-4 mb-3">-->
+<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 3">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- Previous/Next Buttons -->
+  <div class="row">
+    <div class="col text-start">
+      <a href="#" class="btn btn-secondary">&laquo; Previous</a>
+    </div>
+    <div class="col text-end">
+      <a href="#" class="btn btn-secondary">Next &raquo;</a>
+    </div>
+  </div>
+</div>
+
+<!--<div class="container">-->
+<!--  <div class="row no-gutters slider-text align-items-center justify-content-center">-->
+<!--    <div class="col-md-9 text-center">-->
+
+<!--      &lt;!&ndash; 제목 &ndash;&gt;-->
+<!--      <h1 th:text="${notice.title}"></h1>-->
+
+<!--      &lt;!&ndash; 작성일 &ndash;&gt;-->
+<!--      <p class="lead" th:text="'등록일 : ' + ${notice.createdDate}"></p>-->
+<!--      &lt;!&ndash; 수정일 &ndash;&gt;-->
+<!--      <p class="lead" th:text="'수정일 : ' + ${notice.modifiedDate}"></p>-->
+
+<!--      &lt;!&ndash; 조회수 &ndash;&gt;-->
+<!--      <p class="lead" th:text="'조회수 : ' +${notice.viewCnt}"></p>-->
+
+<!--      &lt;!&ndash; 작성자 고정 &ndash;&gt;-->
+<!--      <p class="lead">작성자 : 관리자</p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--&lt;!&ndash;  <hr class="my-4">&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="row">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="col">&ndash;&gt;-->
+<!--&lt;!&ndash;      <button class="w-100 btn btn-primary btn-lg"&ndash;&gt;-->
+<!--&lt;!&ndash;              th:onclick="|location.href='@{/items/edit/{itemRid}/(itemRid=${item.itemRid})}'|"&ndash;&gt;-->
+<!--&lt;!&ndash;              type="button">상품 수정</button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="col">&ndash;&gt;-->
+<!--&lt;!&ndash;      <button class="w-100 btn btn-secondary btn-lg"&ndash;&gt;-->
+<!--&lt;!&ndash;              th:onclick="|location.href='@{/item-list}'|"&ndash;&gt;-->
+<!--&lt;!&ndash;              type="button">목록으로</button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--</div> &lt;!&ndash; /container &ndash;&gt;-->
+
+<!--<section>-->
+<!--  <div class="text-center">-->
+<!--    &lt;!&ndash; 상세페이지 이미지 &ndash;&gt;-->
+<!--&lt;!&ndash;    <img th:src="@{/img/notice/} + ${notice.img1}">&ndash;&gt;-->
+<!--  </div>-->
+<!--</section>-->
+
+</body>
+</html>

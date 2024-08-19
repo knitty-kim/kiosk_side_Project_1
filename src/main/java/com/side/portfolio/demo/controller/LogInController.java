@@ -4,6 +4,7 @@ import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.LogInForm;
 import com.side.portfolio.demo.service.LogInService;
+import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static com.side.portfolio.demo.SessionConst.*;
+import static com.side.portfolio.demo.status.TeamStatus.*;
 
 @Slf4j
 @Controller
@@ -64,8 +66,8 @@ public class LogInController {
 
             HttpSession session = request.getSession();
 
-            //마스터로 로그인 시, 세션에 types = master
-            if (team.getId().equals(1L)) {
+            //마스터로 로그인 시, status = MASTER
+            if (team.getStatus() == MASTER) {
                 session.setAttribute(LOGIN_TYPES, "master");
             } else {
                 session.setAttribute(LOGIN_TYPES, "team");

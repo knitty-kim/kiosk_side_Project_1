@@ -1,7 +1,7 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Item;
-import com.side.portfolio.demo.domain.ItemStatus;
+import com.side.portfolio.demo.status.ItemStatus;
 import com.side.portfolio.demo.dto.ItemCreateForm;
 import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.service.ItemService;

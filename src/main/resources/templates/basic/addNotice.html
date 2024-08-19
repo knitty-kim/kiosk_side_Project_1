@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>공지 등록</h2>
+  </div>
+
+  <!--글로벌 오류 메시지-->
+<!--  <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--    <p class="field-error mb-3" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--  </div>-->
+
+  <form role="form" th:action="@{/notice/add}" th:object="${noticeCreateForm}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label th:for="title">제목</label>
+      <input class="form-control" type="text"
+             th:errorclass="is-invalid" th:field="*{title}" placeholder="제목을 입력하세요">
+      <div class="invalid-feedback" th:errors="*{title}">제목 오류</div>
+    </div>
+    <div class="form-group">
+      <label th:for="content">본문</label>
+<!--      <input class="form-control" type="text"-->
+<!--             th:errorclass="is-invalid" th:field="*{content}" placeholder="본문을 입력하세요">-->
+      <textarea class="form-control" type="text"
+                th:errorclass="is-invalid" th:field="*{content}" rows="5" placeholder="본문을 입력하세요"></textarea>
+      <div class="invalid-feedback" th:errors="*{content}">본문 오류</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">이미지 업로드</label>
+      <div id="image-upload-container">
+        <div class="input-group mb-2">
+          <input type="file" class="form-control" th:field="*{img1}" accept="image/*">
+          <button type="button" class="btn btn-danger" onclick="removeImageField(this)">제거</button>
+        </div>
+      </div>
+      <button type="button" id="add-image-button" class="btn btn-secondary">추가</button>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">공지 등록</button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg"
+                th:onclick="|location.href='@{/notice-list}'|" type="button">취소</button>
+      </div>
+    </div>
+  </form>
+</div> <!-- /container -->
+
+<script>
+  document.getElementById('add-image-button').addEventListener('click', function() {
+    // Get the image upload container
+    let container = document.getElementById('image-upload-container');
+
+    // Count current number of file inputs
+    let fileInputs = container.getElementsByTagName('input');
+    let fileCount = fileInputs.length;
+
+    if (fileCount >= 6) {
+      alert('You can upload up to 6 images.');
+      return;
+    }
+
+    let inputGroup = document.createElement('div');
+    inputGroup.className = 'input-group mb-2';
+
+    // Create a new file input element with a unique name and th:field attribute
+    let newFileInput = document.createElement('input');
+    newFileInput.type = 'file';
+    newFileInput.className = 'form-control mb-2';
+    newFileInput.setAttribute('th:field', '*{img' + (fileCount + 1) + '}');
+    newFileInput.name = 'img' + (fileCount + 1);
+    newFileInput.accept = 'image/*';
+
+    let removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-danger';
+    removeButton.textContent = '제거';
+    removeButton.onclick = function() { removeImageField(this); };
+
+    inputGroup.appendChild(newFileInput);
+    inputGroup.appendChild(removeButton);
+    container.appendChild(inputGroup);
+  });
+
+  function removeImageField(button) {
+    let container = document.getElementById('image-upload-container');
+    container.removeChild(button.parentNode);
+
+    // Optional: Re-adjust names and th:field attributes after removal
+    let fileInputs = container.getElementsByTagName('input');
+    for (var i = 0; i < fileInputs.length; i++) {
+      fileInputs[i].name = 'img' + (i + 1);
+      fileInputs[i].setAttribute('th:field', '*{img' + (i + 1) + '}');
+    }
+  }
+</script>
+
+</body>
+</html>

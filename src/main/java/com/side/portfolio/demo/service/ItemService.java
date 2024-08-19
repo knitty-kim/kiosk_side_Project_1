@@ -1,7 +1,7 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Item;
-import com.side.portfolio.demo.domain.ItemStatus;
+import com.side.portfolio.demo.status.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.ItemJpaRepository;
 import lombok.RequiredArgsConstructor;

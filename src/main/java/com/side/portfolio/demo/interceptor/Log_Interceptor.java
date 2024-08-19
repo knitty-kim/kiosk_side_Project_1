@@ -25,12 +25,12 @@ public class Log_Interceptor implements HandlerInterceptor {
 
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
-            log.info("preHandle handler={}", handler);
-            log.info("preHandle handlerMethod={}", handlerMethod.getMethod().getName());
+//            log.info("preHandle handler={}", handler);
+//            log.info("preHandle handlerMethod={}", handlerMethod.getMethod().getName());
         } else if (handler instanceof ResourceHttpRequestHandler) {
             ResourceHttpRequestHandler requestHandler = (ResourceHttpRequestHandler) handler;
-            log.info("preHandle handler={}", handler);
-            log.info("preHandle requestHandler={}", requestHandler);
+//            log.info("preHandle handler={}", handler);
+//            log.info("preHandle requestHandler={}", requestHandler);
         }
 
         log.info("preHandle [{}], [{}]", logId, requestURI);
@@ -40,7 +40,7 @@ public class Log_Interceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("postHandle [{}]", modelAndView);
+//        log.info("postHandle [{}]", modelAndView);
     }
 
     @Override

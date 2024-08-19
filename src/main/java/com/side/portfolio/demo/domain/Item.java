@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.domain;
 
 import com.side.portfolio.demo.exception.NotEnoughStockException;
+import com.side.portfolio.demo.status.ItemStatus;
 import lombok.*;
 
 import javax.persistence.*;

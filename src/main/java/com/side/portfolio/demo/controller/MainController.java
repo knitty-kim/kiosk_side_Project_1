@@ -4,6 +4,8 @@ import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.dto.SignUpForm;
 import com.side.portfolio.demo.service.SellerService;
 import com.side.portfolio.demo.service.TeamService;
+import com.side.portfolio.demo.status.SellerStatus;
+import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

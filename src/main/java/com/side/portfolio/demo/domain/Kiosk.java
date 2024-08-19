@@ -1,5 +1,6 @@
 package com.side.portfolio.demo.domain;
 
+import com.side.portfolio.demo.status.KioskStatus;
 import lombok.Getter;
 import lombok.Setter;
 

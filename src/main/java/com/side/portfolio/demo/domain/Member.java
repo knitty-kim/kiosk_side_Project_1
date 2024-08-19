@@ -1,7 +1,7 @@
 package com.side.portfolio.demo.domain;
 
+import com.side.portfolio.demo.status.MemberStatus;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

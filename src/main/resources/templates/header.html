@@ -32,7 +32,7 @@
 <!--          </div>-->
 <!--        </li>-->
 
-        <li class="nav-item"><a th:href="@{/notice}" class="nav-link">공지사항</a></li>
+        <li class="nav-item"><a th:href="@{/notice-list}" class="nav-link">공지사항</a></li>
         <li class="nav-item"><a th:href="@{/about}" class="nav-link">회사소개</a></li>
 
 <!--        <li class="nav-item dropdown">-->
@@ -63,7 +63,8 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-             aria-haspopup="true" aria-expanded="false" th:text="${session.name}+'님의 Page'"></a>
+             aria-haspopup="true" aria-expanded="false" th:if="${session.id} != null"
+             th:text="${session.name}+'님의 Page'"></a>
           <div class="dropdown-menu">
             <a th:href="@{/order-list}" class="dropdown-item">주문 목록</a>
             <a th:if="${session.types} != 'seller'"

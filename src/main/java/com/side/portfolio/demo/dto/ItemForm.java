@@ -1,6 +1,6 @@
 package com.side.portfolio.demo.dto;
 
-import com.side.portfolio.demo.domain.ItemStatus;
+import com.side.portfolio.demo.status.ItemStatus;
 import lombok.Getter;
 import lombok.Setter;
 

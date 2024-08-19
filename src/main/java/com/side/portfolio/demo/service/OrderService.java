@@ -2,6 +2,7 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.repository.*;
+import com.side.portfolio.demo.status.DeliveryStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
