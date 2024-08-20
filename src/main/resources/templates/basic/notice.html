@@ -15,6 +15,11 @@
       margin-bottom: 15px;
     }
   </style>
+  <script>
+    function redirectionHome() {
+      window.location.href = '/';
+    }
+  </script>
 </head>
 <body>
 <div class="container mt-5">
@@ -37,6 +42,18 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <div class="col">
+      <div class="float-end">
+        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
+                type="button">홈</button>
+        <button class="btn btn-primary me-1"
+                th:onclick="|location.href='@{/notice-list}'|"
+                type="button">공지 목록</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Notice Content -->
   <div class="row mb-4">
     <div class="col notice-content">
@@ -54,75 +71,38 @@
     </div>
   </div>
 
-<!--  &lt;!&ndash; Notice Images &ndash;&gt;-->
-<!--  <div class="row mb-4">-->
-<!--    <div class="col">-->
-<!--      <h5>Images</h5>-->
-<!--      <div class="row">-->
-<!--        <div class="col-md-4 mb-3">-->
-<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 1">-->
-<!--        </div>-->
-<!--        <div class="col-md-4 mb-3">-->
-<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 2">-->
-<!--        </div>-->
-<!--        <div class="col-md-4 mb-3">-->
-<!--          <img src="https://via.placeholder.com/350x200" class="img-fluid rounded" alt="Image 3">-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
+  <hr class="my-3">
 
-  <!-- Previous/Next Buttons -->
-  <div class="row">
-    <div class="col text-start">
-      <a href="#" class="btn btn-secondary">&laquo; Previous</a>
-    </div>
-    <div class="col text-end">
-      <a href="#" class="btn btn-secondary">Next &raquo;</a>
+  <div class="row mb-3" th:if="${session.types == 'master'}">
+    <div class="col">
+      <div class="float-end">
+        <button class="btn btn-primary me-1"
+                th:onclick="|location.href='@{/notice/update/{noticeId}/(noticeId=${notice.id})}'|"
+                type="button">수정</button>
+        <button class="btn btn-secondary me-1"
+                th:onclick="|confirmDelete(${notice.id})|"
+                type="button">삭제</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!--<div class="container">-->
-<!--  <div class="row no-gutters slider-text align-items-center justify-content-center">-->
-<!--    <div class="col-md-9 text-center">-->
-
-<!--      &lt;!&ndash; 제목 &ndash;&gt;-->
-<!--      <h1 th:text="${notice.title}"></h1>-->
-
-<!--      &lt;!&ndash; 작성일 &ndash;&gt;-->
-<!--      <p class="lead" th:text="'등록일 : ' + ${notice.createdDate}"></p>-->
-<!--      &lt;!&ndash; 수정일 &ndash;&gt;-->
-<!--      <p class="lead" th:text="'수정일 : ' + ${notice.modifiedDate}"></p>-->
-
-<!--      &lt;!&ndash; 조회수 &ndash;&gt;-->
-<!--      <p class="lead" th:text="'조회수 : ' +${notice.viewCnt}"></p>-->
-
-<!--      &lt;!&ndash; 작성자 고정 &ndash;&gt;-->
-<!--      <p class="lead">작성자 : 관리자</p>-->
+  <!-- Previous/Next Buttons -->
+<!--  <div class="row">-->
+<!--    <div class="col text-start">-->
+<!--      <a href="#" class="btn btn-secondary">&laquo; Previous</a>-->
+<!--    </div>-->
+<!--    <div class="col text-end">-->
+<!--      <a href="#" class="btn btn-secondary">Next &raquo;</a>-->
 <!--    </div>-->
 <!--  </div>-->
-<!--&lt;!&ndash;  <hr class="my-4">&ndash;&gt;-->
-<!--&lt;!&ndash;  <div class="row">&ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="col">&ndash;&gt;-->
-<!--&lt;!&ndash;      <button class="w-100 btn btn-primary btn-lg"&ndash;&gt;-->
-<!--&lt;!&ndash;              th:onclick="|location.href='@{/items/edit/{itemRid}/(itemRid=${item.itemRid})}'|"&ndash;&gt;-->
-<!--&lt;!&ndash;              type="button">상품 수정</button>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;    <div class="col">&ndash;&gt;-->
-<!--&lt;!&ndash;      <button class="w-100 btn btn-secondary btn-lg"&ndash;&gt;-->
-<!--&lt;!&ndash;              th:onclick="|location.href='@{/item-list}'|"&ndash;&gt;-->
-<!--&lt;!&ndash;              type="button">목록으로</button>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;  </div>&ndash;&gt;-->
-<!--</div> &lt;!&ndash; /container &ndash;&gt;-->
 
-<!--<section>-->
-<!--  <div class="text-center">-->
-<!--    &lt;!&ndash; 상세페이지 이미지 &ndash;&gt;-->
-<!--&lt;!&ndash;    <img th:src="@{/img/notice/} + ${notice.img1}">&ndash;&gt;-->
-<!--  </div>-->
-<!--</section>-->
-
+</div>
+<script>
+  function confirmDelete(noticeId) {
+    if (confirm("정말로 이 공지를 삭제하시겠습니까?")) {
+      location.href = '/notice/delete/' + noticeId;
+    }
+  }
+</script>
 </body>
 </html>

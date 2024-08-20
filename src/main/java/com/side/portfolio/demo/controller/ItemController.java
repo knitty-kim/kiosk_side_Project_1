@@ -100,9 +100,7 @@ public class ItemController {
         return "redirect:/item-list";
     }
 
-    /**
-     * 상품 수정 폼
-     */
+    //상품 수정 폼
     @GetMapping("/items/update/{itemId}")
     public String updateItemForm(@PathVariable Long itemId, Model model) {
 

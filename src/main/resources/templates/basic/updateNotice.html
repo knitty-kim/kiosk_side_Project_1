@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>공지 수정</h2>
+  </div>
+
+  <!-- Notice Meta Information -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <p><strong>작성자 :</strong> Master</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+      <p th:utext="'<strong>등록일 :</strong> ' + ${#temporals.format(noticeUpdateForm.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+      <p th:utext="'<strong>수정일 :</strong> ' + ${#temporals.format(noticeUpdateForm.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
+    </div>
+  </div>
+
+  <!--글로벌 오류 메시지-->
+<!--  <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--    <p class="field-error mb-3" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--  </div>-->
+
+  <form role="form" th:object="${noticeUpdateForm}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label th:for="title">제목</label>
+      <input class="form-control" type="text"
+             th:errorclass="is-invalid" th:field="*{title}" placeholder="제목을 입력하세요">
+      <div class="invalid-feedback" th:errors="*{title}">제목 오류</div>
+    </div>
+    <div class="form-group">
+      <label th:for="content">본문</label>
+      <textarea class="form-control" type="text"
+                th:errorclass="is-invalid" th:field="*{content}" rows="5" placeholder="본문을 입력하세요"></textarea>
+      <div class="invalid-feedback" th:errors="*{content}">본문 오류</div>
+    </div>
+
+    <div class="my-3">
+      <div id="image-upload-container">
+        <div th:if="*{img1 != null}" class="mb-2 d-flex align-items-center" data-img-id="img1">
+          <span th:text="*{img1}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img1')"></button>
+        </div>
+        <div th:if="*{img2 != null}" class="mb-2 d-flex align-items-center" data-img-id="img2">
+          <span th:text="*{img2}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img2')"></button>
+        </div>
+        <div th:if="*{img3 != null}" class="mb-2 d-flex align-items-center" data-img-id="img3">
+          <span th:text="*{img3}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img3')"></button>
+        </div>
+        <div th:if="*{img4 != null}" class="mb-2 d-flex align-items-center" data-img-id="img4">
+          <span th:text="*{img4}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img4')"></button>
+        </div>
+        <div th:if="*{img5 != null}"  class="mb-2 d-flex align-items-center" data-img-id="img5">
+          <span th:text="*{img5}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img5')"></button>
+        </div>
+        <div th:if="*{img6 != null}" class="mb-2 d-flex align-items-center" data-img-id="img6">
+          <span th:text="*{img6}"></span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img6')"></button>
+        </div>
+
+<!--        <div class="input-group mb-2">-->
+<!--          <input type="file" class="form-control" th:field="*{img_3}" accept="image/*">-->
+<!--          <button type="button" class="btn btn-danger" onclick="removeImageField(this)">제거</button>-->
+<!--        </div>-->
+      </div>
+      <button type="button" id="add-image-button" class="btn btn-secondary">추가</button>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- 삭제할 이미지 목록을 저장할 히든 필드 -->
+    <input type="hidden" name="deleteImages" id="deleteImages">
+
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">수정 확정</button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg"
+                th:onclick="|location.href='@{/notice-list}'|" type="button">취소</button>
+      </div>
+    </div>
+  </form>
+</div> <!-- /container -->
+
+<script>
+
+  const existingImgNumbers = new Map();
+
+  //삭제할 파일 ID 배열
+  let deleteImageIds = [];
+
+  //파일 제거 함수
+  function handleRemove(imgId) {
+    if (confirm('해당 이미지를 삭제하시겠습니까?')) {
+
+      deleteImageIds.push(imgId.charAt(0).toUpperCase() + imgId.slice(1)); //배열에 삭제할 파일 ID 추가
+
+      let container = document.getElementById('image-upload-container');
+      let element = document.querySelector(`[onclick="handleRemove('${imgId}')"]`).parentNode;
+      container.removeChild(element);
+    }
+  }
+
+  // 폼이 제출되기 전 삭제할 파일 ID를 히든 필드에 문자열로 세팅
+  document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('deleteImages').value = deleteImageIds.join(',');
+  });
+
+  //추가 버튼
+  document.getElementById('add-image-button').addEventListener('click', function() {
+
+    // Get the image upload container
+    let container = document.getElementById('image-upload-container');
+
+    let existingImagesCount = container.querySelectorAll('span').length;
+    let fileCount = container.getElementsByTagName('input').length;
+    let totalImagesCount = fileCount + existingImagesCount;
+    if (totalImagesCount >= 6) {
+      alert('You can upload up to 6 images.');
+      return;
+    }
+
+    container.querySelectorAll('[data-img-id]').forEach(div => {
+      let imgId = div.getAttribute('data-img-id');
+      let match = imgId.match(/^img(\d+)$/);
+      existingImgNumbers.set(match[1], match[0]);
+    });
+
+    let keyArr = [...existingImgNumbers.keys()];
+    keyArr.sort((a, b) => a - b);
+    let settledImgNumber = 0;
+    for (let i = 0; i <= 5; i++) {
+      if (keyArr.includes((i + 1).toString())) {
+        continue;
+      } else {
+        settledImgNumber = i + 1;
+        break;
+      }
+    }
+
+    let inputGroup = document.createElement('div');
+    inputGroup.className = 'input-group mb-2';
+
+    let newFileInput = document.createElement('input');
+    newFileInput.type = 'file';
+    newFileInput.className = 'form-control';
+    newFileInput.setAttribute('th:field', '*{img_' + (settledImgNumber) + '}');
+    newFileInput.name = 'img_' + (settledImgNumber);
+    newFileInput.id = 'img_' + (settledImgNumber);
+    newFileInput.accept = 'image/*';
+
+    existingImgNumbers.set(settledImgNumber.toString(), 'img'+settledImgNumber);
+
+    let removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-danger';
+    removeButton.textContent = '제거';
+    removeButton.onclick = function() { removeImageField(this); };
+
+    inputGroup.appendChild(newFileInput);
+    inputGroup.appendChild(removeButton);
+    container.appendChild(inputGroup);
+  });
+
+  //제거 버튼
+  function removeImageField(button) {
+    let container = document.getElementById('image-upload-container');
+    let fileInput = button.parentNode.querySelector('input[type="file"]');
+    let thFieldValue = fileInput.getAttribute('th:field');
+    let deleteImgId = thFieldValue.match(/\{img_(\d+)\}/)[1];
+    existingImgNumbers.delete(deleteImgId);
+    container.removeChild(button.parentNode);
+  }
+
+
+</script>
+
+</body>
+</html>

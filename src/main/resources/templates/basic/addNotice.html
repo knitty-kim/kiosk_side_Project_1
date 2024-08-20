@@ -29,16 +29,13 @@
              th:errorclass="is-invalid" th:field="*{title}" placeholder="제목을 입력하세요">
       <div class="invalid-feedback" th:errors="*{title}">제목 오류</div>
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
       <label th:for="content">본문</label>
-<!--      <input class="form-control" type="text"-->
-<!--             th:errorclass="is-invalid" th:field="*{content}" placeholder="본문을 입력하세요">-->
       <textarea class="form-control" type="text"
                 th:errorclass="is-invalid" th:field="*{content}" rows="5" placeholder="본문을 입력하세요"></textarea>
       <div class="invalid-feedback" th:errors="*{content}">본문 오류</div>
     </div>
     <div class="mb-3">
-      <label class="form-label">이미지 업로드</label>
       <div id="image-upload-container">
         <div class="input-group mb-2">
           <input type="file" class="form-control" th:field="*{img1}" accept="image/*">
@@ -63,6 +60,7 @@
 </div> <!-- /container -->
 
 <script>
+  //추가 버튼
   document.getElementById('add-image-button').addEventListener('click', function() {
     // Get the image upload container
     let container = document.getElementById('image-upload-container');
@@ -82,7 +80,7 @@
     // Create a new file input element with a unique name and th:field attribute
     let newFileInput = document.createElement('input');
     newFileInput.type = 'file';
-    newFileInput.className = 'form-control mb-2';
+    newFileInput.className = 'form-control';
     newFileInput.setAttribute('th:field', '*{img' + (fileCount + 1) + '}');
     newFileInput.name = 'img' + (fileCount + 1);
     newFileInput.accept = 'image/*';
@@ -98,13 +96,13 @@
     container.appendChild(inputGroup);
   });
 
+  //제거 버튼
   function removeImageField(button) {
     let container = document.getElementById('image-upload-container');
     container.removeChild(button.parentNode);
 
-    // Optional: Re-adjust names and th:field attributes after removal
     let fileInputs = container.getElementsByTagName('input');
-    for (var i = 0; i < fileInputs.length; i++) {
+    for (let i = 0; i < fileInputs.length; i++) {
       fileInputs[i].name = 'img' + (i + 1);
       fileInputs[i].setAttribute('th:field', '*{img' + (i + 1) + '}');
     }

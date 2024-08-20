@@ -1,15 +1,13 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Notice;
-import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.dto.NoticeCreateForm;
+import com.side.portfolio.demo.dto.NoticeUpdateForm;
 import com.side.portfolio.demo.service.NoticeService;
-import com.side.portfolio.demo.status.NoticeStatus;
-import com.side.portfolio.demo.upload.FileUtil;
-import com.side.portfolio.demo.upload.UploadFile;
+import com.side.portfolio.demo.service.FileService;
+import com.side.portfolio.demo.domain.FileNameTable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -23,11 +21,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -35,11 +32,9 @@ import java.util.List;
 public class NoticeController {
 
     private final NoticeService noticeService;
-    private final FileUtil fileUtil;
+    private final FileService fileService;
 
-    @Value("${file.dir}")
-    private String fileDir;
-
+    //공지 리스트
     @GetMapping("/notice-list")
     public String noticeList(Model model,
                              @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -63,12 +58,12 @@ public class NoticeController {
         }
 
         model.addAttribute("endPage", endPage);
-
         model.addAttribute("curPage", notices.getNumber());
 
         return "basic/notices";
     }
 
+    //공지 상세
     @GetMapping("/notice-list/{noticeId}")
     public String noticeDetail(@PathVariable Long noticeId, Model model) {
 
@@ -78,6 +73,7 @@ public class NoticeController {
         return "basic/notice";
     }
 
+    //공지 등록 폼
     @GetMapping("/notice/add")
     public String createNoticeForm(Model model) {
 
@@ -86,6 +82,7 @@ public class NoticeController {
         return "basic/addNotice";
     }
 
+    //공지 등록
     @PostMapping("/notice/add")
     public String createNotice(Model model, @Validated NoticeCreateForm form,
                                BindingResult bindingResult) throws IOException {
@@ -95,95 +92,163 @@ public class NoticeController {
             return "basic/addNotice";
         }
 
-        log.info("img1 : " + form.getImg1());
+        Notice notice = Notice.builder()
+                .title(form.getTitle())
+                .content(form.getContent())
+                .createdDate(LocalDateTime.now())
+                .modifiedDate(LocalDateTime.now())
+                .build();
 
-        if (!form.getImg1().isEmpty()) {
+        try {
+            // Java Reflection API
+            // 순회할 필드 이름 목록
+            String[] fieldNames = {"Img1", "Img2", "Img3", "Img4", "Img5", "Img6"};
 
-            UploadFile uploadedFile1 = fileUtil.createFile(form.getImg1());
-            UploadFile uploadedFile2 = fileUtil.createFile(form.getImg2());
-//            UploadFile uploadedFile3 = fileUtil.createFile(form.getImg3());
-//            UploadFile uploadedFile4 = fileUtil.createFile(form.getImg4());
-//            UploadFile uploadedFile5 = fileUtil.createFile(form.getImg5());
-//            UploadFile uploadedFile6 = fileUtil.createFile(form.getImg6());
-            String uuidFileName1 = uploadedFile1.getUuidFileName();
-            String uuidFileName2 = uploadedFile2.getUuidFileName();
-//            String uuidFileName3 = uploadedFile3.getUuidFileName();
-//            String uuidFileName4 = uploadedFile4.getUuidFileName();
-//            String uuidFileName5 = uploadedFile5.getUuidFileName();
-//            String uuidFileName6 = uploadedFile6.getUuidFileName();
+            for (String fieldName : fieldNames) {
+                // form.getImgX() 메서드 동적 호출
+                Method getter = form.getClass().getMethod("get" + fieldName);
+                MultipartFile fieldValue = (MultipartFile) getter.invoke(form);
 
-            Notice notice = Notice.builder()
-                    .title(form.getTitle())
-                    .content(form.getContent())
-                    .img1(uuidFileName1)
-                    .img2(uuidFileName2)
-                    .status(NoticeStatus.POSTED)
-                    .createdDate(LocalDateTime.now())
-                    .modifiedDate(LocalDateTime.now())
-                    .build();
+                // fieldValue 가 비어 있지 않은 경우에만 처리
+                if (fieldValue != null && !fieldValue.isEmpty()) {
+                    FileNameTable uploadedFile = fileService.createFile(fieldValue);
+                    String uuidFileName = uploadedFile.getUuidFileName();
 
-            noticeService.createNotice(notice);
-            return "redirect:/notice-list/" + notice.getId();
+                    // notice.setImgX() 메서드를 동적으로 호출하여 값 설정
+                    Method setter = notice.getClass().getMethod("set" + fieldName, String.class);
+                    setter.invoke(notice, uuidFileName);
+                }
+            }
 
-        } else {
-
-            Notice notice = Notice.builder()
-                    .title(form.getTitle())
-                    .content(form.getContent())
-                    .status(NoticeStatus.POSTED)
-                    .createdDate(LocalDateTime.now())
-                    .modifiedDate(LocalDateTime.now())
-                    .build();
-
-            noticeService.createNotice(notice);
-            return "redirect:/notice-list/" + notice.getId();
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        noticeService.createNotice(notice);
+        return "redirect:/notice-list/" + notice.getId();
 
     }
 
+    //공지 수정 폼
     @GetMapping("/notice/update/{noticeId}")
-    public String updateNoticeForm(@PathVariable Long itemId, Model model) {
+    public String updateNoticeForm(@PathVariable Long noticeId, Model model) {
 
-//        Item item = itemService.findById(itemId);
-//        ItemUpdateForm form = new ItemUpdateForm();
-//        form.setName(item.getName());
-//        form.setPrice(String.valueOf(item.getPrice()));
-//        form.setQty(String.valueOf(item.getQty()));
-//        form.setStatus(item.getStatus());
-//        form.setSellerId(item.getSeller().getId());
+        Notice notice = noticeService.findById(noticeId);
+        NoticeUpdateForm form = new NoticeUpdateForm();
 
-//        model.addAttribute("itemStatuses", ItemStatus.values());
-//        model.addAttribute("itemUpdateForm", form);
-//        model.addAttribute("sellers", sellerService.findAll());
+        form.setContent(notice.getContent());
+        form.setTitle(notice.getTitle());
+        form.setCreatedDate(notice.getCreatedDate());
+        form.setModifiedDate(notice.getModifiedDate());
+
+        try {
+            // Java Reflection API
+            // 순회할 필드 이름 목록
+            String[] fieldNames = {"Img1", "Img2", "Img3", "Img4", "Img5", "Img6"};
+
+            for (String fieldName : fieldNames) {
+                // notice.getImgX() 메서드 동적 호출
+                Method getter = notice.getClass().getMethod("get" + fieldName);
+                String uuid = (String) getter.invoke(notice);
+
+                if (uuid != null) {
+                    // 업로드 파일 이름 찾기
+                    String uploadFileName = fileService.findTableByUuid(uuid).getUploadFileName();
+
+                    // NoticeUpdateForm 에 업로드 파일명 세팅
+                    Method setter = form.getClass().getMethod("set" + fieldName, String.class);
+                    setter.invoke(form, uploadFileName);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        model.addAttribute("noticeUpdateForm", form);
 
         return "basic/updateNotice";
     }
 
-    //상품 수정
+    //공지 수정
     @PostMapping("/notice/update/{noticeId}")
-    public String updateNotice(Model model, @PathVariable Long itemId,
-                               @Validated @ModelAttribute ItemUpdateForm form,
+    public String updateNotice(Model model, @PathVariable Long noticeId,
+                               String deleteImages,
+                               @Validated NoticeUpdateForm form,
                                BindingResult bindingResult) {
 
-//        if (bindingResult.hasErrors()) {
-//            log.info("errors={}", bindingResult);
-//            model.addAttribute("itemStatuses", ItemStatus.values());
-//            model.addAttribute("sellers", sellerService.findAll());
-//            return "basic/updateItem";
-//        }
-//
-//        itemService.updateItem(itemId, form.getName(), new BigDecimal(form.getPrice()),
-//                Integer.valueOf(form.getQty()), form.getStatus(), sellerService.findById(form.getSellerId()));
+        log.info("form={}", form.toString());
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "basic/updateNotice";
+        }
 
+        Notice notice = noticeService.findById(noticeId);
+
+        if (deleteImages != null && !deleteImages.isEmpty()) {
+            String[] deleteImageIds = deleteImages.split(",");
+
+            for (String imgId : deleteImageIds) {
+                try {
+                    Method getter = notice.getClass().getMethod("get" + imgId);
+                    String uuid = (String) getter.invoke(notice);
+
+                    Method setter = notice.getClass().getMethod("set" + imgId, String.class);
+                    setter.invoke(notice, (String) null);
+
+                    noticeService.createNotice(notice);
+                    fileService.deleteTableByUuidFileName(uuid);
+                    fileService.deleteFile(uuid);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+        try {
+            // Java Reflection API
+            // 순회할 필드 이름 목록
+            String[] fieldNames = {"Img_1", "Img_2", "Img_3", "Img_4", "Img_5", "Img_6"};
+
+            for (String fieldName : fieldNames) {
+
+                String modifiedName = fieldName.replace("_", "");
+                Method getter = form.getClass().getMethod("get" + fieldName);
+                MultipartFile fieldValue = (MultipartFile) getter.invoke(form);
+
+                if (fieldValue != null && !fieldValue.isEmpty()) {
+                    FileNameTable uploadedFile = fileService.createFile(fieldValue);
+                    String uuidFileName = uploadedFile.getUuidFileName();
+
+                    Method setter = notice.getClass().getMethod("set" + modifiedName, String.class);
+                    setter.invoke(notice, uuidFileName);
+
+                    noticeService.createNotice(notice);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/notice-list/" + noticeId;
+
+    }
+
+    //공지 삭제
+    @GetMapping("/notice/delete/{noticeId}")
+    public String deleteNotice(@PathVariable Long noticeId) {
+        noticeService.deleteById(noticeId);
         return "redirect:/notice-list";
     }
 
-
+    //공지사항 상세 클릭 시, 이미지 파일 불러오기
     @ResponseBody
     @GetMapping("/images/{filename}")
     public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        String fullDir = fileUtil.getFullDir(filename);
+        String fullDir = fileService.getFullDir(filename);
         return new UrlResource("file:" + fullDir);
     }
 }

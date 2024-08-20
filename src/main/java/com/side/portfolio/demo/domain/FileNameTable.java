@@ -1,4 +1,4 @@
-package com.side.portfolio.demo.upload;
+package com.side.portfolio.demo.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,10 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-@Getter
+@Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UploadFile {
+public class FileNameTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,7 @@ public class UploadFile {
     private String uuidFileName;
 
     @Builder
-    public UploadFile(String uploadFileName, String uuidFileName) {
+    public FileNameTable(String uploadFileName, String uuidFileName) {
         this.uploadFileName = uploadFileName;
         this.uuidFileName = uuidFileName;
     }

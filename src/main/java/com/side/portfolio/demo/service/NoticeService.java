@@ -1,19 +1,15 @@
 package com.side.portfolio.demo.service;
 
-import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.Notice;
-import com.side.portfolio.demo.domain.Seller;
-import com.side.portfolio.demo.repository.ItemJpaRepository;
 import com.side.portfolio.demo.repository.NoticeJpaRepository;
-import com.side.portfolio.demo.status.ItemStatus;
-import com.side.portfolio.demo.status.NoticeStatus;
+import com.side.portfolio.demo.repository.FileNameTableJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @Service
@@ -22,6 +18,8 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeJpaRepository noticeJpaRepository;
+    private final FileNameTableJpaRepository fileJpaRepository;
+    private final FileService fileService;
 
     @Transactional
     public void createNotice(Notice notice) {
@@ -39,6 +37,36 @@ public class NoticeService {
 
     public Notice findById(Long noticeId) {
         return noticeJpaRepository.findById(noticeId).get();
+    }
+
+    @Transactional
+    public void deleteById(Long noticeId) {
+        Notice notice = findById(noticeId);
+
+        //순회할 필드 이름 목록
+        String[] fieldNames = {"Img1", "Img2", "Img3", "Img4", "Img5", "Img6"};
+
+        try {
+            //Java Reflection API
+            for (String fieldName : fieldNames) {
+                //notice.getImgX() 메서드 동적 호출
+                Method getter = notice.getClass().getMethod("get" + fieldName);
+                String uuidImg = (String) getter.invoke(notice);
+
+                //필드 값이 null 이 아닌 경우 삭제
+                if (uuidImg != null) {
+                    fileService.deleteFile(uuidImg);  // 실제 파일 삭제
+                    fileJpaRepository.deleteByUuidFileName(uuidImg);   // FileNameTable 삭제
+                }
+            }
+
+            //notice 엔티티 삭제
+            noticeJpaRepository.deleteById(noticeId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
