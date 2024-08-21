@@ -21,25 +21,33 @@
 <!--    <p class="field-error mb-3" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
 <!--  </div>-->
 
-  <form role="form" th:action="@{/items/add}" th:object="${itemCreateForm}" method="post">
+  <form role="form" th:action="@{/item/add}" th:object="${itemCreateForm}" method="post" enctype="multipart/form-data">
+
+    <!-- 상품명 -->
     <div class="form-group">
       <label th:for="name">상품명</label>
       <input class="form-control" type="text"
              th:errorclass="is-invalid" th:field="*{name}" placeholder="상품명을 입력하세요">
       <div class="invalid-feedback" th:errors="*{name}">상품명 오류</div>
     </div>
+
+    <!-- 가격 -->
     <div class="form-group">
       <label th:for="price">가격</label>
       <input class="form-control" type="number" step="0.01"
              th:errorclass="is-invalid" th:field="*{price}" placeholder="가격을 입력하세요">
       <div class="invalid-feedback" th:errors="*{price}">가격 오류</div>
     </div>
+
+    <!-- 수량 -->
     <div class="form-group">
       <label th:for="qty">수량</label>
       <input class="form-control" type="number"
              th:errorclass="is-invalid" th:field="*{qty}"  placeholder="수량을 입력하세요">
       <div class="invalid-feedback" th:errors="*{qty}">수량 오류</div>
     </div>
+
+    <!-- 상태 -->
     <div class="form-group">
       <label th:for="status">상태</label>
       <select th:field="*{status}" class="form-control" th:errorclass="is-invalid">
@@ -48,7 +56,9 @@
       </select>
       <div class="invalid-feedback" th:errors="*{status}">상태 오류</div>
     </div>
-    <div class="form-group">
+
+    <!-- 판매자 -->
+    <div class="form-group mb-2">
       <label th:for="sellerId">판매자</label>
       <select th:field="*{sellerId}" class="form-control" th:errorclass="is-invalid">
         <option value="">판매자를 선택하세요</option>
@@ -56,7 +66,19 @@
       </select>
       <div class="invalid-feedback" th:errors="*{sellerId}">판매자 오류</div>
     </div>
+
+    <div class="mb-3">
+      <div id="image-upload-container">
+        <div class="input-group mb-2">
+          <input type="file" class="form-control" th:field="*{img1}" accept="image/*">
+          <button type="button" class="btn btn-danger" onclick="removeImageField(this)">제거</button>
+        </div>
+      </div>
+      <button type="button" id="add-image-button" class="btn btn-secondary">추가</button>
+    </div>
+
     <hr class="my-4">
+
     <div class="row">
       <div class="col">
         <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등록</button>
@@ -68,5 +90,56 @@
     </div>
   </form>
 </div> <!-- /container -->
+
+<script>
+  //추가 버튼
+  document.getElementById('add-image-button').addEventListener('click', function() {
+    // Get the image upload container
+    let container = document.getElementById('image-upload-container');
+
+    // Count current number of file inputs
+    let fileInputs = container.getElementsByTagName('input');
+    let fileCount = fileInputs.length;
+
+    if (fileCount >= 6) {
+      alert('You can upload up to 6 images.');
+      return;
+    }
+
+    let inputGroup = document.createElement('div');
+    inputGroup.className = 'input-group mb-2';
+
+    // Create a new file input element with a unique name and th:field attribute
+    let newFileInput = document.createElement('input');
+    newFileInput.type = 'file';
+    newFileInput.className = 'form-control';
+    newFileInput.setAttribute('th:field', '*{img' + (fileCount + 1) + '}');
+    newFileInput.name = 'img' + (fileCount + 1);
+    newFileInput.accept = 'image/*';
+
+    let removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-danger';
+    removeButton.textContent = '제거';
+    removeButton.onclick = function() { removeImageField(this); };
+
+    inputGroup.appendChild(newFileInput);
+    inputGroup.appendChild(removeButton);
+    container.appendChild(inputGroup);
+  });
+
+  //제거 버튼
+  function removeImageField(button) {
+    let container = document.getElementById('image-upload-container');
+    container.removeChild(button.parentNode);
+
+    let fileInputs = container.getElementsByTagName('input');
+    for (let i = 0; i < fileInputs.length; i++) {
+      fileInputs[i].name = 'img' + (i + 1);
+      fileInputs[i].setAttribute('th:field', '*{img' + (i + 1) + '}');
+    }
+  }
+</script>
+
 </body>
 </html>

@@ -2,19 +2,25 @@ package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.dto.SignUpForm;
+import com.side.portfolio.demo.service.FileService;
 import com.side.portfolio.demo.service.SellerService;
 import com.side.portfolio.demo.service.TeamService;
 import com.side.portfolio.demo.status.SellerStatus;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -24,6 +30,7 @@ public class MainController {
 
     private final TeamService teamService;
     private final SellerService sellerService;
+    private final FileService fileService;
 //    private final LoginService loginService;
 
     @GetMapping("/")
@@ -103,5 +110,12 @@ public class MainController {
     }
 
 
+    //상세 페이지 로드 시, 이미지 파일 불러오기
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        String fullDir = fileService.getFullDir(filename);
+        return new UrlResource("file:" + fullDir);
+    }
 }
 

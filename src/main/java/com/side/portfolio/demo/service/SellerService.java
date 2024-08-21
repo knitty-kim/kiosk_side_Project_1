@@ -2,7 +2,6 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
-import com.side.portfolio.demo.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +18,7 @@ public class SellerService {
 
     private final SellerJpaRepository sellerJpaRepository;
 
-    /**
-     * 판매자 가입
-     */
+    //판매자 가입
     @Transactional
     public void signUp(Seller seller) {
         sellerJpaRepository.save(seller);
@@ -43,11 +40,7 @@ public class SellerService {
         return sellerJpaRepository.findById(sellerId).get();
     }
 
-    /**
-     * 판매자 페이지네이션
-     * @param pageable
-     * @return
-     */
+    //판매자 페이지네이션
     public Page<Seller> findByPagination(Pageable pageable) {
         Page<Seller> result = sellerJpaRepository.findAll(pageable);
         return result;

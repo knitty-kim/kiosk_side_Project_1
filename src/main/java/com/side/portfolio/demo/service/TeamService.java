@@ -2,7 +2,6 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
-import com.side.portfolio.demo.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,26 +16,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private final TeamRepository teamRepository;
     private final TeamJpaRepository teamJpaRepository;
 
-    /**
-     * 팀 가입
-     * @param team
-     * @return
-     */
+    //팀 가입
     @Transactional
-    public Long signUp(Team team) {
+    public void signUp(Team team) {
         validateTeam(team);
-        return teamRepository.save(team);
+        teamJpaRepository.save(team);
     }
 
-    /**
-     * 중복 팀 검증
-     * @param team
-     */
+    //중복 팀 검증
     private void validateTeam(Team team) {
-        Optional<Team> byName = teamRepository.findByName(team.getName());
+        Optional<Team> byName = teamJpaRepository.findByName(team.getName());
         if (byName.isPresent()) {
             throw new IllegalStateException("이미 존재하는 팀입니다");
         }

@@ -4,6 +4,7 @@ import com.side.portfolio.demo.status.ItemStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -28,4 +29,10 @@ public class ItemCreateForm {
     @NotNull(message = "판매자가 선택되어야 합니다")
     private Long sellerId;
 
+    private MultipartFile img1;
+    private MultipartFile img2;
+    private MultipartFile img3;
+    private MultipartFile img4;
+    private MultipartFile img5;
+    private MultipartFile img6;
 }

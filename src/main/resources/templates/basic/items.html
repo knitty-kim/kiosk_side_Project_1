@@ -83,7 +83,7 @@
                 <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                         type="button">홈</button>
                 <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                        th:onclick="|location.href='@{/items/add}'|"
+                        th:onclick="|location.href='@{/item/add}'|"
                         type="button">상품 등록</button>
                 <button class="btn btn-primary me-1"
                         th:onclick="|location.href='@{/item-list}'|"
@@ -118,11 +118,12 @@
             </thead>
             <tbody>
             <tr th:each="item : ${items}">
-                <!--TODO 상품 상세로 url 연결!-->
-                <td><a href="#" th:text="${item.id}">상품 ID</a></td>
+                <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
 
-                <!--TODO 상품 상세로 url 연결!-->
-                <td class="w-25"><a class="text-wrap" href="#" th:text="${item.name}">상품명</a></td>
+                <td class="w-25">
+                    <a class="text-wrap"
+                       th:href="@{'/item-list/' + ${item.id}}"
+                       th:text="${item.name}">상품명</a></td>
 
                 <td th:text="${item.price}">10</td>
                 <td th:text="${item.qty}">10</td>
@@ -141,7 +142,7 @@
 
                 <td th:if="${session.types == 'master'}">
                     <a class="btn btn-primary" role="button"
-                       th:href="@{/items/update/{itemId}(itemId=${item.id})}">수정</a></td>
+                       th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a></td>
             </tr>
             </tbody>
         </table>
@@ -159,7 +160,6 @@
 </div>
 
 </div> <!-- /container -->
-<!--jQuery-->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 </body>
 </html>

@@ -31,9 +31,14 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
 
-    private String remark;
     private String img1;
     private String img2;
+    private String img3;
+    private String img4;
+    private String img5;
+    private String img6;
+
+    private String remark;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -93,19 +98,40 @@ public class Item {
     public void setUpStatus(ItemStatus status) {
         this.status = status;
     }
+
+    public void setUpImg1(String img1) {
+        this.img1 = img1;
+    }
+    public void setUpImg2(String img2) {
+        this.img2 = img2;
+    }
+    public void setUpImg3(String img3) {
+        this.img3 = img3;
+    }
+    public void setUpImg4(String img4) {
+        this.img4 = img4;
+    }
+    public void setUpImg5(String img5) {
+        this.img5 = img5;
+    }
+    public void setUpImg6(String img6) {
+        this.img6 = img6;
+    }
+
+    public void setUpModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
     //==변경 메서드 끝==//
 
     @Builder
     public Item(String name, BigDecimal price, int qty, ItemStatus status, String remark,
-                String img1, String img2, LocalDateTime createdDate, LocalDateTime modifiedDate,
+                LocalDateTime createdDate, LocalDateTime modifiedDate,
                 Seller seller, List<OrderItem> orderItems) {
         this.name = name;
         this.price = price;
         this.qty = qty;
         this.status = status;
         this.remark = remark;
-        this.img1 = img1;
-        this.img2 = img2;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.seller = seller;

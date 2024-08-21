@@ -34,7 +34,7 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final FileService fileService;
 
-    //공지 리스트
+    //공지 목록
     @GetMapping("/notice-list")
     public String noticeList(Model model,
                              @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -183,6 +183,9 @@ public class NoticeController {
         }
 
         Notice notice = noticeService.findById(noticeId);
+        notice.setTitle(form.getTitle());
+        notice.setContent(form.getContent());
+        notice.setModifiedDate(LocalDateTime.now());
 
         if (deleteImages != null && !deleteImages.isEmpty()) {
             String[] deleteImageIds = deleteImages.split(",");
@@ -195,16 +198,13 @@ public class NoticeController {
                     Method setter = notice.getClass().getMethod("set" + imgId, String.class);
                     setter.invoke(notice, (String) null);
 
-                    noticeService.createNotice(notice);
                     fileService.deleteTableByUuidFileName(uuid);
                     fileService.deleteFile(uuid);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
 
         try {
@@ -224,17 +224,15 @@ public class NoticeController {
 
                     Method setter = notice.getClass().getMethod("set" + modifiedName, String.class);
                     setter.invoke(notice, uuidFileName);
-
-                    noticeService.createNotice(notice);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "redirect:/notice-list/" + noticeId;
+        noticeService.createNotice(notice);
 
+        return "redirect:/notice-list/" + noticeId;
     }
 
     //공지 삭제
@@ -244,11 +242,4 @@ public class NoticeController {
         return "redirect:/notice-list";
     }
 
-    //공지사항 상세 클릭 시, 이미지 파일 불러오기
-    @ResponseBody
-    @GetMapping("/images/{filename}")
-    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        String fullDir = fileService.getFullDir(filename);
-        return new UrlResource("file:" + fullDir);
-    }
 }

@@ -3,9 +3,7 @@ package com.side.portfolio.demo.service;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
-import com.side.portfolio.demo.repository.SellerRepository;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
-import com.side.portfolio.demo.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LogInService {
 
-    private final TeamRepository teamRepository;
     private final TeamJpaRepository teamJpaRepository;
-    private final SellerRepository sellerRepository;
     private final SellerJpaRepository sellerJpaRepository;
 
     //팀 로그인

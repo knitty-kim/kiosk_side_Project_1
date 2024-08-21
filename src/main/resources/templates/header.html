@@ -62,13 +62,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false" th:if="${session.id} != null"
-             th:text="${session.name}+'님의 Page'"></a>
+             th:text="'Welcome! '+${session.name}"></a>
           <div class="dropdown-menu">
             <a th:href="@{/order-list}" class="dropdown-item">주문 목록</a>
             <a th:if="${session.types} != 'seller'"
                th:href="@{/cart-list}" class="dropdown-item">장바구니</a>
-            <a th:href="@{/templates/basic/qnalist}" class="dropdown-item" >나의 문의</a>
-            <a th:href="@{/templates/basic/signout}" class="dropdown-item">회원 탈퇴</a>
+<!--            <a th:href="@{/templates/basic/signout}" class="dropdown-item">회원 탈퇴</a>-->
           </div>
         </li>
 
@@ -86,7 +85,7 @@
 <header class="masthead" th:fragment="common-header">
   <div class="container position-relative">
     <div class="row justify-content-center">
-      <div class="col-xl-6">
+      <div class="col-xl-auto">
         <div class="text-center text-white">
           <!-- Page heading-->
           <h1 class="my-auto">Welcome to Kiosk Project!</h1>
