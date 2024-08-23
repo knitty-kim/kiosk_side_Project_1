@@ -73,7 +73,7 @@
         <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                 type="button">홈</button>
         <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                th:onclick="|location.href='@{/items/add}'|"
+                th:onclick="|location.href='@{/item/add}'|"
                 type="button">상품 등록</button>
         <button class="btn btn-primary me-1"
                 th:onclick="|location.href='@{/item-list}'|"

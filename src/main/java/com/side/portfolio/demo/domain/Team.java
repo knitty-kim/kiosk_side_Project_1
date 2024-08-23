@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)//무분별한 객체 생성 방지
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +49,7 @@ public class Team {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "team")
-    private List<Order> kiosks = new ArrayList<>();
+    private List<Kiosk> kiosks = new ArrayList<>();
 
     @OneToMany(mappedBy = "team")
     private List<Cart> carts = new ArrayList<>();
