@@ -7,6 +7,11 @@
     function redirectionHome() {
       window.location.href = '/';
     }
+
+    function notYet() {
+      alert("작업중입니다..");
+    }
+
   </script>
 </head>
 <body>
@@ -41,8 +46,8 @@
       </thead>
       <tbody>
         <tr th:each="seller : ${sellers}">
-          <td><a href="#" th:text="${seller.id}">판매자 ID</a></td>
-          <td><a href="#" th:text="${seller.name}">판매자 명</a></td>
+          <td><a href="#" th:text="${seller.id}" onclick="notYet()">판매자 ID</a></td>
+          <td><a href="#" th:text="${seller.name}" onclick="notYet()">판매자 명</a></td>
           <td th:text="${seller.phNumber}">333-333-3333</td>
           <td th:text="${seller.email}">us@us.or</td>
           <td th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>

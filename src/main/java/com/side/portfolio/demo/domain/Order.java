@@ -21,7 +21,7 @@ public class Order {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    //ORDERED, CANCELED
+    //ORDERED, ACCEPTED, REJECTED, CANCELED
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 

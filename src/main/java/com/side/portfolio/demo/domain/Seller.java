@@ -39,11 +39,11 @@ public class Seller {
     @Embedded
     private Address address;
 
-//    @OneToMany(mappedBy = "seller")
-//    private List<Order> orders = new ArrayList<>();
-
     @OneToMany(mappedBy = "seller")
     private List<Item> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller")
+    private List<PartnerSeller> partnerSellers = new ArrayList<>();
 
     @Builder
     public Seller(String pw, String name, String phNumber,

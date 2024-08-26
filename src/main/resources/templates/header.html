@@ -34,24 +34,27 @@
 
         <li class="nav-item"><a th:href="@{/notice-list}" class="nav-link">공지사항</a></li>
         <li class="nav-item"><a th:href="@{/about}" class="nav-link">회사소개</a></li>
-
-<!--        <li class="nav-item dropdown">-->
-<!--            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">상품보기</a>-->
-<!--            <ul class="dropdown-menu">-->
-<!--                <a class="dropdown-item" th:href="@{/item-list}">전체상품 목록</a>-->
-<!--              &lt;!&ndash;            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='orD.cnt')}">인기상품 보기</a>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <a class="dropdown-item" th:href="@{/item-list(categoryKey = 0, ascDesc = 'desc', orderCri='itemKey')}">신상품 보기</a>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <a class="dropdown-item" th:href="@{/shoplist(categoryKey = 0, ascDesc = 'asc', orderCri='sale')}">최저가 상품 보기</a>&ndash;&gt;-->
-<!--            </ul>-->
-<!--        </li>-->
-
         <li class="nav-item"><a th:href="@{/item-list}" class="nav-link">전체 상품</a></li>
+        <li class="nav-item">
+          <a class="nav-link"
+             th:if="${session.types} == 'seller'"
+             th:href="@{/ordered-list/{sellerId}(sellerId=${session.id})}">주문된 목록</a></li>
+
+        <li class="nav-item">
+          <a class="nav-link"
+             th:if="${session.types} != 'seller' and ${session.id} != null"
+             th:href="@{/order-list}">주문 목록</a></li>
+
+        <li class="nav-item">
+          <a class="nav-link"
+             th:if="${session.types} != 'seller' and ${session.id} != null"
+             th:href="@{/cart-list}">장바구니</a></li>
 
         <li class="nav-item" th:if="${session.types} == 'master'">
-          <a th:href="@{/team/team-list}" class="nav-link">팀 목록</a></li>
+          <a th:href="@{/team/team-list}" class="nav-link">전체 팀 목록</a></li>
 
-        <li class="nav-item" th:if="${session.types} != 'seller'">
-            <a th:href="@{/seller/seller-list}" class="nav-link">판매자 목록</a></li>
+        <li class="nav-item" th:if="${session.types} == 'master'">
+            <a th:href="@{/seller/seller-list}" class="nav-link">전체 판매자 목록</a></li>
 
       </ul>
 
@@ -63,10 +66,9 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false" th:if="${session.id} != null"
              th:text="'Welcome! '+${session.name}"></a>
-          <div class="dropdown-menu">
-            <a th:href="@{/order-list}" class="dropdown-item">주문 목록</a>
-            <a th:if="${session.types} != 'seller'"
-               th:href="@{/cart-list}" class="dropdown-item">장바구니</a>
+          <div class="dropdown-menu" th:if="${session.types} == 'team'">
+            <a th:href="@{/seller/partner-seller-list/{teamId}(teamId=${session.id})}" class="dropdown-item">제휴된 판매자 목록</a>
+<!--            <a th:href="@{/cart-list}" class="dropdown-item">장바구니</a>-->
 <!--            <a th:href="@{/templates/basic/signout}" class="dropdown-item">회원 탈퇴</a>-->
           </div>
         </li>

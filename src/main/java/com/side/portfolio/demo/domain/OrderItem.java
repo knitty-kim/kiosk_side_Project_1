@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class OrderItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
     private Long id;
 
@@ -36,6 +36,7 @@ public class OrderItem {
         orderItem.setUpItem(item);
         orderItem.setUpOrderPrice(orderPrice);
         orderItem.setUpCount(count);
+        orderItem.setUpCreatedDate(LocalDateTime.now());
         return orderItem;
     }
 

@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
+import com.side.portfolio.demo.dto.condition.OrderedItemDto;
 import com.side.portfolio.demo.repository.*;
 import com.side.portfolio.demo.status.DeliveryStatus;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,11 @@ public class OrderService {
     private final TeamJpaRepository teamJpaRepository;
     private final CartJpaRepository cartJpaRepository;
     private final ItemJpaRepository itemJpaRepository;
+//    private final SellerJpaRepository sellerJpaRepository;
 
-    /**
-     * 주문 생성
-     * @param teamId
-     * @return
-     */
+//    private final JPAQueryFactory queryFactory;
+
+    //주문 생성
     @Transactional
     public Long createOrder(Long teamId) {
         
@@ -96,5 +96,10 @@ public class OrderService {
         return orderItemJpaRepository.findByOrder_Id(orderId);
     }
 
+    //판매자 ID로 주문 상품 조회
+    public List<OrderedItemDto> findBySeller_Id(Long sellerId) {
+        List<OrderedItemDto> orderedItems = orderJpaRepository.searchOrderItemBySellerId(sellerId);
+        return orderedItems;
+    }
 
 }

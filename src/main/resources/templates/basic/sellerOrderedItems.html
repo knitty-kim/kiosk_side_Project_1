@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script>
+        function redirectionHome() {
+            window.location.href = '/';
+        }
+
+        function notYet() {
+            alert("작업중입니다..");
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <!--타이틀-->
+    <div class="py-5 text-center">
+        <h2>주문된 목록</h2>
+    </div>
+
+    <!--상단 목록 이동 버튼들-->
+    <div class="row mb-3">
+        <div class="col">
+            <div class="float-end">
+                <button class="btn btn-secondary me-1" onclick="redirectionHome()"
+                        type="button">홈</button>
+                <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+                        th:onclick="|location.href='@{/item/add}'|"
+                        type="button">상품 등록</button>
+                <button class="btn btn-primary me-1"
+                        th:onclick="|location.href='@{/item-list}'|"
+                        type="button">상품 목록</button>
+                <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
+                        th:onclick="|location.href='@{/order-list}'|"
+                        type="button">주문 목록</button>
+                <button class="btn btn-warning" th:if="${session.types != 'seller'}"
+                        th:onclick="|location.href='@{/cart-list}'|"
+                        type="button">장바구니</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-0">
+
+    <!--테이블-->
+    <td>
+        <input type="hidden" id="sessionId" th:value="${session.id}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>상품 ID</th>
+                <th>상품명</th>
+                <th>주문 수량</th>
+                <th>주문자</th>
+                <th>주문 상태</th>
+                <th>주문 일자</th>
+                <th>수정 일자</th>
+                <th th:if="${session.types == 'seller'}"></th>
+                <th th:if="${session.types == 'seller'}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td><a th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemId}">상품 ID</a></td>
+
+                <td class="w-25">
+                    <a class="text-wrap" th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemName}">상품명</a></td>
+
+                <td th:text="${order.orderedCount}">주문 수량</td>
+                <td th:text="${order.teamName}">주문자 명</td>
+                <td class="fw-bolder"
+                    th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
+                    th:text="${order.orderStatus}">주문 상태</td>
+
+                <td th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">주문 일자</td>
+                <td th:text="${#temporals.format(order.modifiedDate, 'yyyy-MM-dd HH:mm')}">수정 일자</td>
+
+                <td th:if="${session.types == 'seller'}">
+                    <a class="btn btn-primary" role="button"
+                       href="#" onclick="notYet()">Accept</a></td>
+
+                <td th:if="${session.types == 'seller'}">
+                    <a class="btn btn-secondary" role="button"
+                       href="#" onclick="notYet()">Reject</a></td>
+
+            </tr>
+            </tbody>
+        </table>
+</div>
+
+<!-- 페이징 바 -->
+<!--<div class="row" id="pageSection">-->
+<!--    <ul class="pagination justify-content-center">-->
+<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>-->
+<!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
+<!--            <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
+<!--        </li>-->
+<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+</div> <!-- /container -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</body>
+</html>

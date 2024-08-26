@@ -1,8 +1,10 @@
 package com.side.portfolio.demo.controller;
 
+import com.side.portfolio.demo.Message;
 import com.side.portfolio.demo.domain.Delivery;
 import com.side.portfolio.demo.domain.Order;
 import com.side.portfolio.demo.domain.OrderItem;
+import com.side.portfolio.demo.dto.condition.OrderedItemDto;
 import com.side.portfolio.demo.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +40,35 @@ public class OrderController {
         HttpSession session = request.getSession();
 
         String types = (String) session.getAttribute("types");
-        Long teamId = (Long) session.getAttribute("id");
 
         if (types.equals("team") || types.equals("master")) {
+            Long teamId = (Long) session.getAttribute("id");
             Page<Order> orders = orderService.findByTeam_Id(teamId, pageable);
+            model.addAttribute("orders", orders);
+
+            model.addAttribute("prev", orders.getPageable().previousOrFirst().getPageNumber());
+            model.addAttribute("next", orders.getPageable().next().getPageNumber());
+
+            model.addAttribute("hasPrev", orders.hasPrevious());
+            model.addAttribute("hasNext", orders.hasNext());
+
+            int groupSize = 3; //화면에 보여질 페이지 개수
+            int curPageGrp = (int) Math.floor((double) orders.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
+            model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
+
+            int endPage = Math.min(orders.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1);
+            if (endPage == -1) {
+                endPage = 0;
+            }
+
+            model.addAttribute("endPage", endPage);
+
+            model.addAttribute("curPage", orders.getNumber());
+
+        } else if (types.equals("seller") || types.equals("master")) {
+            Long sellerId = (Long) session.getAttribute("id");
+
+            Page<Order> orders = orderService.findByTeam_Id(sellerId, pageable);
             model.addAttribute("orders", orders);
 
             model.addAttribute("prev", orders.getPageable().previousOrFirst().getPageNumber());
@@ -147,6 +174,26 @@ public class OrderController {
     public String deleteOrder(@PathVariable Long orderId) {
         orderService.cancelOrder(orderId);
         return "OK";
+    }
+
+    //판매자 ID로 주문 상품 조회
+    @GetMapping("/ordered-list/{sellerId}")
+    public String orderedList(Model model, HttpServletRequest request,
+                              @PathVariable Long sellerId) {
+
+        HttpSession session = request.getSession();
+        Long sessionId = (Long) session.getAttribute("id");
+
+        if (sessionId != sellerId) {
+            model.addAttribute("data", new Message("잘못된 접근입니다!", "/"));
+            return "message";
+        }
+
+        List<OrderedItemDto> orderedList = orderService.findBySeller_Id(sellerId);
+
+        model.addAttribute("orders", orderedList);
+
+        return "basic/sellerOrderedItems";
     }
 
 }

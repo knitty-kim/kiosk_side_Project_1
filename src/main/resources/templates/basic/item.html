@@ -108,7 +108,9 @@
       <!--<button class="btn btn-primary btn-lg">구매하기</button>-->
 
       <!-- 장바구니 담기 버튼 -->
-      <div class="d-flex" th:if="${item.status.toString() == 'OPEN'}">
+      <div class="d-flex"
+           th:if="${item.status.toString() == 'OPEN'}
+           and ${session.types == 'master' or session.types == 'team'}">
         <button class="btn btn-primary btn-lg" type="button"
                 onclick="toCart()">장바구니 담기</button>
       </div>
