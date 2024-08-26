@@ -350,6 +350,64 @@
 	  </div>
 	</details>
      </li>
+	    <li>
+	<details>
+	  <summary><b>24.08.22 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>README.md 업데이트</li>
+	      <li>AWS EC2와 RDS의 동일하지 않은 가용영역으로 인한 과금 내역 확인</li>
+	      <li>AWS RDS 리전 변경 및 재생성(Sydney -> Seoul)</li>
+		<li>MySQL Workbench에서 EC2 SSH 터널링을 통한 접속</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.08.23 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>장바구니 리스트, 주문 리스트, 주문 상세에서 상품 등록 버튼 미동작 오류 수정
+	      <ul>
+		<li>ajax 비동기 post 전송 코드 추가</li>
+	      </ul></li>
+	      <li>Address 엔티티 기본 생성자 -> @NoArgsConstructor 수정</li>
+	      <li>Team 엔티티와 Kiosk 엔티티 간 연관관계 수정</li>
+		<li>팀, 판매자 상세 클릭 시, 임시 경고창을 띄우도록 수정</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.08.24 Sat</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>주문 상태 ACCEPTED 추가</li>
+	      <li>주문 상태가 ACCEPTED인 경우, 주문 취소 불가하도록 수정</li>
+	      <li>판매자가 본인 가게에 대한 주문 내역만 볼 수 있도록 수정</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.08.26 Mon</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>QueryDSL 설정 추가</li>
+	      <li>주문 상태 REJECTED 추가</li>
+	      <li>판매자 전용 주문된 목록 페이지 추가</li>
+		    <li>올바른 접근이 아닌 경우, 메시지를 띄우도록 Message 객체 추가</li>
+		    <li>해당 판매자가 아닌 사용자의 주문된 목록 페이지 접근 제한</li>
+		    <li>상품 상세 페이지에서 판매자는 장바구니 담기 불가능하도록 수정</li>
+		    <li>주문 상품 생성 시, 생성일 세팅되도록 수정</li>
+		    <li>"제휴된 판매자"에 대한 기능을 위한 PartnerSeller 객체 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
     </ul>
   </div>
 </details>
