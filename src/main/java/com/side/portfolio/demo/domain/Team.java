@@ -54,8 +54,12 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Cart> carts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "team")
-    private List<PartnerSeller> partnerSellers = new ArrayList<>();
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<Partner> partners = new ArrayList<>();
+
+    public void setUpPartner(Partner partner) {
+        partners.add(partner);
+    }
 
     @Builder
     public Team(String pw, String name, int tickets, String phNumber,

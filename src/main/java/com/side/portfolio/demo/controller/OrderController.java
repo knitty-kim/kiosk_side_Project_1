@@ -5,6 +5,7 @@ import com.side.portfolio.demo.domain.Delivery;
 import com.side.portfolio.demo.domain.Order;
 import com.side.portfolio.demo.domain.OrderItem;
 import com.side.portfolio.demo.dto.condition.OrderedItemDto;
+import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final LogInService logInService;
 
     //주문 목록
     @GetMapping("/order-list")
@@ -181,10 +183,7 @@ public class OrderController {
     public String orderedList(Model model, HttpServletRequest request,
                               @PathVariable Long sellerId) {
 
-        HttpSession session = request.getSession();
-        Long sessionId = (Long) session.getAttribute("id");
-
-        if (sessionId != sellerId) {
+        if (logInService.invalidAccess(request.getSession(), sellerId)) {
             model.addAttribute("data", new Message("잘못된 접근입니다!", "/"));
             return "message";
         }
@@ -193,7 +192,7 @@ public class OrderController {
 
         model.addAttribute("orders", orderedList);
 
-        return "basic/sellerOrderedItems";
+        return "basic/sellerOrders";
     }
 
 }

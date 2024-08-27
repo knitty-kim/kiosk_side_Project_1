@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
   <script>
     function redirectionHome() {
       window.location.href = '/';
@@ -10,6 +11,38 @@
 
     function notYet() {
       alert("작업중입니다..");
+    }
+
+    //제휴 맺기
+    function addConnection(button, sellerId) {
+
+      let data = {
+        teamId : $("#sessionId").val(),
+        sellerId : sellerId
+      }
+
+      $.ajax({
+        url: '/team/partners/add',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+
+          if (response[0] == true) {
+            if (confirm("제휴 맺기 성공! 제휴 판매자 목록으로 이동하시겠습니까?")) {
+              location.href = response[1];
+            }
+          } else {
+            alert(response[1]);
+          }
+
+        },
+        error: function(error) {
+          console.error('Error sending data', error);
+
+        }
+      });
+
     }
 
   </script>
@@ -31,23 +64,30 @@
   </div>
   <hr class="my-0">
   <div>
+    <input type="hidden" id="sessionId" th:value="${session.id}">
     <table class="table table-striped">
       <thead>
       <tr>
         <th>ID</th>
-        <th>이름</th>
+        <th>판매자 명</th>
         <th>연락처</th>
         <th>이메일</th>
         <th>생성일</th>
         <th>수정일</th>
         <th>상태</th>
         <th>remark</th>
+        <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
       </tr>
       </thead>
       <tbody>
         <tr th:each="seller : ${sellers}">
-          <td><a href="#" th:text="${seller.id}" onclick="notYet()">판매자 ID</a></td>
-          <td><a href="#" th:text="${seller.name}" onclick="notYet()">판매자 명</a></td>
+          <td><a href="#" th:text="${seller.id}"
+                 onclick="notYet()">판매자 ID</a></td>
+
+          <td><a href="#"
+                 th:text="${seller.name}"
+                 onclick="notYet()">판매자 명</a></td>
+
           <td th:text="${seller.phNumber}">333-333-3333</td>
           <td th:text="${seller.email}">us@us.or</td>
           <td th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>
@@ -58,6 +98,11 @@
                               'text-secondary')"
               th:text="${seller.status}">상태</td>
           <td th:text="${seller.remark}">비고</td>
+          <td th:if="${session.types == 'master'} or ${session.types == 'team'}">
+            <button class="btn btn-primary" type="button" id="button-addon2"
+                    th:onclick="|addConnection(this, ${seller.id})|">제휴 맺기</button></td>
+<!--            <a class="btn btn-primary" role="button" onclick="addConnection(this)">제휴 맺기</a></td>-->
+<!--               th:href="@{/team/partners/add/{teamId}(teamId=${session.id})}"-->
         </tr>
       </tbody>
     </table>

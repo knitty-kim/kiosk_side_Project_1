@@ -43,7 +43,11 @@ public class Seller {
     private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "seller")
-    private List<PartnerSeller> partnerSellers = new ArrayList<>();
+    private List<Partner> partners = new ArrayList<>();
+
+    public void setUpPartner(Partner partner) {
+        partners.add(partner);
+    }
 
     @Builder
     public Seller(String pw, String name, String phNumber,

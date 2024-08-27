@@ -99,8 +99,8 @@ public class Order {
 
     public void setUpOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
-        orderItem.setUpCreatedDate(LocalDateTime.now());
-        orderItem.setUpModifiedDate(LocalDateTime.now());
+//        orderItem.setUpCreatedDate(LocalDateTime.now());
+//        orderItem.setUpModifiedDate(LocalDateTime.now());
         orderItem.setUpOrder(this);
     }
 

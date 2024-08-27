@@ -1,6 +1,8 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.dto.condition.PartnerDto;
+import com.side.portfolio.demo.repository.PartnerJpaRepository;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class SellerService {
 
     private final SellerJpaRepository sellerJpaRepository;
+    private final PartnerJpaRepository partnerJpaRepository;
 
     //판매자 가입
     @Transactional
@@ -30,6 +33,11 @@ public class SellerService {
         if (sellers.isPresent()) {
             throw new IllegalStateException("이미 존재하는 판매자입니다");
         }
+    }
+
+    public List<PartnerDto> findPartnerByTeam_Id(Long teamId) {
+        List<PartnerDto> partners = sellerJpaRepository.searchPartnerByTeamId(teamId);
+        return partners;
     }
 
     public List<Seller> findAll() {

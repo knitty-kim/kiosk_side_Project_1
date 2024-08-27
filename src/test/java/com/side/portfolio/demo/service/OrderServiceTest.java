@@ -2,6 +2,7 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.repository.OrderJpaRepository;
+import com.side.portfolio.demo.status.OrderStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

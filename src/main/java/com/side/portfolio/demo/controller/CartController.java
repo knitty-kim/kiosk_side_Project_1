@@ -120,7 +120,7 @@ public class CartController {
             cartService.createCart(cart);
 
             result.add(true);
-            result.add("cart-list");
+            result.add("/cart-list");
         }
 
         return result;

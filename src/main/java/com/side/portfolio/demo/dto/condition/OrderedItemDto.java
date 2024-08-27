@@ -20,7 +20,6 @@ public class OrderedItemDto {
     private LocalDateTime modifiedDate;
 
     @QueryProjection
-
     public OrderedItemDto(Long itemId, String itemName, int orderedCount,
                           Long teamId, String teamName, OrderStatus orderStatus,
                           LocalDateTime createdDate, LocalDateTime modifiedDate) {

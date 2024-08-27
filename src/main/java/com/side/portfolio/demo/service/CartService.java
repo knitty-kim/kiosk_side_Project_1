@@ -35,8 +35,8 @@ public class CartService {
     }
 
     //상품이 장바구니에 있는지 확인
-    public Boolean isInCart(Long teamId, Long ItemId) {
-        List<Cart> carts = cartJpaRepository.findByTeam_IdAndItem_Id(teamId, ItemId);
+    public Boolean isInCart(Long teamId, Long itemId) {
+        List<Cart> carts = cartJpaRepository.findByTeam_IdAndItem_Id(teamId, itemId);
         if (carts.isEmpty()) {
             return false;
         } else {
