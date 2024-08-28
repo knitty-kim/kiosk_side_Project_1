@@ -1,10 +1,15 @@
 package com.side.portfolio.demo.repository.custom;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.side.portfolio.demo.dto.condition.PartnerDto;
-import com.side.portfolio.demo.dto.condition.QPartnerDto;
+import com.side.portfolio.demo.dto.condition.*;
+import com.side.portfolio.demo.status.SellerStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -33,5 +38,44 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
 
     }
 
+    @Override
+    public Page<SellerDto> searchPage(SellerSearchCond cond, Pageable pageable) {
+        List<SellerDto> content = queryFactory
+                .select(new QSellerDto(seller.id, seller.name, seller.phNumber,
+                        seller.email, seller.createdDate, seller.modifiedDate,
+                        seller.status, seller.remark))
+                .from(seller)
+                .where(idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(seller)
+                .from(seller)
+                .where(idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()))
+                .fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression idEq(Long id) {
+        return id == null ? null : seller.id.eq(id);
+    }
+
+    private BooleanExpression nameEq(String name) {
+        return StringUtils.hasText(name) ? seller.name.eq(name) : null;
+    }
+
+
+    private BooleanExpression phNumberEq(String phNumber) {
+        return StringUtils.hasText(phNumber) ? seller.phNumber.eq(phNumber) : null;
+    }
+
+    private BooleanExpression statusEq(SellerStatus status) {
+        return status == null ? null : seller.status.eq(status);
+    }
 
 }

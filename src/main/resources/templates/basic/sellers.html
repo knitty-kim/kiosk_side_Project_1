@@ -13,8 +13,20 @@
       alert("작업중입니다..");
     }
 
+    //수량 유효성 검사
+    function notOpen(sellerStatus) {
+      if (sellerStatus.toString() != 'OPEN') {
+        return true;
+      }
+    }
+
     //제휴 맺기
-    function addConnection(button, sellerId) {
+    function addConnection(button, sellerId, sellerStatus) {
+
+      if (notOpen(sellerStatus)) {
+        alert('OPEN 상태인 판매자만 제휴할 수 있습니다');
+        return;
+      }
 
       let data = {
         teamId : $("#sessionId").val(),
@@ -50,7 +62,7 @@
 <body>
 <div class="container" style="max-width: 1000px">
   <div class="py-5 text-center">
-    <h2>판매자 목록</h2>
+    <h2>전체 판매자 목록</h2>
   </div>
   <div class="row mb-3">
     <div class="col">
@@ -100,7 +112,7 @@
           <td th:text="${seller.remark}">비고</td>
           <td th:if="${session.types == 'master'} or ${session.types == 'team'}">
             <button class="btn btn-primary" type="button" id="button-addon2"
-                    th:onclick="|addConnection(this, ${seller.id})|">제휴 맺기</button></td>
+                    th:onclick="|addConnection(this, ${seller.id}, ${seller.status})|">제휴 맺기</button></td>
 <!--            <a class="btn btn-primary" role="button" onclick="addConnection(this)">제휴 맺기</a></td>-->
 <!--               th:href="@{/team/partners/add/{teamId}(teamId=${session.id})}"-->
         </tr>
