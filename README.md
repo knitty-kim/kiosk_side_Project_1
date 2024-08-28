@@ -408,6 +408,27 @@
 	  </div>
 	</details>
      </li>
+     <li>
+	<details>
+	  <summary><b>24.08.27 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>판매자 제휴 맺기 기능 추가</li>
+	      <li>판매자 제휴 맺기 테스트 추가</li>
+	      <li>올바른 접근이 아닌 경우에 대한 코드를 LogInService로 Extract</li>
+	      <li>제휴 판매자 목록 접근이 올바르지 않은 경우에 대한 처리 추가</li>
+	      <li>헤더에 "제휴 판매자 목록" 버튼 추가</li>
+	      <li>sellerOrderedItems -> sellerOrders 이름 변경</li>
+	      <li>"전체 판매자 목록"에 "제휴 맺기" 버튼 추가</li>
+	      <li>PartnerSeller -> Partner 이름 변경</li>
+	      <li>제휴 상태 객체 PartnerStatus 추가</li>
+	      <li>"제휴 판매자 조회"를 위한 객체 PartnerDto 추가</li>
+	      <li>"제휴 판매자 목록" 페이지 추가</li>
+	      <li>접속한 팀과 제휴된 "제휴 판매자 조회" 기능 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
     </ul>
   </div>
 </details>
