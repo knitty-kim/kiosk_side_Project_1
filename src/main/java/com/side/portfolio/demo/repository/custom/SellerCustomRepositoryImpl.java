@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.repository.custom;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.side.portfolio.demo.dto.condition.*;
 import com.side.portfolio.demo.status.SellerStatus;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -39,7 +41,8 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
     }
 
     @Override
-    public Page<SellerDto> searchPage(SellerSearchCond cond, Pageable pageable) {
+    public Page<SellerDto> searchSeller(SellerSearchCond cond, Pageable pageable) {
+
         List<SellerDto> content = queryFactory
                 .select(new QSellerDto(seller.id, seller.name, seller.phNumber,
                         seller.email, seller.createdDate, seller.modifiedDate,
@@ -51,14 +54,14 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory
-                .select(seller)
+        JPAQuery<Long> countQuery = queryFactory
+                .select(seller.count())
                 .from(seller)
                 .where(idEq(cond.getId()), nameEq(cond.getName()),
-                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()))
-                .fetchCount();
+                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()));
 
-        return new PageImpl<>(content, pageable, total);
+        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
+
     }
 
     private BooleanExpression idEq(Long id) {

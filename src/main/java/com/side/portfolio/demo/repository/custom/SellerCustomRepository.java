@@ -11,6 +11,6 @@ import java.util.List;
 public interface SellerCustomRepository {
 
     List<PartnerDto> searchPartnerByTeamId(Long teamId);
-    Page<SellerDto> searchPage(SellerSearchCond cond, Pageable pageable);
+    Page<SellerDto> searchSeller(SellerSearchCond cond, Pageable pageable);
 
 }

@@ -13,7 +13,7 @@
       alert("작업중입니다..");
     }
 
-    //수량 유효성 검사
+    //판매자 상태 체크
     function notOpen(sellerStatus) {
       if (sellerStatus.toString() != 'OPEN') {
         return true;
@@ -21,7 +21,10 @@
     }
 
     //제휴 맺기
-    function addConnection(button, sellerId, sellerStatus) {
+    function addConnection(button) {
+
+      let sellerId = button.getAttribute('data-id');
+      let sellerStatus = button.getAttribute('data-status');
 
       if (notOpen(sellerStatus)) {
         alert('OPEN 상태인 판매자만 제휴할 수 있습니다');
@@ -64,8 +67,10 @@
   <div class="py-5 text-center">
     <h2>전체 판매자 목록</h2>
   </div>
+
+  <!-- 테이블 -->
   <div class="row mb-3">
-    <div class="col">
+    <div class="col-12 mb-2">
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
         <button class="btn btn-secondary"
@@ -73,7 +78,38 @@
                 th:onclick="|location.href='@{/team/team-list}'|" type="button">팀 목록</button>
       </div>
     </div>
+
+    <!-- 검색창 폼 -->
+    <div class="col-12">
+      <form action="#" method="GET" th:object="${cond}" th:action="@{seller-list2}">
+        <div class="row g-2">
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="판매자 명" name="name" th:field="*{name}">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="연락처" name="phNumber" th:field="*{phNumber}">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="이메일" name="email" th:field="*{email}">
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" name="status">
+              <option value="" th:selected="*{status == null}">상태 선택</option>
+              <option value="OPEN" th:selected="*{status == 'OPEN'}">OPEN</option>
+              <option value="CLOSED" th:selected="*{status == 'CLOSED'}">CLOSED</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-primary w-100" type="submit">검색</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
+
   <hr class="my-0">
   <div>
     <input type="hidden" id="sessionId" th:value="${session.id}">
@@ -112,8 +148,11 @@
           <td th:text="${seller.remark}">비고</td>
           <td th:if="${session.types == 'master'} or ${session.types == 'team'}">
             <button class="btn btn-primary" type="button" id="button-addon2"
-                    th:onclick="|addConnection(this, ${seller.id}, ${seller.status})|">제휴 맺기</button></td>
-<!--            <a class="btn btn-primary" role="button" onclick="addConnection(this)">제휴 맺기</a></td>-->
+                    th:data-id="${seller.id}"
+                    th:data-status="${seller.status}"
+                    onclick="addConnection(this)">제휴 맺기</button>
+          </td>
+<!--            <a class="btn btn-primary" role="button" onclick="addConnection(this)">제휴 맺기</a>-->
 <!--               th:href="@{/team/partners/add/{teamId}(teamId=${session.id})}"-->
         </tr>
       </tbody>
@@ -123,11 +162,11 @@
   <!-- 페이징 바 -->
   <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{seller-list(page=${prev})}">Prev</a></li>
+      <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{seller-list2(page=${prev})}">Prev</a></li>
       <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-        <a class="page-link" th:href="@{seller-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+        <a class="page-link" th:href="@{seller-list2(page=${pageNumber})}" th:text="${pageNumber}">current</a>
       </li>
-      <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{seller-list(page=${next})}">Next</a></li>
+      <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{seller-list2(page=${next})}">Next</a></li>
     </ul>
   </div>
 

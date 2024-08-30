@@ -2,6 +2,8 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.condition.PartnerDto;
+import com.side.portfolio.demo.dto.condition.SellerDto;
+import com.side.portfolio.demo.dto.condition.SellerSearchCond;
 import com.side.portfolio.demo.repository.PartnerJpaRepository;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +42,15 @@ public class SellerService {
         return partners;
     }
 
+    //전체 판매자 조회
     public List<Seller> findAll() {
         return sellerJpaRepository.findAll();
+    }
+
+    //전체 판매자 조회2
+    public Page<SellerDto> findSellerByCond(SellerSearchCond cond, Pageable pageable) {
+        Page<SellerDto> sellers = sellerJpaRepository.searchSeller(cond, pageable);
+        return sellers;
     }
 
     public Seller findById(Long sellerId) {
