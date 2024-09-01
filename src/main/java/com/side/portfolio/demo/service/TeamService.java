@@ -3,6 +3,8 @@ package com.side.portfolio.demo.service;
 import com.side.portfolio.demo.domain.Partner;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
+import com.side.portfolio.demo.dto.condition.TeamDto;
+import com.side.portfolio.demo.dto.condition.TeamSearchCond;
 import com.side.portfolio.demo.repository.PartnerJpaRepository;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
@@ -16,8 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamService {
 
     private final TeamJpaRepository teamJpaRepository;
@@ -64,9 +66,15 @@ public class TeamService {
         }
     }
 
-    //팀 전체 조회
+    //전체 팀 조회
     public List<Team> findAll() {
         return teamJpaRepository.findAll();
+    }
+
+    //전체 팀 검색 조회
+    public Page<TeamDto> findTeamByCond(TeamSearchCond cond, Pageable pageable) {
+        Page<TeamDto> teams = teamJpaRepository.searchTeam(cond, pageable);
+        return teams;
     }
 
     //팀 전체 페이징 조회

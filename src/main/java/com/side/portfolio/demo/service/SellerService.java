@@ -47,7 +47,7 @@ public class SellerService {
         return sellerJpaRepository.findAll();
     }
 
-    //전체 판매자 조회2
+    //전체 판매자 검색 조회
     public Page<SellerDto> findSellerByCond(SellerSearchCond cond, Pageable pageable) {
         Page<SellerDto> sellers = sellerJpaRepository.searchSeller(cond, pageable);
         return sellers;

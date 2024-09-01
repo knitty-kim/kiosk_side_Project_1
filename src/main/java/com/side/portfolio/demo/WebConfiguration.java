@@ -26,6 +26,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                         "/", "/login", "/logout", "/signup", "/ordered-list/**",
                         "/notice-list/**", "/images/**", "/about",
                         "/api/**",
-                        "/seller/**");
+                        "/seller/**",
+                        "/team/**");
     }
 }

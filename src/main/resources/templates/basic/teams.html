@@ -16,10 +16,12 @@
 <body>
 <div class="container-fluid">
   <div class="py-5 text-center">
-    <h2>팀 목록</h2>
+    <h2>전체 팀 목록</h2>
   </div>
+
+  <!-- 버튼들 -->
   <div class="row mb-3">
-    <div class="col">
+    <div class="col mb-2">
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
         <button class="btn btn-secondary"
@@ -27,7 +29,53 @@
                 th:onclick="|location.href='@{/seller/seller-list}'|" type="button">판매자 목록</button>
       </div>
     </div>
+
+    <!-- 검색창 폼 -->
+    <div class="col-12">
+      <form action="#" method="GET" th:object="${cond}" th:action="@{team-list}">
+        <div class="row g-2">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="팀 명" name="name" th:field="*{name}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="연락처" name="phNumber" th:field="*{phNumber}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="티켓 수" name="tickets" th:field="*{tickets}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="이메일" name="email" th:field="*{email}">
+          </div>
+          <div class="col">
+            <select class="form-select" name="status">
+              <option value="" th:selected="*{status == null}">상태 선택</option>
+              <option value="ACTIVE" th:selected="*{status != null and status.toString() == 'ACTIVE'}">ACTIVE</option>
+              <option value="DORMANT" th:selected="*{status != null and status.toString() == 'DORMANT'}">DORMANT</option>
+            </select>
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Street" name="street" th:field="*{street}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="City" name="city" th:field="*{city}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Zipcode" name="zipcode" th:field="*{zipcode}">
+          </div>
+          <div class="col">
+            <button class="btn btn-primary w-100" type="submit">검색</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
   </div>
+
+
   <hr class="my-0">
   <div>
     <table class="table table-striped">
@@ -56,11 +104,12 @@
           <td th:text="${team.tickets}">3000</td>
           <td th:text="${#temporals.format(team.createdDate, 'yyyy-MM-dd')}">생성일</td>
           <td th:text="${#temporals.format(team.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
-          <td class="fw-bolder" th:classappend="${team.status.toString() == 'ACTIVE'} ? 'text-success' : 'text-secondary'"
+          <td class="fw-bolder"
+              th:classappend="${team.status != null and team.status.toString() == 'ACTIVE'} ? 'text-success' : 'text-secondary'"
               th:text="${team.status}">상태</td>
-          <td th:text="${team.getAddress().getStreet()}">Street</td>
-          <td th:text="${team.getAddress().getCity()}">City</td>
-          <td th:text="${team.getAddress().getZipcode()}">Zipcode</td>
+          <td th:text="${team.getStreet()}">Street</td>
+          <td th:text="${team.getCity()}">City</td>
+          <td th:text="${team.getZipcode()}">Zipcode</td>
 <!--          <td th:text="${team.remark}">비고</td>-->
         </tr>
       </tbody>
@@ -70,38 +119,29 @@
   <!-- 페이징 바 -->
   <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{team-list(page=${prev})}">Prev</a></li>
-      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-        <a class="page-link" th:href="@{team-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+      <li class="page-item">
+        <a class="page-link" th:if="${hasPrev == true}"
+           th:href="@{team-list(page=${prev}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, tickets=${cond.tickets}, email=${cond.email},
+           status=${cond.status}, street=${cond.street}, city=${cond.city},
+           zipcode=${cond.zipcode})}">Prev</a></li>
+      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+          th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+        <a class="page-link" th:href="@{team-list(page=${pageNumber}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, tickets=${cond.tickets}, email=${cond.email},
+           status=${cond.status}, street=${cond.street}, city=${cond.city},
+           zipcode=${cond.zipcode})}"
+           th:text="${pageNumber}">current</a>
       </li>
-      <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{team-list(page=${next})}">Next</a></li>
+      <li class="page-item">
+        <a class="page-link" th:if="${hasNext == true}"
+           th:href="@{team-list(page=${next}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, tickets=${cond.tickets}, email=${cond.email},
+           status=${cond.status}, street=${cond.street}, city=${cond.city},
+           zipcode=${cond.zipcode})}">Next</a></li>
     </ul>
   </div>
 
 </div> <!-- /container -->
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -68,7 +68,7 @@
     <h2>전체 판매자 목록</h2>
   </div>
 
-  <!-- 테이블 -->
+  <!-- 버튼들 -->
   <div class="row mb-3">
     <div class="col-12 mb-2">
       <div class="float-end">
@@ -81,7 +81,7 @@
 
     <!-- 검색창 폼 -->
     <div class="col-12">
-      <form action="#" method="GET" th:object="${cond}" th:action="@{seller-list2}">
+      <form action="#" method="GET" th:object="${cond}" th:action="@{seller-list}">
         <div class="row g-2">
           <div class="col-md-2">
             <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
@@ -98,8 +98,9 @@
           <div class="col-md-2">
             <select class="form-select" name="status">
               <option value="" th:selected="*{status == null}">상태 선택</option>
-              <option value="OPEN" th:selected="*{status == 'OPEN'}">OPEN</option>
-              <option value="CLOSED" th:selected="*{status == 'CLOSED'}">CLOSED</option>
+              <option value="OPEN" th:selected="*{status != null and status.toString() == 'OPEN'}">OPEN</option>
+              <option value="CLOSED" th:selected="*{status != null and status.toString() == 'CLOSED'}">CLOSED</option>
+              <option value="DORMANT" th:selected="*{status != null and status.toString() == 'DORMANT'}">DORMANT</option>
             </select>
           </div>
           <div class="col-md-2">
@@ -137,7 +138,7 @@
                  onclick="notYet()">판매자 명</a></td>
 
           <td th:text="${seller.phNumber}">333-333-3333</td>
-          <td th:text="${seller.email}">us@us.or</td>
+          <td th:text="${seller.email}">kiosk@kiosk.or</td>
           <td th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>
           <td th:text="${#temporals.format(seller.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
           <td class="fw-bolder"
@@ -162,38 +163,22 @@
   <!-- 페이징 바 -->
   <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{seller-list2(page=${prev})}">Prev</a></li>
-      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-        <a class="page-link" th:href="@{seller-list2(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+      <li class="page-item">
+        <a class="page-link" th:if="${hasPrev == true}"
+           th:href="@{seller-list(page=${prev}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Prev</a></li>
+      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+          th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+        <a class="page-link" th:href="@{seller-list(page=${pageNumber}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}" th:text="${pageNumber}">current</a>
       </li>
-      <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{seller-list2(page=${next})}">Next</a></li>
+      <li class="page-item">
+        <a class="page-link" th:if="${hasNext == true}"
+           th:href="@{seller-list(page=${next}, id=${cond.id}, name=${cond.name},
+           phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Next</a></li>
     </ul>
   </div>
 
 </div> <!-- /container -->
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -49,7 +49,8 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
                         seller.status, seller.remark))
                 .from(seller)
                 .where(idEq(cond.getId()), nameEq(cond.getName()),
-                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()))
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getStatus()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -58,7 +59,8 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
                 .select(seller.count())
                 .from(seller)
                 .where(idEq(cond.getId()), nameEq(cond.getName()),
-                        phNumberEq(cond.getPhNumber()), statusEq(cond.getStatus()));
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getStatus()));
 
         return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
 
@@ -72,6 +74,9 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
         return StringUtils.hasText(name) ? seller.name.eq(name) : null;
     }
 
+    private BooleanExpression emailEq(String email) {
+        return StringUtils.hasText(email) ? seller.email.eq(email) : null;
+    }
 
     private BooleanExpression phNumberEq(String phNumber) {
         return StringUtils.hasText(phNumber) ? seller.phNumber.eq(phNumber) : null;
