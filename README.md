@@ -115,6 +115,12 @@
 </details>
 
 
+
+<!--           ===================== 8월 ===================              -->
+
+
+
+
 <details>
   <summary><b>24년 8월</b></summary>
   
@@ -460,7 +466,19 @@
 	  </div>
 	</details>
      </li>
-     <li>
+    </ul>
+  </div>
+</details>
+
+
+<!-- ========================   9월 ========================== -->
+
+<details>
+  <summary><b>24년 9월</b></summary>
+  
+  <div markdown="1">
+    <ul>
+      <li>
 	<details>
 	  <summary><b>24.09.01 Sun</b></summary>
 	  <div markdown="1">
@@ -502,8 +520,8 @@
 </details>
 
 
-<br>
-<br>
+</br>
+</br>
 
 ## 프로젝트 설명
 <details>
