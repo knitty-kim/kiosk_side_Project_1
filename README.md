@@ -435,6 +435,68 @@
 	  </div>
 	</details>
      </li>
+     <li>
+	<details>
+	  <summary><b>24.08.28 Wed</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>"OPEN" 상태인 판매자만 제휴할 수 있도록 수정</li>
+	      <li>판매자 조회를 위한 SellerDto 추가</li>
+	      <li>판매자 조회 페이징을 위한 코드 추가</li>
+	      <li>메인, 회사소개 페이지 내용 수정</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.08.30 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>전체 판매자 목록 페이지 검색창 추가</li>
+	      <li>전체 판매자 목록 검색 조건으로 id, 판매자명, 연락처, 이메일, 상태 추가</li>
+	      <li>전체 판매자 목록 검색 버튼 동작 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.01 Sun</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>전체 판매자 목록 검색 버튼 동작 테스트</li>
+	      <li>전체 팀 목록 검색 버튼 추가</li>
+	      <li>전체 팀 목록 검색 조건으로 id, 팀명, 연락처, 이메일, 티켓수, 이메일, 상태, Street, city, zipcode 추가</li>
+	      <li>팀 조회를 위한 TeamDto 추가</li>
+	      <li>팀 조회 페이징을 위한 코드 추가</li>
+	      <li>전체 팀 목록 검색 버튼 동작 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.02 Mon</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>전체 상품 목록 페이지 검색창 추가</li>
+	      <li>전체 상품 목록 검색 조건으로 id, 상품명, 가격, 재고, 판매자명, 상태 추가</li>
+	      <li>상품 조회 및 검색을 위한 ItemDto, ItemSearchCond 객체 추가</li>
+	      <li>상품 검색 기능 추가</li>
+	      <li>전체 팀 목록 검색 조건 중 "티켓 수"에 대한 타입 int -> Integer로 변경</li>
+	      <li>전체 팀 목록, 전체 판매자 목록, 제휴 판매자 목록 간 이동 버튼 추가</li>
+	      <li>장바구니에서 상품 ID, 상품 명 클릭 시, 상품 상세 페이지로 이동하도록 수정</li>
+	      <li>장바구니 내 수량 변경 기능 추가</li>
+	      <li>장바구니 내 수량 변경 시, 기존 수량과 동일한 수량으로 변경하려는 경우에 대한 유효성 검사 추가</li>
+	      <li>장바구니 내 수량 변경 시, 소수점 및 1 미만 입력 불가 제한 추가</li>
+	      <li>장바구니 내 수량 변경 시, "총 가격", "합산 가격", "합산 수량" 또한 변경되도록 수정</li>
+	      <li>전체 상품 목록 페이지 내 수량 변경에 대한 유효성 검사 수정</li>
+	      <li>로그인 페이지 내 회원가입 버튼 및 기능 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
     </ul>
   </div>
 </details>
