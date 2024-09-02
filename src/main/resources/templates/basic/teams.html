@@ -24,9 +24,13 @@
     <div class="col mb-2">
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-        <button class="btn btn-secondary"
-                th:if="${session.types} != 'seller'"
+        <button class="btn btn-secondary me-2"
+                th:if="${session.types} == 'master' or ${session.types} == 'team'"
                 th:onclick="|location.href='@{/seller/seller-list}'|" type="button">판매자 목록</button>
+        <button class="btn btn-secondary"
+                th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                th:onclick="|location.href='@{/seller/partner-list/{teamId}(teamId=${session.id})}'|"
+                type="button">제휴 판매자 목록</button>
       </div>
     </div>
 
@@ -44,7 +48,7 @@
             <input type="text" class="form-control" placeholder="연락처" name="phNumber" th:field="*{phNumber}">
           </div>
           <div class="col">
-            <input type="text" class="form-control" placeholder="티켓 수" name="tickets" th:field="*{tickets}">
+            <input type="number" class="form-control" placeholder="티켓 수" name="tickets" th:field="*{tickets}">
           </div>
           <div class="col">
             <input type="text" class="form-control" placeholder="이메일" name="email" th:field="*{email}">
@@ -71,18 +75,18 @@
         </div>
       </form>
     </div>
-
-
   </div>
 
-
   <hr class="my-0">
+
+  <!-- 테이블 -->
   <div>
+    <input type="hidden" id="sessionId" th:value="${session.id}">
     <table class="table table-striped">
       <thead>
       <tr>
         <th>ID</th>
-        <th>이름</th>
+        <th>팀 명</th>
         <th>연락처</th>
         <th>이메일</th>
         <th>티켓</th>

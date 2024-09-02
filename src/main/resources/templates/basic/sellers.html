@@ -73,9 +73,13 @@
     <div class="col-12 mb-2">
       <div class="float-end">
         <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-        <button class="btn btn-secondary"
+        <button class="btn btn-secondary me-2"
                 th:if="${session.types} == 'master'"
                 th:onclick="|location.href='@{/team/team-list}'|" type="button">팀 목록</button>
+        <button class="btn btn-secondary"
+                th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                th:onclick="|location.href='@{/seller/partner-list/{teamId}(teamId=${session.id})}'|"
+                type="button">제휴 판매자 목록</button>
       </div>
     </div>
 
@@ -112,8 +116,10 @@
   </div>
 
   <hr class="my-0">
+
+  <!-- 테이블 -->
+  <input type="hidden" id="sessionId" th:value="${session.id}">
   <div>
-    <input type="hidden" id="sessionId" th:value="${session.id}">
     <table class="table table-striped">
       <thead>
       <tr>

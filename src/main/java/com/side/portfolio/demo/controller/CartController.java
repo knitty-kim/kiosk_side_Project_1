@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -124,6 +125,16 @@ public class CartController {
         }
 
         return result;
+    }
+
+    //장바구니 업데이트
+    @ResponseBody
+    @PostMapping("/carts/update")
+    public String updateCartQty(@RequestBody Map<String, String> param) {
+        Long cartId = Long.valueOf(param.get("id"));
+        Integer qty = Integer.valueOf(param.get("qty"));
+        cartService.updateCartQty(cartId, qty);
+        return "OK";
     }
 
     //장바구니 상품 비우기

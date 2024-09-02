@@ -7,6 +7,10 @@
     window.onload = function () {
     };
 
+    function notYet() {
+      alert("작업중입니다..");
+    }
+
     function redirectionHome() {
       window.location.href = '/';
     }
@@ -23,23 +27,28 @@
       }
     }
 
+    // 상품 하나 비우기
     function deleteCart(cartId) {
-      $.ajax({
-        url: '/carts/delete/' + cartId,
-        type: 'POST',
-        data: {},
-        success: function (response) {
-          if (response == "OK") {
-            location.href = '/cart-list';
-          }
-        },
-        error: function (error) {
-          console.error('Error sending data', error);
-        }
-      });
+      if (confirm('해당 상품을 비우시겠습니까?')) {
 
+        $.ajax({
+          url: '/carts/delete/' + cartId,
+          type: 'POST',
+          data: {},
+          success: function (response) {
+            if (response == "OK") {
+              location.href = '/cart-list';
+            }
+          },
+          error: function (error) {
+            console.error('Error sending data', error);
+          }
+        });
+
+      }
     }
 
+    // 장바구니 전체 비우기
     function deleteCarts(teamId) {
       if (confirm('장바구니를 모두 비우시겠습니까?')) {
 
@@ -60,13 +69,100 @@
       }
     }
 
+    // 수량 증가 함수
+    function incrementQty(cartId) {
+      const qtyInput = document.getElementById('quantity-' + cartId);
+      let currentQty = parseInt(qtyInput.value);
+      if (!isNaN(currentQty)) {
+        qtyInput.value = currentQty + 1;
+        qtyInput.focus();
+      }
+    }
+
+    // 수량 감소 함수
+    function decrementQty(cartId) {
+      const qtyInput = document.getElementById('quantity-' + cartId);
+      let currentQty = parseInt(qtyInput.value);
+      if (!isNaN(currentQty) && currentQty > 1) {
+        qtyInput.value = currentQty - 1;
+        qtyInput.focus();
+      }
+    }
+
+    // 소수점 방지 및 1 이상의 값만 허용
+    function validateQtyInput(inputElement) {
+      let value = inputElement.value;
+
+      if (value.includes('.') || value < 1) {
+        inputElement.value = Math.floor(value); // 소수점 제거
+        if (inputElement.value < 1) inputElement.value = 1; // 최소값 1 보장
+      }
+    }
+
+    function confirmQty(cartId) {
+      let qtyInput = document.getElementById('quantity-' + cartId);
+      let qty = qtyInput.value;
+      let previousValue = qtyInput.getAttribute('data-previous');
+
+      if (qty != previousValue && confirm('해당 상품의 수량을 변경하시겠습니까?')) {
+
+        let data = {
+          "id" : cartId,
+          "qty" : qty
+        }
+
+        $.ajax({
+          url: '/carts/update',
+          type: 'POST',
+          contentType: "application/json",
+          data: JSON.stringify(data),
+          success: function (response) {
+            if (response == "OK") {
+              alert('수량이 변경되었습니다.');
+              location.href = '/cart-list';
+            } else {
+              alert('수량 변경에 실패했습니다.');
+            }
+          },
+          error: function (error) {
+            console.error('Error updating quantity', error);
+          }
+        });
+
+      } else if (qty == previousValue) {
+        alert('변경할 수량이 기존 수량과 동일합니다');
+      }
+
+    }
+
   </script>
+  <style>
+    .btn-custom-increment {
+      background-color: #28a745; /* 초록색 */
+      color: white;
+    }
+    .btn-custom-decrement {
+      background-color: #dc3545; /* 빨간색 */
+      color: white;
+    }
+    .btn-confirm {
+      background-color: #ff7f50; /* 코랄 */
+      color: white;
+      border: none;
+    }
+    .btn-confirm:hover {
+      background-color: #e55b41; /* 진한 코랄 */
+    }
+  </style>
 </head>
 <body>
-<div class="container" style="max-width: 800px">
+<div class="container" style="width: 800px;">
+  <!-- 타이틀 -->
   <div class="py-5 text-center">
     <h2>장바구니</h2>
   </div>
+
+  <!--상단 목록 이동 버튼들-->
   <div class="row mb-3">
     <div class="col">
       <div class="float-end">
@@ -87,8 +183,12 @@
       </div>
     </div>
   </div>
+
   <hr class="my-0">
+
+  <!-- 테이블 -->
   <div>
+    <input type="hidden" id="sessionId" th:value="${session.id}">
     <table class="table table-striped">
       <thead>
       <tr>
@@ -102,20 +202,45 @@
       </thead>
       <tbody>
       <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
-        <!--TODO 상품 상세로 url 연결!-->
-        <td><a href="#" th:text="${cart.getItem().getId()}">상품 ID</a></td>
+        <td>
+          <a th:text="${cart.getItem().getId()}"
+             th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품 ID</a></td>
 
-        <!--TODO 상품 상세로 url 연결!-->
-        <td class="w-25"><a class="text-wrap" href="#" th:text="${cart.getItem().getName()}">상품명</a></td>
+        <td class="w-25">
+          <a class="text-wrap" th:text="${cart.getItem().getName()}"
+             th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품명</a></td>
 
         <td th:text="${#numbers.formatDecimal(cart.getPrice(), 1, 2)}">10000</td>
 
-        <!-- TODO 추후 장바구니 내에서 수량 변경 가능하도록 수정!-->
-        <td th:text="${#numbers.formatInteger(cart.getQty(), 1, 'DEFAULT')}">10</td>
+        <!-- 수량 입력 필드 -->
+        <td>
+          <div class="input-group">
+            <button class="btn btn-custom-decrement" type="button"
+                    th:onclick="|decrementQty(${cart.getId()})|">-</button>
+
+            <input type="number" name="quantity"
+                   th:id="|quantity-${cart.getId()}|"
+                   th:attr="data-previous=${cart.getQty()}"
+                   th:value="${cart.getQty()}"
+                   min="1" step="1"
+                   oninput="validateQtyInput(this)"
+                   class="form-control text-center"
+                   style="width: 30px;"/>
+
+            <button class="btn btn-custom-increment" type="button"
+                    th:onclick="|incrementQty(${cart.getId()})|">+</button>
+
+            <!-- 수량 확정 버튼 -->
+            <button class="btn btn-confirm" type="button"
+                    th:onclick="|confirmQty(${cart.getId()})|">변경</button>
+          </div>
+        </td>
 
         <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
-        <td><button class="btn btn-primary" type="button" th:onclick="deleteCart('[[${cart.getId()}]]')">비우기</button></td>
+
+        <td><button class="btn btn-primary" type="button" th:onclick="|deleteCart(${cart.getId()})|">비우기</button></td>
       </tr>
+
       <tr>
         <td>합산</td>
         <td></td>

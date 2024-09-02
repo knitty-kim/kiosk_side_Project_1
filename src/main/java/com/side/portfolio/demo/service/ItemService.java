@@ -1,6 +1,8 @@
 package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Item;
+import com.side.portfolio.demo.dto.condition.ItemDto;
+import com.side.portfolio.demo.dto.condition.ItemSearchCond;
 import com.side.portfolio.demo.status.ItemStatus;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.repository.ItemJpaRepository;
@@ -25,8 +27,15 @@ public class ItemService {
         itemJpaRepository.save(item);
     }
 
+    //전체 상품 조회
     public List<Item> findAll() {
         return itemJpaRepository.findAll();
+    }
+
+    //전체 상품 검색 조회
+    public Page<ItemDto> findItemByCond(ItemSearchCond cond, Pageable pageable) {
+        Page<ItemDto> items = itemJpaRepository.searchItem(cond, pageable);
+        return items;
     }
 
     public Page<Item> findAll(Pageable pageable){

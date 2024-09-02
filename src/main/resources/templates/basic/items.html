@@ -10,12 +10,23 @@
         }
 
         //수량 유효성 검사
-        function countCheck(id) {
+        function checkInvalid(id) {
             if (Number($("#" + id).val()) <= 0 || $("#" + id).val() == '') {
                 $("#" + id).addClass("is-invalid");
                 $("#" + id).focus();
-            } else {
-                $("#" + id).removeClass("is-invalid");
+            }
+        }
+
+        function removeInvalid(id) {
+            $("#" + id).removeClass("is-invalid");
+        }
+
+        // 소수점 방지 및 1 이상의 값만 허용
+        function validateQtyInput(inputElement) {
+            let value = inputElement.value;
+
+            if (value.includes('.') || value < 1) {
+                inputElement.value = '';
             }
         }
 
@@ -25,10 +36,10 @@
             let parentTr = $(button).closest('tr');
             let qtyId = 'inputCnt' + parentTr.find('td:eq(0)').text();
 
-            countCheck(qtyId);
+            checkInvalid(qtyId);
 
             if ($('input.is-invalid').length > 0) {
-                alert("check invalid value!");
+                // alert("check invalid value!");
                 return false;
             }
 
@@ -70,15 +81,15 @@
     </script>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container" style="width: 1100px;">
     <!--타이틀-->
     <div class="py-5 text-center">
-        <h2>상품 목록</h2>
+        <h2>전체 상품 목록</h2>
     </div>
 
     <!--상단 목록 이동 버튼들-->
     <div class="row mb-3">
-        <div class="col">
+        <div class="col mb-2">
             <div class="float-end">
                 <button class="btn btn-secondary me-1" onclick="redirectionHome()"
                         type="button">홈</button>
@@ -96,66 +107,118 @@
                         type="button">장바구니</button>
             </div>
         </div>
+
+        <!-- 검색창 폼 -->
+        <div class="col-12">
+            <form action="#" method="GET" th:object="${cond}" th:action="@{item-list}">
+                <div class="row g-2">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="상품 명" name="name" th:field="*{name}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="가격" name="price" th:field="*{price}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="재고" name="qty" th:field="*{qty}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="판매자 명" name="sellerName" th:field="*{sellerName}">
+                    </div>
+                    <div class="col">
+                        <select class="form-select" name="status">
+                            <option value="" th:selected="*{status == null}">상태 선택</option>
+                            <option value="OPEN" th:selected="*{status != null and status.toString() == 'OPEN'}">OPEN</option>
+                            <option value="CLOSED" th:selected="*{status != null and status.toString() == 'CLOSED'}">CLOSED</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary w-100" type="submit">검색</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 
     <hr class="my-0">
 
     <!--테이블-->
-<!--    <td>-->
-        <input type="hidden" id="sessionId" th:value="${session.id}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>상품 ID</th>
-                <th>상품명</th>
-                <th>가격</th>
-                <th>수량</th>
-                <th>판매자</th>
-                <th>상태</th>
-                <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
-                <th th:if="${session.types == 'master'}"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${items}">
-                <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
+    <input type="hidden" id="sessionId" th:value="${session.id}">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>상품명</th>
+            <th>가격</th>
+            <th>수량</th>
+            <th>판매자</th>
+            <th>상태</th>
+            <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
+            <th th:if="${session.types == 'master'}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
 
-                <td class="w-25">
-                    <a class="text-wrap"
-                       th:href="@{'/item-list/' + ${item.id}}"
-                       th:text="${item.name}">상품명</a></td>
+            <td class="w-25">
+                <a class="text-wrap"
+                   th:href="@{'/item-list/' + ${item.id}}"
+                   th:text="${item.name}">상품명</a></td>
 
-                <td th:text="${item.price}">10</td>
-                <td th:text="${item.qty}">10</td>
-                <td th:text="${item.seller.name}">판매자</td>
-                <td class="fw-bolder"
-                    th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
-                    th:text="${item.status}">상태</td>
+            <td th:text="${item.price}">10</td>
+            <td th:text="${item.qty}" style="width: 60px;">10</td>
+            <td th:text="${item.sellerName}" style="width: 80px;">판매자</td>
+            <td class="fw-bolder" style="width: 50px;"
+                th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
+                th:text="${item.status}">상태</td>
 
-                <td class="input-group" th:if="${session.types == 'team' or session.types == 'master'}">
-                    <input type="number" class="form-control" onchange="countCheck(this.id)"
+            <td th:if="${session.types == 'team' or session.types == 'master'}">
+                <div class="input-group">
+                    <input type="number" class="form-control" style="width: 35px;"
                            th:id="inputCnt+${item.id}"
+                           onchange="checkInvalid(this.id)"
+                           onblur="removeInvalid(this.id)"
+                           oninput="validateQtyInput(this)"
                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
-                    <div class="invalid-tooltip">수량은 0 이하일 수 없습니다</div>
-                    <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
-                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button></td>
 
-                <td th:if="${session.types == 'master'}">
-                    <a class="btn btn-primary" role="button"
-                       th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a></td>
-            </tr>
-            </tbody>
-        </table>
+                    <div class="invalid-tooltip">1개 이상의 수량만 담을 수 있습니다</div>
+
+                    <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
+                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button>
+                </div>
+            </td>
+            <td th:if="${session.types == 'master'}"  style="width: 90px;">
+                <a class="btn btn-primary" role="button"
+                   th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- 페이징 바 -->
 <div class="row" id="pageSection">
     <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>
-        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-            <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>
+        <li class="page-item">
+            <a class="page-link" th:if="${hasPrev == true}"
+               th:href="@{/item-list(page=${prev}, id=${cond.id}, name=${cond.name},
+               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+               status=${cond.status})}">Prev</a></li>
+        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+            <a class="page-link" th:href="@{/item-list(page=${pageNumber}, id=${cond.id}, name=${cond.name},
+               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+               status=${cond.status})}" th:text="${pageNumber}">current</a>
         </li>
-        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>
+        <li class="page-item">
+            <a class="page-link" th:if="${hasNext == true}"
+               th:href="@{/item-list(page=${next}, id=${cond.id}, name=${cond.name},
+               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+               status=${cond.status})}">Next</a></li>
     </ul>
 </div>
 

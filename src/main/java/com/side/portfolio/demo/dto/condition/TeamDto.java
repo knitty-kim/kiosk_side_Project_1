@@ -14,7 +14,7 @@ public class TeamDto {
     private String name;
     private String phNumber;
     private String email;
-    private int tickets;
+    private Integer tickets;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private TeamStatus status;
@@ -24,7 +24,7 @@ public class TeamDto {
 
     @QueryProjection
     public TeamDto(Long id, String name, String phNumber,
-                   String email, int tickets, LocalDateTime createdDate,
+                   String email, Integer tickets, LocalDateTime createdDate,
                    LocalDateTime modifiedDate, TeamStatus status,
                    String street, String city, String zipcode) {
         this.id = id;

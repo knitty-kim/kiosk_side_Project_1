@@ -34,7 +34,7 @@
 
         <li class="nav-item"><a th:href="@{/notice-list}" class="nav-link">공지사항</a></li>
         <li class="nav-item"><a th:href="@{/about}" class="nav-link">회사소개</a></li>
-        <li class="nav-item"><a th:href="@{/item-list}" class="nav-link">전체 상품</a></li>
+        <li class="nav-item"><a th:href="@{/item-list}" class="nav-link">전체 상품 목록</a></li>
         <li class="nav-item">
           <a class="nav-link"
              th:if="${session.types} == 'seller'"
@@ -50,14 +50,14 @@
              th:if="${session.types} != 'seller' and ${session.id} != null"
              th:href="@{/cart-list}">장바구니</a></li>
 
-        <li class="nav-item" th:if="${session.types} == 'master'">
-          <a th:href="@{/team/team-list}" class="nav-link">전체 팀 목록</a></li>
+<!--        <li class="nav-item" th:if="${session.types} == 'master'">-->
+<!--          <a th:href="@{/team/team-list}" class="nav-link">전체 팀 목록</a></li>-->
 
-        <li class="nav-item" th:if="${session.types} == 'master' or ${session.types} == 'team'">
-            <a th:href="@{/seller/seller-list}" class="nav-link">전체 판매자 목록</a></li>
+<!--        <li class="nav-item" th:if="${session.types} == 'master' or ${session.types} == 'team'">-->
+<!--            <a th:href="@{/seller/seller-list}" class="nav-link">전체 판매자 목록</a></li>-->
 
-        <li class="nav-item" th:if="${session.types} == 'master' or ${session.types} == 'team'">
-          <a th:href="@{/seller/partner-list/{teamId}(teamId=${session.id})}" class="nav-link">제휴 판매자 목록</a></li>
+<!--        <li class="nav-item" th:if="${session.types} == 'master' or ${session.types} == 'team'">-->
+<!--          <a th:href="@{/seller/partner-list/{teamId}(teamId=${session.id})}" class="nav-link">제휴 판매자 목록</a></li>-->
 
       </ul>
 
@@ -69,11 +69,12 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false" th:if="${session.id} != null"
              th:text="'Welcome! '+${session.name}"></a>
-<!--          <div class="dropdown-menu" th:if="${session.types} == 'team'">-->
-<!--            <a th:href="@{/seller/partner-seller-list/{teamId}(teamId=${session.id})}" class="dropdown-item">제휴된 판매자 목록</a>-->
-<!--            <a th:href="@{/cart-list}" class="dropdown-item">장바구니</a>-->
+          <div class="dropdown-menu" th:if="${session.types} == 'master' or ${session.types} == 'team'">
+            <a th:if="${session.types} == 'master'" th:href="@{/team/team-list}" class="dropdown-item">전체 팀 목록</a>
+            <a th:href="@{/seller/seller-list}" class="dropdown-item">전체 판매자 목록</a>
+            <a th:href="@{/seller/partner-list/{teamId}(teamId=${session.id})}" class="dropdown-item">제휴 판매자 목록</a>
 <!--            <a th:href="@{/templates/basic/signout}" class="dropdown-item">회원 탈퇴</a>-->
-<!--          </div>-->
+          </div>
         </li>
 
 
@@ -133,4 +134,9 @@
       </div>
     </div>
   </div>
+  <script>
+    function notYet() {
+      alert("작업중입니다..");
+    }
+  </script>
 </header>

@@ -4,6 +4,8 @@ import com.side.portfolio.demo.domain.FileNameTable;
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.dto.ItemCreateForm;
 import com.side.portfolio.demo.dto.ItemUpdateForm;
+import com.side.portfolio.demo.dto.condition.ItemDto;
+import com.side.portfolio.demo.dto.condition.ItemSearchCond;
 import com.side.portfolio.demo.service.FileService;
 import com.side.portfolio.demo.service.ItemService;
 import com.side.portfolio.demo.service.SellerService;
@@ -37,12 +39,36 @@ public class ItemController {
     private final SellerService sellerService;
     private final FileService fileService;
 
-    //상품 목록
+//    //전체 상품 목록
+//    @GetMapping("/item-list")
+//    public String itemList(Model model,
+//                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+//
+//        Page<Item> items = itemService.findAll(pageable);
+//        model.addAttribute("items", items);
+//
+//        model.addAttribute("prev", items.getPageable().previousOrFirst().getPageNumber());
+//        model.addAttribute("next", items.getPageable().next().getPageNumber());
+//
+//        model.addAttribute("hasPrev", items.hasPrevious());
+//        model.addAttribute("hasNext", items.hasNext());
+//
+//        int groupSize = 3; //화면에 보여질 페이지 개수
+//        int curPageGrp = (int) Math.floor((double) items.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
+//        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
+//        model.addAttribute("endPage", Math.min(items.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
+//
+//        model.addAttribute("curPage", items.getNumber());
+//
+//        return "basic/items";
+//    }
+
+    //전체 상품 검색 조회 목록
     @GetMapping("/item-list")
-    public String itemList(Model model,
+    public String itemList(Model model, ItemSearchCond cond,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        Page<Item> items = itemService.findAll(pageable);
+        Page<ItemDto> items = itemService.findItemByCond(cond, pageable);
         model.addAttribute("items", items);
 
         model.addAttribute("prev", items.getPageable().previousOrFirst().getPageNumber());
@@ -57,6 +83,8 @@ public class ItemController {
         model.addAttribute("endPage", Math.min(items.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
 
         model.addAttribute("curPage", items.getNumber());
+
+        model.addAttribute("cond", cond);
 
         return "basic/items";
     }
