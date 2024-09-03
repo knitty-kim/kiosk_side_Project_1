@@ -2,279 +2,341 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>K&Y Kiosk Project</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <script>
-    window.onload = function () {
-    };
-
-    function notYet() {
-      alert("작업중입니다..");
-    }
-
-    function redirectionHome() {
-      window.location.href = '/';
-    }
-
-    function assureOrder() {
-      if ([[${carts.size <= 0}]]) {
-        alert("1개 이상인 경우에만 주문 가능합니다");
-        return false;
-      }
-      if (confirm("정말 주문하시겠습니까?")) {
-        location.href = '/orders/add';
-      } else {
-        return false;
-      }
-    }
-
-    // 상품 하나 비우기
-    function deleteCart(cartId) {
-      if (confirm('해당 상품을 비우시겠습니까?')) {
-
-        $.ajax({
-          url: '/carts/delete/' + cartId,
-          type: 'POST',
-          data: {},
-          success: function (response) {
-            if (response == "OK") {
-              location.href = '/cart-list';
-            }
-          },
-          error: function (error) {
-            console.error('Error sending data', error);
-          }
-        });
-
-      }
-    }
-
-    // 장바구니 전체 비우기
-    function deleteCarts(teamId) {
-      if (confirm('장바구니를 모두 비우시겠습니까?')) {
-
-        $.ajax({
-          url: '/carts/deleteAll/' + teamId,
-          type: 'POST',
-          data: {},
-          success: function (response) {
-            if (response == "OK") {
-              location.href = '/cart-list';
-            }
-          },
-          error: function (error) {
-            console.error('Error sending data', error);
-          }
-        });
-
-      }
-    }
-
-    // 수량 증가 함수
-    function incrementQty(cartId) {
-      const qtyInput = document.getElementById('quantity-' + cartId);
-      let currentQty = parseInt(qtyInput.value);
-      if (!isNaN(currentQty)) {
-        qtyInput.value = currentQty + 1;
-        qtyInput.focus();
-      }
-    }
-
-    // 수량 감소 함수
-    function decrementQty(cartId) {
-      const qtyInput = document.getElementById('quantity-' + cartId);
-      let currentQty = parseInt(qtyInput.value);
-      if (!isNaN(currentQty) && currentQty > 1) {
-        qtyInput.value = currentQty - 1;
-        qtyInput.focus();
-      }
-    }
-
-    // 소수점 방지 및 1 이상의 값만 허용
-    function validateQtyInput(inputElement) {
-      let value = inputElement.value;
-
-      if (value.includes('.') || value < 1) {
-        inputElement.value = Math.floor(value); // 소수점 제거
-        if (inputElement.value < 1) inputElement.value = 1; // 최소값 1 보장
-      }
-    }
-
-    function confirmQty(cartId) {
-      let qtyInput = document.getElementById('quantity-' + cartId);
-      let qty = qtyInput.value;
-      let previousValue = qtyInput.getAttribute('data-previous');
-
-      if (qty != previousValue && confirm('해당 상품의 수량을 변경하시겠습니까?')) {
-
-        let data = {
-          "id" : cartId,
-          "qty" : qty
-        }
-
-        $.ajax({
-          url: '/carts/update',
-          type: 'POST',
-          contentType: "application/json",
-          data: JSON.stringify(data),
-          success: function (response) {
-            if (response == "OK") {
-              alert('수량이 변경되었습니다.');
-              location.href = '/cart-list';
-            } else {
-              alert('수량 변경에 실패했습니다.');
-            }
-          },
-          error: function (error) {
-            console.error('Error updating quantity', error);
-          }
-        });
-
-      } else if (qty == previousValue) {
-        alert('변경할 수량이 기존 수량과 동일합니다');
-      }
-
-    }
-
-  </script>
+  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
   <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    h2 {
+      font-weight: bold;
+      color: #343a40;
+    }
+
     .btn-custom-increment {
       background-color: #28a745; /* 초록색 */
       color: white;
     }
+
     .btn-custom-decrement {
       background-color: #dc3545; /* 빨간색 */
       color: white;
     }
+
     .btn-confirm {
       background-color: #ff7f50; /* 코랄 */
       color: white;
       border: none;
     }
+
     .btn-confirm:hover {
       background-color: #e55b41; /* 진한 코랄 */
+    }
+
+    .table-wrapper {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #007bff;
+      border-color: #007bff;
     }
   </style>
 </head>
 <body>
-<div class="container" style="width: 800px;">
-  <!-- 타이틀 -->
-  <div class="py-5 text-center">
-    <h2>장바구니</h2>
-  </div>
 
-  <!--상단 목록 이동 버튼들-->
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
-                type="button">홈</button>
-        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                th:onclick="|location.href='@{/item/add}'|"
-                type="button">상품 등록</button>
-        <button class="btn btn-primary me-1"
-                th:onclick="|location.href='@{/item-list}'|"
-                type="button">상품 목록</button>
-        <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
-                th:onclick="|location.href='@{/order-list}'|"
-                type="button">주문 목록</button>
-        <button class="btn btn-warning" th:if="${session.types != 'seller'}"
-                th:onclick="|location.href='@{/cart-list}'|"
-                type="button">장바구니</button>
+<div th:replace="~{header :: common-nav}">
+  <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+  <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+  <div class="container-fluid" style="max-width: 1000px;">
+
+    <!-- 메뉴 명 -->
+    <div class="text-center mb-xl-4">
+      <h2>장바구니</h2>
+    </div>
+
+    <!-- 상단 버튼들 -->
+    <div class="d-flex justify-content-end mb-4">
+      <!--            <button class="btn btn-secondary me-1" onclick="redirectionHome()" type="button">홈</button>-->
+      <button class="btn btn-primary me-1"
+              th:if="${session.types == 'master'}"
+              th:onclick="|location.href='@{/item/add}'|"
+              type="button">상품 등록</button>
+      <button class="btn btn-success me-1"
+              th:if="${session.types} == 'master' or ${session.types} == 'team'"
+              th:onclick="|location.href='@{/order-list}'|"
+              type="button">주문 목록</button>
+      <button class="btn btn-warning me-1"
+              th:if="${session.types} == 'master' or ${session.types} == 'team'"
+              th:onclick="|location.href='@{/cart-list}'|"
+              type="button">장바구니</button>
+      <button class="btn btn-primary"
+              th:onclick="|location.href='@{/item-list}'|"
+              type="button">상품 목록</button>
+    </div>
+
+    <!-- 테이블 영역 -->
+    <div class="table-wrapper">
+      <input type="hidden" id="sessionId" th:value="${session.id}">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>상품명</th>
+          <th>총 가격</th>
+          <th>판매자</th>
+          <th class="text-center">수량</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
+          <td>
+            <a th:text="${cart.getItem().getId()}"
+               th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품 ID</a></td>
+
+          <td class="w-25">
+            <a class="text-wrap" th:text="${cart.getItem().getName()}"
+               th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품명</a></td>
+
+          <td th:text="${#numbers.formatDecimal(cart.getPrice(), 1, 2)}">10000</td>
+
+          <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
+
+          <!-- 수량 입력 필드 -->
+          <td>
+            <div class="input-group">
+              <button class="btn btn-custom-decrement" type="button"
+                      th:onclick="|decrementQty(${cart.getId()})|">-</button>
+
+              <input type="number" name="quantity"
+                     th:id="|quantity-${cart.getId()}|"
+                     th:attr="data-previous=${cart.getQty()}"
+                     th:value="${cart.getQty()}"
+                     min="1" step="1"
+                     oninput="validateQtyInput(this)"
+                     class="form-control text-center"
+                     style="width: 5rem;"/>
+
+              <button class="btn btn-custom-increment" type="button"
+                      th:onclick="|incrementQty(${cart.getId()})|">+</button>
+
+              <!-- 수량 확정 버튼 -->
+              <button class="btn btn-confirm" type="button"
+                      th:onclick="|confirmQty(${cart.getId()})|">변경</button>
+            </div>
+          </td>
+
+          <td><button class="btn btn-primary" type="button" th:onclick="|deleteCart(${cart.getId()})|">비우기</button></td>
+        </tr>
+
+        <tr class="table-info">
+          <td>합산</td>
+          <td></td>
+          <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
+          <td></td>
+          <td class="text-center" th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row my-3">
+      <div class="col">
+        <div class="float-end">
+          <button class="btn btn-secondary me-1" th:onclick="deleteCarts('[[${session.id}]]')" type="button">모두 비우기</button>
+          <button class="btn btn-secondary me-2" onclick="assureOrder()" type="button">주문</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <hr class="my-0">
+    <!-- 페이징 바 -->
+  <!--  <div class="row" id="pageSection" th:style="${paging == true ? 'display:block' : 'display:none'}">-->
+  <!--      <ul class="pagination justify-content-center">-->
+  <!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/cart-list(page=${prev})}">Prev</a></li>-->
+  <!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
+  <!--          <a class="page-link" th:href="@{/cart-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
+  <!--        </li>-->
+  <!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/cart-list(page=${next})}">Next</a></li>-->
+  <!--      </ul>-->
+  <!--  </div>-->
 
-  <!-- 테이블 -->
-  <div>
-    <input type="hidden" id="sessionId" th:value="${session.id}">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>상품명</th>
-        <th>총 가격</th>
-        <th>수량</th>
-        <th>판매자</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:if="${carts.size >= 1}" th:each="cart : ${carts}">
-        <td>
-          <a th:text="${cart.getItem().getId()}"
-             th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품 ID</a></td>
+  </div> <!-- /container -->
+</section>
 
-        <td class="w-25">
-          <a class="text-wrap" th:text="${cart.getItem().getName()}"
-             th:href="@{'/item-list/' + ${cart.getItem().getId()}}">상품명</a></td>
+<div th:replace="~{footer :: common-footer}">
+  <p>레이아웃 푸터</p>
+</div>
 
-        <td th:text="${#numbers.formatDecimal(cart.getPrice(), 1, 2)}">10000</td>
+<script>
+  function notYet() {
+    alert("작업중입니다..");
+  }
 
-        <!-- 수량 입력 필드 -->
-        <td>
-          <div class="input-group">
-            <button class="btn btn-custom-decrement" type="button"
-                    th:onclick="|decrementQty(${cart.getId()})|">-</button>
+  function redirectionHome() {
+    window.location.href = '/';
+  }
 
-            <input type="number" name="quantity"
-                   th:id="|quantity-${cart.getId()}|"
-                   th:attr="data-previous=${cart.getQty()}"
-                   th:value="${cart.getQty()}"
-                   min="1" step="1"
-                   oninput="validateQtyInput(this)"
-                   class="form-control text-center"
-                   style="width: 30px;"/>
+  function assureOrder() {
+    if ([[${carts.size <= 0}]]) {
+      alert("1개 이상인 경우에만 주문 가능합니다");
+      return false;
+    }
+    if (confirm("정말 주문하시겠습니까?")) {
+      location.href = '/orders/add';
+    } else {
+      return false;
+    }
+  }
 
-            <button class="btn btn-custom-increment" type="button"
-                    th:onclick="|incrementQty(${cart.getId()})|">+</button>
+  // 상품 하나 비우기
+  function deleteCart(cartId) {
+    if (confirm('해당 상품을 비우시겠습니까?')) {
 
-            <!-- 수량 확정 버튼 -->
-            <button class="btn btn-confirm" type="button"
-                    th:onclick="|confirmQty(${cart.getId()})|">변경</button>
-          </div>
-        </td>
+      $.ajax({
+        url: '/carts/delete/' + cartId,
+        type: 'POST',
+        data: {},
+        success: function (response) {
+          if (response == "OK") {
+            location.href = '/cart-list';
+          }
+        },
+        error: function (error) {
+          console.error('Error sending data', error);
+        }
+      });
 
-        <td th:text="${cart.getItem().getSeller().getName()}">판매자</td>
+    }
+  }
 
-        <td><button class="btn btn-primary" type="button" th:onclick="|deleteCart(${cart.getId()})|">비우기</button></td>
-      </tr>
+  // 장바구니 전체 비우기
+  function deleteCarts(teamId) {
+    if (confirm('장바구니를 모두 비우시겠습니까?')) {
 
-      <tr>
-        <td>합산</td>
-        <td></td>
-        <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
-        <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
-        <td></td>
-        <td></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+      $.ajax({
+        url: '/carts/deleteAll/' + teamId,
+        type: 'POST',
+        data: {},
+        success: function (response) {
+          if (response == "OK") {
+            location.href = '/cart-list';
+          }
+        },
+        error: function (error) {
+          console.error('Error sending data', error);
+        }
+      });
 
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-1" th:onclick="deleteCarts('[[${session.id}]]')" type="button">모두 비우기</button>
-        <button class="btn btn-secondary me-2" onclick="assureOrder()" type="button">주문</button>
-      </div>
-    </div>
-  </div>
+    }
+  }
 
-  <!-- 페이징 바 -->
-<!--  <div class="row" id="pageSection" th:style="${paging == true ? 'display:block' : 'display:none'}">-->
-<!--      <ul class="pagination justify-content-center">-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/cart-list(page=${prev})}">Prev</a></li>-->
-<!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
-<!--          <a class="page-link" th:href="@{/cart-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
-<!--        </li>-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/cart-list(page=${next})}">Next</a></li>-->
-<!--      </ul>-->
-<!--  </div>-->
+  // 수량 증가 함수
+  function incrementQty(cartId) {
+    const qtyInput = document.getElementById('quantity-' + cartId);
+    let currentQty = parseInt(qtyInput.value);
+    if (!isNaN(currentQty)) {
+      qtyInput.value = currentQty + 1;
+      qtyInput.focus();
+    }
+  }
 
-</div> <!-- /container -->
-<!--jQuery-->
+  // 수량 감소 함수
+  function decrementQty(cartId) {
+    const qtyInput = document.getElementById('quantity-' + cartId);
+    let currentQty = parseInt(qtyInput.value);
+    if (!isNaN(currentQty) && currentQty > 1) {
+      qtyInput.value = currentQty - 1;
+      qtyInput.focus();
+    }
+  }
+
+  // 소수점 방지 및 1 이상의 값만 허용
+  function validateQtyInput(inputElement) {
+    let value = inputElement.value;
+
+    if (value.includes('.') || value < 1) {
+      inputElement.value = Math.floor(value); // 소수점 제거
+      if (inputElement.value < 1) inputElement.value = 1; // 최소값 1 보장
+    }
+  }
+
+  function confirmQty(cartId) {
+    let qtyInput = document.getElementById('quantity-' + cartId);
+    let qty = qtyInput.value;
+    let previousValue = qtyInput.getAttribute('data-previous');
+
+    if (qty != previousValue && confirm('해당 상품의 수량을 변경하시겠습니까?')) {
+
+      let data = {
+        "id" : cartId,
+        "qty" : qty
+      }
+
+      $.ajax({
+        url: '/carts/update',
+        type: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          if (response == "OK") {
+            alert('수량이 변경되었습니다.');
+            location.href = '/cart-list';
+          } else {
+            alert('수량 변경에 실패했습니다.');
+          }
+        },
+        error: function (error) {
+          console.error('Error updating quantity', error);
+        }
+      });
+
+    } else if (qty == previousValue) {
+      alert('변경할 수량이 기존 수량과 동일합니다');
+    }
+
+  }
+
+  //스크롤 위치 이동
+  window.addEventListener('load', function() {
+    const targetElement = document.getElementById('scroll-target');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+</script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

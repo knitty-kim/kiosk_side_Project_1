@@ -2,95 +2,200 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>K&Y Kiosk Project</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
-  <script>
-    function redirectionHome() {
-      window.location.href = '/';
+  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
     }
 
-    function notYet() {
-      alert("작업중입니다..");
+    h2 {
+      font-weight: bold;
+      color: #343a40;
     }
 
-  </script>
+    .table-wrapper {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+
+  </style>
 </head>
 <body>
-<div class="container" style="max-width: 1000px">
-  <div class="py-5 text-center">
-    <h2>제휴 판매자 목록</h2>
-  </div>
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-2" onclick="redirectionHome()" type="button">홈</button>
-        <button class="btn btn-secondary me-2"
-                th:if="${session.types} == 'master'"
-                th:onclick="|location.href='@{/team/team-list}'|" type="button">팀 목록</button>
-        <button class="btn btn-secondary"
-                th:if="${session.types} == 'master' or ${session.types} == 'team'"
-                th:onclick="|location.href='@{/seller/seller-list}'|" type="button">판매자 목록</button>
-      </div>
+
+<div th:replace="~{header :: common-nav}">
+  <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+  <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+  <div class="container-fluid" style="width: 1100px;">
+
+    <!-- 메뉴 명 -->
+    <div class="text-center mb-xl-4">
+      <h2>제휴 판매자 목록</h2>
     </div>
-  </div>
 
-  <hr class="my-0">
+    <!-- 상단 버튼들 -->
+    <div class="d-flex justify-content-end mb-3">
+      <button class="btn btn-primary me-1"
+              th:if="${session.types} == 'master'"
+              th:onclick="|location.href='@{/team/team-list}'|"
+              type="button">팀 목록</button>
+      <button class="btn btn-success"
+              th:if="${session.types} == 'master' or ${session.types} == 'team'"
+              th:onclick="|location.href='@{/seller/seller-list}'|"
+              type="button">판매자 목록</button>
+    </div>
 
-  <!-- 테이블 -->
-  <div>
-    <input type="hidden" id="sessionId" th:value="${session.id}">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>파트너 명</th>
-        <th>연락처</th>
-        <th>이메일</th>
-        <th>생성일</th>
-        <th>제휴일</th>
-        <th>상태</th>
-        <th>제휴</th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr th:each="partner : ${partners}">
-          <td><a href="#"
-                 th:text="${partner.sellerId}"
-                 onclick="notYet()">판매자 ID</a></td>
+    <!-- 검색창 폼 -->
+    <div class="d-flex mb-3">
+      <form action="#" method="GET" th:object="${cond}" th:action="@{${session.id}}">
+        <div class="row g-2">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="판매자 명" name="name" th:field="*{name}">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="연락처" name="phNumber" th:field="*{phNumber}">
+          </div>
+          <div class="col-2">
+            <input type="text" class="form-control" placeholder="이메일" name="email" th:field="*{email}">
+          </div>
+          <div class="col">
+            <select class="form-select" name="status">
+              <option value="" th:selected="*{status == null}">상태 선택</option>
+              <option value="OPEN" th:selected="*{status != null and status.toString() == 'OPEN'}">OPEN</option>
+              <option value="CLOSED" th:selected="*{status != null and status.toString() == 'CLOSED'}">CLOSED</option>
+              <option value="DORMANT" th:selected="*{status != null and status.toString() == 'DORMANT'}">DORMANT</option>
+            </select>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary w-100" type="submit">검색</button>
+          </div>
+        </div>
+      </form>
+    </div>
 
-          <td><a href="#"
-                 th:text="${partner.sellerName}"
-                 onclick="notYet()">판매자 명</a></td>
-
-          <td th:text="${partner.sellerPhNumber}">333-333-3333</td>
-          <td th:text="${partner.sellerEmail}">us@us.or</td>
-          <td th:text="${#temporals.format(partner.sellerCreatedDate, 'yyyy-MM-dd')}">생성일</td>
-          <td th:text="${#temporals.format(partner.partnerCreatedDate, 'yyyy-MM-dd')}">제휴일</td>
-          <td class="fw-bolder"
-              th:classappend="${partner.sellerStatus.toString() == 'OPEN'} ? 'text-success' :
-                              (${partner.sellerStatus.toString() == 'CLOSED'} ? 'text-danger' :
-                              'text-secondary')"
-              th:text="${partner.sellerStatus}">상태</td>
-          <td class="fw-bolder"
-              th:classappend="${partner.partnerStatus.toString() == 'CONNECTED'} ? 'text-warning' : 'text-secondary'"
-              th:text="${partner.partnerStatus}">제휴</td>
+    <!-- 테이블 영역 -->
+    <div class="table-wrapper">
+      <input type="hidden" id="sessionId" th:value="${session.id}">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>파트너 명</th>
+          <th>연락처</th>
+          <th>이메일</th>
+          <th>생성일</th>
+          <th>제휴일</th>
+          <th>상태</th>
+          <th>제휴</th>
         </tr>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          <tr th:each="partner : ${partners}">
+            <td><a href="#"
+                   th:text="${partner.sellerId}"
+                   onclick="notYet()">판매자 ID</a></td>
 
-  <!-- 페이징 바 -->
-<!--  <div class="row" id="pageSection">-->
-<!--    <ul class="pagination justify-content-center">-->
-<!--      <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{seller-list(page=${prev})}">Prev</a></li>-->
-<!--      <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
-<!--        <a class="page-link" th:href="@{seller-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
-<!--      </li>-->
-<!--      <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{seller-list(page=${next})}">Next</a></li>-->
-<!--    </ul>-->
-<!--  </div>-->
+            <td><a href="#"
+                   th:text="${partner.sellerName}"
+                   onclick="notYet()">판매자 명</a></td>
 
-</div> <!-- /container -->
+            <td th:text="${partner.sellerPhNumber}">333-333-3333</td>
+            <td th:text="${partner.sellerEmail}">us@us.or</td>
+            <td th:text="${#temporals.format(partner.sellerCreatedDate, 'yyyy-MM-dd')}">생성일</td>
+            <td th:text="${#temporals.format(partner.partnerCreatedDate, 'yyyy-MM-dd')}">제휴일</td>
+            <td class="fw-bolder"
+                th:classappend="${partner.sellerStatus.toString() == 'OPEN'} ? 'text-success' :
+                                (${partner.sellerStatus.toString() == 'CLOSED'} ? 'text-danger' :
+                                'text-secondary')"
+                th:text="${partner.sellerStatus}">상태</td>
+            <td class="fw-bolder"
+                th:classappend="${partner.partnerStatus.toString() == 'CONNECTED'} ? 'text-warning' : 'text-secondary'"
+                th:text="${partner.partnerStatus}">제휴</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이징 바 -->
+    <div class="row mt-4" id="pageSection">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" th:if="${hasPrev == true}"
+             th:href="@{{teamId}(teamId=${session.id},
+             page=${prev}, id=${cond.id}, name=${cond.name},
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Prev</a></li>
+        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+          <a class="page-link" th:href="@{{teamId}(teamId=${session.id},
+             page=${pageNumber}, id=${cond.id}, name=${cond.name},
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}" th:text="${pageNumber}">current</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" th:if="${hasNext == true}"
+             th:href="@{{teamId}(teamId=${session.id},
+             page=${next}, id=${cond.id}, name=${cond.name},
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Next</a></li>
+      </ul>
+    </div>
+
+  </div> <!-- /container -->
+
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+  <p>레이아웃 푸터</p>
+</div>
+
+<script>
+  function redirectionHome() {
+    window.location.href = '/';
+  }
+
+  function notYet() {
+    alert("작업중입니다..");
+  }
+
+  //스크롤 위치 이동
+  window.addEventListener('load', function() {
+    const targetElement = document.getElementById('scroll-target');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+</script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

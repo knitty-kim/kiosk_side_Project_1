@@ -2,129 +2,200 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>K&Y Kiosk Project</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
   <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <script>
-    window.onload = function () {
-    };
-
-    function redirectionHome() {
-      window.location.href = '/';
+  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
     }
 
-    function deleteOrder(orderId) {
-
-      let canceled = '[[${delivery.getStatus().toString()}]]';
-
-      if (canceled == "CANCELED") {
-        alert("이미 취소된 주문입니다!");
-        return false;
-      } else if (canceled == "DELIVERING" || canceled == "DELIVERED") {
-        alert("배송중이거나 배송 완료된 주문은 취소할수없습니다!");
-        return false;
-      }
-
-      if (confirm("현재 주문을 취소하시겠습니까?")) {
-        let order_id = orderId;
-
-        $.ajax({
-          url: '/orders/delete/' + order_id,
-          type: 'POST',
-          data: {},
-          success: function (response) {
-            if (response == "OK") {
-              location.href = '/orders/' + order_id;
-            }
-          },
-          error: function (error) {
-            console.error('Error sending data', error);
-          }
-        });
-
-      }
-
+    h2 {
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 20px;
     }
 
-  </script>
+    .table-wrapper {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
 </head>
 <body>
-<div class="container" style="max-width: 1000px">
-  <div class="py-5 text-center">
-    <h2>주문 내역</h2>
-  </div>
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-start d-inline mt-3">
-        <p class="d-inline me-lg-3">
-          주문 ID : <strong class="text-white bg-dark" th:text="${order.getId()}"></strong>
-      </p>
-        <p class="d-inline">
-          배송 상태 : <strong th:text="${delivery.getStatus()}"
-                          th:class="${delivery.getStatus().toString() == 'CANCELED'} ? 'text-danger bg-dark' : 'text-white bg-dark'"></strong>
-        </p>
-      </div>
 
-      <div class="float-end d-inline">
-        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
-                type="button">홈</button>
-        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                th:onclick="|location.href='@{/item/add}'|"
-                type="button">상품 등록</button>
-        <button class="btn btn-primary me-1"
-                th:onclick="|location.href='@{/item-list}'|"
-                type="button">상품 목록</button>
-        <button class="btn btn-success me-1"
-                th:onclick="|location.href='@{/order-list}'|"
-                type="button">주문 목록</button>
-        <button class="btn btn-warning"
-                th:onclick="|location.href='@{/cart-list}'|"
-                type="button">장바구니</button>
+<div th:replace="~{header :: common-nav}">
+  <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+  <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+
+  <div class="container-fluid" style="width: 1000px;">
+
+    <!-- 메뉴 명 -->
+    <div class="text-center mb-xl-4">
+      <h2>주문 내역</h2>
+    </div>
+
+    <!-- 상단 버튼들 -->
+    <div class="d-flex justify-content-end mb-2">
+      <!--            <button class="btn btn-secondary me-1" onclick="redirectionHome()" type="button">홈</button>-->
+      <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+              th:onclick="|location.href='@{/item/add}'|"
+              type="button">상품 등록</button>
+      <button class="btn btn-primary me-1"
+              th:onclick="|location.href='@{/item-list}'|"
+              type="button">상품 목록</button>
+      <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
+              th:onclick="|location.href='@{/order-list}'|"
+              type="button">주문 목록</button>
+      <button class="btn btn-warning" th:if="${session.types != 'seller'}"
+              th:onclick="|location.href='@{/cart-list}'|"
+              type="button">장바구니</button>
+    </div>
+
+    <!-- 상단 버튼들 -->
+    <div class="d-flex mb-3">
+      <div class="col">
+        <div class="float-start mt-3">
+          <p class="d-inline me-lg-3">주문 ID :
+            <strong class="text-success" th:text="${order.getId()}"></strong>
+          </p>
+          <p class="d-inline me-lg-3"> 주문 상태 :
+            <strong th:text="${order.getStatus()}"
+                    th:class="${order.getStatus().toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"></strong>
+          </p>
+          <p class="d-inline"> 배송 상태 :
+            <strong th:text="${delivery.getStatus()}"
+                    th:class="${delivery.getStatus().toString() == 'CANCELED'} ? 'text-danger' : 'text-success'"></strong>
+          </p>
+        </div>
+
       </div>
     </div>
-  </div>
-  <hr class="my-0">
-  <div>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>상품 ID</th>
-        <th>상품명</th>
-        <th>총 가격</th>
-        <th>수량</th>
-        <th>판매자</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="orderItem : ${orderItems}">
-        <td><a href="#" th:text="${orderItem.getItem().getId()}">상품 ID</a></td>
-        <td class="w-25"><a class="text-wrap" href="#" th:text="${orderItem.getItem().getName()}">상품명</a></td>
-        <td th:text="${#numbers.formatDecimal(orderItem.getOrderPrice(), 1, 2)}">10000</td>
-        <td th:text="${#numbers.formatInteger(orderItem.getCount(), 1, 'DEFAULT')}">10</td>
-        <td th:text="${orderItem.getItem().getSeller().getName()}">판매자</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>합산</td>
-        <td></td>
-        <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
-        <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
-        <td></td>
-        <td></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
 
-  <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-2" th:onclick="deleteOrder('[[${order.id}]]')" type="button">주문 취소</button>
+    <!-- 테이블 영역 -->
+    <div class="table-wrapper">
+      <input type="hidden" id="sessionId" th:value="${session.id}">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>상품 ID</th>
+          <th>상품명</th>
+          <th>총 가격</th>
+          <th>수량</th>
+          <th>판매자</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderItem : ${orderItems}">
+          <td><a href="#" th:text="${orderItem.getItem().getId()}">상품 ID</a></td>
+          <td class="w-25"><a class="text-wrap" href="#" th:text="${orderItem.getItem().getName()}">상품명</a></td>
+          <td th:text="${#numbers.formatDecimal(orderItem.getOrderPrice(), 1, 2)}">10000</td>
+          <td th:text="${#numbers.formatInteger(orderItem.getCount(), 1, 'DEFAULT')}">10</td>
+          <td th:text="${orderItem.getItem().getSeller().getName()}">판매자</td>
+          <td></td>
+        </tr>
+        <tr class="table-info">
+          <td>합산</td>
+          <td></td>
+          <td th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">합산 가격</td>
+          <td th:text="${#numbers.formatInteger(totalQty, 1, 'DEFAULT')}">합산 수량</td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row my-3">
+      <div class="col">
+        <div class="float-end">
+          <button class="btn btn-secondary me-2" th:onclick="deleteOrder('[[${order.id}]]')" type="button">주문 취소</button>
+        </div>
       </div>
     </div>
-  </div>
 
-</div> <!-- /container -->
-<!--jQuery-->
+  </div> <!-- /container -->
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+  <p>레이아웃 푸터</p>
+</div>
+
+<script>
+  function redirectionHome() {
+    window.location.href = '/';
+  }
+
+  function deleteOrder(orderId) {
+
+    let canceled = '[[${delivery.getStatus().toString()}]]';
+
+    if (canceled == "CANCELED") {
+      alert("이미 취소된 주문입니다!");
+      return false;
+    } else if (canceled == "DELIVERING" || canceled == "DELIVERED") {
+      alert("배송중이거나 배송 완료된 주문은 취소할수없습니다!");
+      return false;
+    }
+
+    if (confirm("현재 주문을 취소하시겠습니까?")) {
+      let order_id = orderId;
+
+      $.ajax({
+        url: '/orders/delete/' + order_id,
+        type: 'POST',
+        data: {},
+        success: function (response) {
+          if (response == "OK") {
+            location.href = '/orders/' + order_id;
+          }
+        },
+        error: function (error) {
+          console.error('Error sending data', error);
+        }
+      });
+
+    }
+
+  }
+
+  //스크롤 위치 이동
+  window.addEventListener('load', function() {
+    const targetElement = document.getElementById('scroll-target');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+</script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

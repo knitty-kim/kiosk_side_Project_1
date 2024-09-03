@@ -2,6 +2,7 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.condition.PartnerDto;
+import com.side.portfolio.demo.dto.condition.PartnerSearchCond;
 import com.side.portfolio.demo.dto.condition.SellerDto;
 import com.side.portfolio.demo.dto.condition.SellerSearchCond;
 import com.side.portfolio.demo.repository.PartnerJpaRepository;
@@ -37,8 +38,9 @@ public class SellerService {
         }
     }
 
-    public List<PartnerDto> findPartnerByTeam_Id(Long teamId) {
-        List<PartnerDto> partners = sellerJpaRepository.searchPartnerByTeamId(teamId);
+    //제휴 판매자 검색 조회
+    public Page<PartnerDto> findPartnerByTeam_Id(Long teamId, PartnerSearchCond cond, Pageable pageable) {
+        Page<PartnerDto> partners = sellerJpaRepository.searchPartnerByTeamId(teamId, cond, pageable);
         return partners;
     }
 

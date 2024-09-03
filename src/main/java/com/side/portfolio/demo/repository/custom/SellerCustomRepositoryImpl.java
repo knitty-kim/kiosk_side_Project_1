@@ -3,6 +3,7 @@ package com.side.portfolio.demo.repository.custom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.side.portfolio.demo.domain.Partner;
 import com.side.portfolio.demo.dto.condition.*;
 import com.side.portfolio.demo.status.SellerStatus;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +27,34 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<PartnerDto> searchPartnerByTeamId(Long teamId) {
+    public Page<PartnerDto> searchPartnerByTeamId(Long teamId, PartnerSearchCond cond, Pageable pageable) {
 
-        return queryFactory
+        List<PartnerDto> content = queryFactory
                 .select(new QPartnerDto(seller.id, seller.name, team.id,
                         seller.phNumber, seller.email, seller.status, partner.status,
                         seller.createdDate, partner.createdDate))
                 .from(partner)
                 .join(partner.team, team)
                 .join(partner.seller, seller)
-                .where(partner.team.id.eq(teamId))
+                .where(partner.team.id.eq(teamId),
+                        idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getStatus()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(partner.count())
+                .from(partner)
+                .join(partner.team, team)
+                .join(partner.seller, seller)
+                .where(partner.team.id.eq(teamId),
+                        idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getStatus()));
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
 
     }
 

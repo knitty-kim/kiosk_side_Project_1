@@ -2,23 +2,93 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css"
-        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>K&Y Kiosk Project</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
+  <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
   <style>
-    .container {
-      max-width: 560px;
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .container-custom {
+      max-width: 900px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 20px;
+    }
+
+    .notice-content img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .meta-info p {
+      margin: 0;
+      color: #6c757d;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: #e9ecef;
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
   </style>
-
 </head>
 <body>
-<div class="container">
-  <div class="py-5 text-center">
-    <h2>공지 수정</h2>
+
+<div th:replace="~{header :: common-nav}">
+  <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+  <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+
+<div class="container-custom" style="max-width: 700px">
+
+  <div class="row">
+    <div class="col text-center">
+      <h2>공지 수정</h2>
+    </div>
   </div>
 
+<!--  <div class="py-5 text-center">-->
+<!--    <h2>공지 수정</h2>-->
+<!--  </div>-->
+
   <!-- Notice Meta Information -->
-  <div class="row mb-4">
+  <div class="row mb-2">
     <div class="col-md-6">
       <p><strong>작성자 :</strong> Master</p>
     </div>
@@ -34,13 +104,13 @@
 <!--  </div>-->
 
   <form role="form" th:object="${noticeUpdateForm}" method="post" enctype="multipart/form-data">
-    <div class="form-group">
+    <div class="form-group mb-2">
       <label th:for="title">제목</label>
       <input class="form-control" type="text"
              th:errorclass="is-invalid" th:field="*{title}" placeholder="제목을 입력하세요">
       <div class="invalid-feedback" th:errors="*{title}">제목 오류</div>
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
       <label th:for="content">본문</label>
       <textarea class="form-control" type="text"
                 th:errorclass="is-invalid" th:field="*{content}" rows="5" placeholder="본문을 입력하세요"></textarea>
@@ -51,43 +121,44 @@
       <div id="image-upload-container">
         <div th:if="*{img1 != null}" class="mb-2 d-flex align-items-center" data-img-id="img1">
           <span th:text="*{img1}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img1')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img1')"></button>
         </div>
         <div th:if="*{img2 != null}" class="mb-2 d-flex align-items-center" data-img-id="img2">
           <span th:text="*{img2}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img2')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img2')"></button>
         </div>
         <div th:if="*{img3 != null}" class="mb-2 d-flex align-items-center" data-img-id="img3">
           <span th:text="*{img3}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img3')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img3')"></button>
         </div>
         <div th:if="*{img4 != null}" class="mb-2 d-flex align-items-center" data-img-id="img4">
           <span th:text="*{img4}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img4')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img4')"></button>
         </div>
         <div th:if="*{img5 != null}"  class="mb-2 d-flex align-items-center" data-img-id="img5">
           <span th:text="*{img5}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img5')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img5')"></button>
         </div>
         <div th:if="*{img6 != null}" class="mb-2 d-flex align-items-center" data-img-id="img6">
           <span th:text="*{img6}"></span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" onclick="handleRemove('img6')"></button>
+          <button type="button" class="btn-close ms-2" aria-label="Close"
+                  onclick="handleRemove('img6')"></button>
         </div>
-
-<!--        <div class="input-group mb-2">-->
-<!--          <input type="file" class="form-control" th:field="*{img_3}" accept="image/*">-->
-<!--          <button type="button" class="btn btn-danger" onclick="removeImageField(this)">제거</button>-->
-<!--        </div>-->
       </div>
-      <button type="button" id="add-image-button" class="btn btn-secondary">추가</button>
+      <button type="button" id="add-image-button" class="btn btn-secondary">이미지 추가</button>
     </div>
 
-    <hr class="my-4">
+    <hr class="my-3">
 
     <!-- 삭제할 이미지 목록을 저장할 히든 필드 -->
     <input type="hidden" name="deleteImages" id="deleteImages">
 
-    <div class="row">
+    <div class="row mb-3">
       <div class="col">
         <button class="w-100 btn btn-primary btn-lg" type="submit">수정 확정</button>
       </div>
@@ -98,6 +169,11 @@
     </div>
   </form>
 </div> <!-- /container -->
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+  <p>레이아웃 푸터</p>
+</div>
 
 <script>
 
@@ -188,7 +264,17 @@
     existingImgNumbers.delete(deleteImgId);
     container.removeChild(button.parentNode);
   }
-</script>
 
+  //스크롤 위치 이동
+  window.addEventListener('load', function() {
+    const targetElement = document.getElementById('scroll-target');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+</script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

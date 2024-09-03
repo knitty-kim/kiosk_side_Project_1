@@ -2,114 +2,88 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>K&Y Kiosk Project</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
     <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script>
-        function redirectionHome() {
-            window.location.href = '/';
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f8f9fa;
         }
 
-        //수량 유효성 검사
-        function checkInvalid(id) {
-            if (Number($("#" + id).val()) <= 0 || $("#" + id).val() == '') {
-                $("#" + id).addClass("is-invalid");
-                $("#" + id).focus();
-            }
+        h2 {
+            font-weight: bold;
+            color: #343a40;
         }
 
-        function removeInvalid(id) {
-            $("#" + id).removeClass("is-invalid");
+        .table-wrapper {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        // 소수점 방지 및 1 이상의 값만 허용
-        function validateQtyInput(inputElement) {
-            let value = inputElement.value;
-
-            if (value.includes('.') || value < 1) {
-                inputElement.value = '';
-            }
+        .table th, .table td {
+            vertical-align: middle;
         }
-
-        //담기 버튼, 유효성 검사
-        function toCart(button) {
-
-            let parentTr = $(button).closest('tr');
-            let qtyId = 'inputCnt' + parentTr.find('td:eq(0)').text();
-
-            checkInvalid(qtyId);
-
-            if ($('input.is-invalid').length > 0) {
-                // alert("check invalid value!");
-                return false;
-            }
-
-
-            let data = {
-                teamId : $("#sessionId").val(),
-                itemId : parentTr.find('td:eq(0)').text(),
-                price : parentTr.find('td:eq(2)').text(),
-                qty : $("#" + qtyId).val()
-            }
-
-            $.ajax({
-                url: '/carts/add',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(response) {
-
-                    $("#" + qtyId).val('');     //담은 수량 초기화
-
-                    if (response[0] == true) {
-                        if (confirm("담기 성공! 장바구니로 이동하시겠습니까?")) {
-                            location.href = "/cart-list";
-                        }
-                    } else {
-                        alert(response[1]);
-                    }
-
-                },
-                error: function(error) {
-                    console.error('Error sending data', error);
-
-
-                }
-            });
-
-        }
-
-    </script>
+    </style>
 </head>
 <body>
-<div class="container" style="width: 1100px;">
-    <!--타이틀-->
-    <div class="py-5 text-center">
-        <h2>전체 상품 목록</h2>
-    </div>
 
-    <!--상단 목록 이동 버튼들-->
-    <div class="row mb-3">
-        <div class="col mb-2">
-            <div class="float-end">
-                <button class="btn btn-secondary me-1" onclick="redirectionHome()"
-                        type="button">홈</button>
-                <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                        th:onclick="|location.href='@{/item/add}'|"
-                        type="button">상품 등록</button>
-                <button class="btn btn-primary me-1"
-                        th:onclick="|location.href='@{/item-list}'|"
-                        type="button">상품 목록</button>
-                <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
-                        th:onclick="|location.href='@{/order-list}'|"
-                        type="button">주문 목록</button>
-                <button class="btn btn-warning" th:if="${session.types != 'seller'}"
-                        th:onclick="|location.href='@{/cart-list}'|"
-                        type="button">장바구니</button>
-            </div>
+<div th:replace="~{header :: common-nav}">
+    <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+    <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+    <div class="container-fluid" style="width: 1000px;">
+
+        <!-- 메뉴 명 -->
+        <div class="text-center mb-xl-4">
+            <h2>전체 상품 목록</h2>
+        </div>
+
+        <!-- 상단 버튼들 -->
+        <div class="d-flex justify-content-end mb-3">
+<!--            <button class="btn btn-secondary me-1" onclick="redirectionHome()" type="button">홈</button>-->
+            <button class="btn btn-primary me-1"
+                    th:if="${session.types == 'master'}"
+                    th:onclick="|location.href='@{/item/add}'|"
+                    type="button">상품 등록</button>
+            <button class="btn btn-success me-1"
+                    th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                    th:onclick="|location.href='@{/order-list}'|"
+                    type="button">주문 목록</button>
+            <button class="btn btn-success me-1"
+                    th:if="${session.types} == 'seller'"
+                    th:onclick="|location.href='@{/ordered-list/{sellerId}(sellerId=${session.id})}'|"
+                    type="button">주문된 목록</button>
+            <button class="btn btn-warning me-1"
+                    th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                    th:onclick="|location.href='@{/cart-list}'|"
+                    type="button">장바구니</button>
+            <button class="btn btn-primary"
+                    th:onclick="|location.href='@{/item-list}'|"
+                    type="button">상품 목록</button>
         </div>
 
         <!-- 검색창 폼 -->
-        <div class="col-12">
+        <div class="d-flex mb-3">
             <form action="#" method="GET" th:object="${cond}" th:action="@{item-list}">
                 <div class="row g-2">
                     <div class="col">
@@ -141,87 +115,165 @@
             </form>
         </div>
 
-    </div>
+        <!-- 테이블 영역 -->
+        <div class="table-wrapper">
+            <input type="hidden" id="sessionId" th:value="${session.id}">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>상품명</th>
+                        <th>가격</th>
+                        <th>수량</th>
+                        <th>판매자</th>
+                        <th>상태</th>
+                        <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
+                        <th th:if="${session.types == 'master'}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
+                        <td class="text-break">
+                            <a th:href="@{'/item-list/' + ${item.id}}"
+                               th:text="${item.name}">상품명</a></td>
+                        <td th:text="${item.price}">10</td>
+                        <td th:text="${item.qty}">10</td>
+                        <td th:text="${item.sellerName}">판매자</td>
+                        <td class="fw-bolder"
+                            th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
+                            th:text="${item.status}">상태</td>
+                        <td th:if="${session.types == 'team' or session.types == 'master'}">
+                            <div class="input-group">
+                                <input type="number" class="form-control" style="width: 7rem;"
+                                       th:id="inputCnt+${item.id}"
+                                       onchange="checkInvalid(this.id)"
+                                       onblur="removeInvalid(this.id)"
+                                       oninput="validateQtyInput(this)"
+                                       th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
+                                <div class="invalid-tooltip">1개 이상의 수량만 담을 수 있습니다</div>
+                                <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
+                                        th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button>
+                            </div>
+                        </td>
+                        <td th:if="${session.types == 'master'}">
+                            <a class="btn btn-primary" role="button"
+                               th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <hr class="my-0">
+        <!-- 페이징 바 -->
+        <div class="row mt-4" id="pageSection">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" th:if="${hasPrev == true}"
+                       th:href="@{/item-list(page=${prev}, id=${cond.id}, name=${cond.name},
+                       price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+                       status=${cond.status})}">Prev</a>
+                </li>
+                <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
+                    th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+                    <a class="page-link" th:href="@{/item-list(page=${pageNumber}, id=${cond.id}, name=${cond.name},
+                       price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+                       status=${cond.status})}" th:text="${pageNumber}">current</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${hasNext == true}"
+                       th:href="@{/item-list(page=${next}, id=${cond.id}, name=${cond.name},
+                       price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
+                       status=${cond.status})}">Next</a>
+                </li>
+            </ul>
+        </div>
 
-    <!--테이블-->
-    <input type="hidden" id="sessionId" th:value="${session.id}">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>상품명</th>
-            <th>가격</th>
-            <th>수량</th>
-            <th>판매자</th>
-            <th>상태</th>
-            <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
-            <th th:if="${session.types == 'master'}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${items}">
-            <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
+    </div> <!-- /container -->
+</section>
 
-            <td class="w-25">
-                <a class="text-wrap"
-                   th:href="@{'/item-list/' + ${item.id}}"
-                   th:text="${item.name}">상품명</a></td>
-
-            <td th:text="${item.price}">10</td>
-            <td th:text="${item.qty}" style="width: 60px;">10</td>
-            <td th:text="${item.sellerName}" style="width: 80px;">판매자</td>
-            <td class="fw-bolder" style="width: 50px;"
-                th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
-                th:text="${item.status}">상태</td>
-
-            <td th:if="${session.types == 'team' or session.types == 'master'}">
-                <div class="input-group">
-                    <input type="number" class="form-control" style="width: 35px;"
-                           th:id="inputCnt+${item.id}"
-                           onchange="checkInvalid(this.id)"
-                           onblur="removeInvalid(this.id)"
-                           oninput="validateQtyInput(this)"
-                           th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'" placeholder="담을 수량?">
-
-                    <div class="invalid-tooltip">1개 이상의 수량만 담을 수 있습니다</div>
-
-                    <button class="btn btn-primary" type="button" id="button-addon2" onclick="toCart(this)"
-                            th:disabled="${item.status.toString() == 'CLOSED'} ? 'disabled'">담기</button>
-                </div>
-            </td>
-            <td th:if="${session.types == 'master'}"  style="width: 90px;">
-                <a class="btn btn-primary" role="button"
-                   th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div th:replace="~{footer :: common-footer}">
+    <p>레이아웃 푸터</p>
 </div>
 
-<!-- 페이징 바 -->
-<div class="row" id="pageSection">
-    <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a class="page-link" th:if="${hasPrev == true}"
-               th:href="@{/item-list(page=${prev}, id=${cond.id}, name=${cond.name},
-               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
-               status=${cond.status})}">Prev</a></li>
-        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
-            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-            <a class="page-link" th:href="@{/item-list(page=${pageNumber}, id=${cond.id}, name=${cond.name},
-               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
-               status=${cond.status})}" th:text="${pageNumber}">current</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" th:if="${hasNext == true}"
-               th:href="@{/item-list(page=${next}, id=${cond.id}, name=${cond.name},
-               price=${cond.price}, qty=${cond.qty}, sellerName=${cond.sellerName},
-               status=${cond.status})}">Next</a></li>
-    </ul>
-</div>
+<script>
+    function redirectionHome() {
+        window.location.href = '/';
+    }
 
-</div> <!-- /container -->
+    function checkInvalid(id) {
+        if (Number($("#" + id).val()) <= 0 || $("#" + id).val() == '') {
+            $("#" + id).addClass("is-invalid");
+            $("#" + id).focus();
+        }
+    }
+
+    function removeInvalid(id) {
+        $("#" + id).removeClass("is-invalid");
+    }
+
+    function validateQtyInput(inputElement) {
+        let value = inputElement.value;
+
+        if (value.includes('.') || value < 1) {
+            inputElement.value = '';
+        }
+    }
+
+    function toCart(button) {
+
+        let parentTr = $(button).closest('tr');
+        let qtyId = 'inputCnt' + parentTr.find('td:eq(0)').text();
+
+        checkInvalid(qtyId);
+
+        if ($('input.is-invalid').length > 0) {
+            return false;
+        }
+
+        let data = {
+            teamId: $("#sessionId").val(),
+            itemId: parentTr.find('td:eq(0)').text(),
+            price: parentTr.find('td:eq(2)').text(),
+            qty: $("#" + qtyId).val()
+        }
+
+        $.ajax({
+            url: '/carts/add',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                $("#" + qtyId).val('');     // 담은 수량 초기화
+
+                if (response[0] == true) {
+                    if (confirm("담기 성공! 장바구니로 이동하시겠습니까?")) {
+                        location.href = "/cart-list";
+                    }
+                } else {
+                    alert(response[1]);
+                }
+
+            },
+            error: function(error) {
+                console.error('Error sending data', error);
+            }
+        });
+
+    }
+
+    //스크롤 위치 이동
+    window.addEventListener('load', function() {
+        const targetElement = document.getElementById('scroll-target');
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+
+</script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

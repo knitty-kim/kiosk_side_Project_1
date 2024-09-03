@@ -2,93 +2,120 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>K&Y Kiosk Project</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
     <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <script>
-        function redirectionHome() {
-            window.location.href = '/';
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f8f9fa;
         }
 
-        function notYet() {
-            alert("작업중입니다..");
+        h2 {
+            font-weight: bold;
+            color: #343a40;
         }
-    </script>
+
+        .table-wrapper {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
-<div class="container-fluid">
-    <!--타이틀-->
-    <div class="py-5 text-center">
+
+<div th:replace="~{header :: common-nav}">
+    <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+    <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+<div class="container-fluid" style="max-width: 1100px;">
+
+    <!-- 메뉴 명 -->
+    <div class="text-center mb-xl-4">
         <h2>주문된 목록</h2>
     </div>
 
-    <!--상단 목록 이동 버튼들-->
-    <div class="row mb-3">
-        <div class="col">
-            <div class="float-end">
-                <button class="btn btn-secondary me-1" onclick="redirectionHome()"
-                        type="button">홈</button>
-                <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-                        th:onclick="|location.href='@{/item/add}'|"
-                        type="button">상품 등록</button>
-                <button class="btn btn-primary me-1"
-                        th:onclick="|location.href='@{/item-list}'|"
-                        type="button">상품 목록</button>
-                <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
-                        th:onclick="|location.href='@{/order-list}'|"
-                        type="button">주문 목록</button>
-                <button class="btn btn-warning" th:if="${session.types != 'seller'}"
-                        th:onclick="|location.href='@{/cart-list}'|"
-                        type="button">장바구니</button>
-            </div>
-        </div>
+    <!-- 상단 버튼들 -->
+    <div class="d-flex justify-content-end mb-4">
+<!--        <button class="btn btn-secondary me-1" onclick="redirectionHome()"-->
+<!--                type="button">홈</button>-->
+<!--        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"-->
+<!--                th:onclick="|location.href='@{/item/add}'|"-->
+<!--                type="button">상품 등록</button>-->
+        <button class="btn btn-primary"
+                th:if="${session.types == 'seller'}"
+                th:onclick="|location.href='@{/item-list}'|"
+                type="button">상품 목록</button>
     </div>
 
-    <hr class="my-0">
-
-    <!--테이블-->
-    <td>
+    <!-- 테이블 영역 -->
+    <div class="table-wrapper">
         <input type="hidden" id="sessionId" th:value="${session.id}">
         <table class="table table-striped">
             <thead>
-            <tr>
-                <th>상품 ID</th>
-                <th>상품명</th>
-                <th>주문 수량</th>
-                <th>주문자</th>
-                <th>주문 상태</th>
-                <th>주문 일자</th>
-                <th>수정 일자</th>
-                <th th:if="${session.types == 'seller'}"></th>
-                <th th:if="${session.types == 'seller'}"></th>
-            </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>주문 수량</th>
+                    <th>주문자</th>
+                    <th>주문 상태</th>
+                    <th>주문 일자</th>
+                    <th>수정 일자</th>
+                    <th th:if="${session.types == 'seller'}"></th>
+                    <th th:if="${session.types == 'seller'}"></th>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="order : ${orders}">
-                <td><a th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemId}">상품 ID</a></td>
+                <tr th:each="order : ${orders}">
+                    <td><a th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemId}">상품 ID</a></td>
 
-                <td class="w-25">
-                    <a class="text-wrap" th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemName}">상품명</a></td>
+                    <td class="w-25">
+                        <a class="text-wrap" th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemName}">상품명</a></td>
 
-                <td th:text="${order.orderedCount}">주문 수량</td>
-                <td th:text="${order.teamName}">주문자 명</td>
-                <td class="fw-bolder"
-                    th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
-                    th:text="${order.orderStatus}">주문 상태</td>
+                    <td th:text="${order.orderedCount}">주문 수량</td>
+                    <td th:text="${order.teamName}">주문자 명</td>
+                    <td class="fw-bolder"
+                        th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
+                        th:text="${order.orderStatus}">주문 상태</td>
 
-                <td th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">주문 일자</td>
-                <td th:text="${#temporals.format(order.modifiedDate, 'yyyy-MM-dd HH:mm')}">수정 일자</td>
+                    <td th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">주문 일자</td>
+                    <td th:text="${#temporals.format(order.modifiedDate, 'yyyy-MM-dd HH:mm')}">수정 일자</td>
 
-                <td th:if="${session.types == 'seller'}">
-                    <a class="btn btn-primary" role="button"
-                       href="#" onclick="notYet()">Accept</a></td>
+                    <td th:if="${session.types == 'seller'}">
+                        <a class="btn btn-primary" role="button"
+                           href="#" onclick="notYet()">Accept</a></td>
 
-                <td th:if="${session.types == 'seller'}">
-                    <a class="btn btn-secondary" role="button"
-                       href="#" onclick="notYet()">Reject</a></td>
+                    <td th:if="${session.types == 'seller'}">
+                        <a class="btn btn-secondary" role="button"
+                           href="#" onclick="notYet()">Reject</a></td>
 
-            </tr>
+                </tr>
             </tbody>
         </table>
-</div>
+    </div>
 
 <!-- 페이징 바 -->
 <!--<div class="row" id="pageSection">-->
@@ -102,6 +129,24 @@
 <!--</div>-->
 
 </div> <!-- /container -->
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+    <p>레이아웃 푸터</p>
+</div>
+
+<script>
+    function redirectionHome() {
+        window.location.href = '/';
+    }
+
+    function notYet() {
+        alert("작업중입니다..");
+    }
+</script>
+
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

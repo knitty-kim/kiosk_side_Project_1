@@ -2,62 +2,127 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css"
-        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>K&Y Kiosk Project</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
+  <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
+  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
   <style>
-    .container {
-      max-width: 560px;
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .container-custom {
+      max-width: 900px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 20px;
     }
 
     .notice-content img {
       width: 100%;
       height: auto;
       margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .meta-info p {
+      margin: 0;
+      color: #6c757d;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: #e9ecef;
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
   </style>
-  <script>
-    function redirectionHome() {
-      window.location.href = '/';
-    }
-  </script>
+
 </head>
 <body>
-<div class="container mt-5">
-  <!-- Notice Title -->
+
+<div th:replace="~{header :: common-nav}">
+  <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+  <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+
+<div class="container-custom">
+
+  <!-- 공지사항 타이틀 -->
   <div class="row">
     <div class="col text-center">
-      <h2 class="mb-3" th:text="${notice.title}">Notice Title</h2>
+      <h2 th:text="${notice.title}">Notice Title</h2>
     </div>
   </div>
 
   <!-- Notice Meta Information -->
-  <div class="row mb-4">
-    <div class="col-md-6">
-      <p><strong>작성자 :</strong> Master</p>
-    </div>
-    <div class="col-md-6 text-md-end">
-      <p th:utext="'<strong>등록일 :</strong> ' + ${#temporals.format(notice.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
-      <p th:utext="'<strong>수정일 :</strong> ' + ${#temporals.format(notice.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
-      <p th:utext="'<strong>조회수 :</strong> ' + ${notice.viewCnt}"></p>
+  <div class="row meta-info mb-4">
+    <div class="col-md-12 text-end">
+      <p th:utext="'<strong>등록일:</strong> ' + ${#temporals.format(notice.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+      <p th:utext="'<strong>수정일:</strong> ' + ${#temporals.format(notice.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
+      <p><strong>작성자:</strong> Master</p>
+      <p th:utext="'<strong>조회수:</strong> ' + ${notice.viewCnt}"></p>
     </div>
   </div>
 
+  <!-- Button Group -->
+<!--  <div class="row mb-3">-->
+<!--    <div class="col text-end">-->
+<!--      <button class="btn btn-secondary me-2"-->
+<!--              onclick="redirectionHome()"-->
+<!--              type="button">홈</button>-->
+<!--      <button class="btn btn-custom me-2"-->
+<!--              th:onclick="|location.href='@{/notice-list}'|"-->
+<!--              type="button">공지 목록</button>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- Button Group -->
   <div class="row mb-3">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-secondary me-1" onclick="redirectionHome()"
-                type="button">홈</button>
-        <button class="btn btn-primary me-1"
-                th:onclick="|location.href='@{/notice-list}'|"
-                type="button">공지 목록</button>
-      </div>
+    <div class="col text-end">
+      <button class="btn btn-primary me-1"
+              th:onclick="|location.href='@{/notice-list}'|">목록으로</button>
+      <button class="btn btn-success me-1" th:if="${session.types == 'master'}"
+              th:onclick="|location.href='@{/notice/update/{noticeId}/(noticeId=${notice.id})}'|">수정</button>
+      <button class="btn btn-danger" th:if="${session.types == 'master'}"
+              th:onclick="|confirmDelete(${notice.id})|">삭제</button>
     </div>
   </div>
 
   <!-- Notice Content -->
-  <div class="row mb-4">
+  <div class="row mb-3">
     <div class="col notice-content">
-      <!-- Images included in the content -->
+      <!-- 이미지 출력 -->
       <img th:if="${notice.getImg1()}" th:src="|/images/${notice.getImg1()}|">
       <img th:if="${notice.getImg2()}" th:src="|/images/${notice.getImg2()}|">
       <img th:if="${notice.getImg3()}" th:src="|/images/${notice.getImg3()}|">
@@ -65,44 +130,40 @@
       <img th:if="${notice.getImg5()}" th:src="|/images/${notice.getImg5()}|">
       <img th:if="${notice.getImg6()}" th:src="|/images/${notice.getImg6()}|">
 
-      <p th:text="${notice.getContent()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et suscipit eros.
-        Sed nec venenatis quam. Cras auctor dapibus nunc sit amet malesuada. Phasellus at suscipit enim.
-        Nam euismod pharetra turpis a aliquam. Quisque at lorem id turpis ornare faucibus at non felis.</p>
+      <p th:text="${notice.getContent()}">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et suscipit eros. Sed nec venenatis quam.
+        Cras auctor dapibus nunc sit amet malesuada. Phasellus at suscipit enim. Nam euismod pharetra turpis a aliquam.
+      </p>
     </div>
   </div>
 
-  <hr class="my-3">
-
-  <div class="row mb-3" th:if="${session.types == 'master'}">
-    <div class="col">
-      <div class="float-end">
-        <button class="btn btn-primary me-1"
-                th:onclick="|location.href='@{/notice/update/{noticeId}/(noticeId=${notice.id})}'|"
-                type="button">수정</button>
-        <button class="btn btn-secondary me-1"
-                th:onclick="|confirmDelete(${notice.id})|"
-                type="button">삭제</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Previous/Next Buttons -->
-<!--  <div class="row">-->
-<!--    <div class="col text-start">-->
-<!--      <a href="#" class="btn btn-secondary">&laquo; Previous</a>-->
-<!--    </div>-->
-<!--    <div class="col text-end">-->
-<!--      <a href="#" class="btn btn-secondary">Next &raquo;</a>-->
-<!--    </div>-->
-<!--  </div>-->
+  <hr>
 
 </div>
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+  <p>레이아웃 푸터</p>
+</div>
+
 <script>
-  function confirmDelete(noticeId) {
-    if (confirm("정말로 이 공지를 삭제하시겠습니까?")) {
-      location.href = '/notice/delete/' + noticeId;
-    }
+  function redirectionHome() {
+    window.location.href = '/';
   }
+
+  function notYet() {
+    alert("작업중입니다..");
+  }
+
+  //스크롤 위치 이동
+  window.addEventListener('load', function() {
+    const targetElement = document.getElementById('scroll-target');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
