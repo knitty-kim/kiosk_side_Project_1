@@ -222,7 +222,6 @@ public class ItemController {
             return "basic/updateItem";
         }
 
-        //TODO - 수정일 set 할 것!
         Item item = itemService.findById(itemId);
         item.setUpName(form.getName());
         item.setUpPrice(new BigDecimal(form.getPrice()));

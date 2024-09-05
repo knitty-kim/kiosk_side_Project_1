@@ -2,6 +2,7 @@ package com.side.portfolio.demo.service;
 
 import com.side.portfolio.demo.domain.*;
 import com.side.portfolio.demo.dto.condition.OrderedItemDto;
+import com.side.portfolio.demo.dto.condition.OrderedItemSearchCond;
 import com.side.portfolio.demo.repository.*;
 import com.side.portfolio.demo.status.DeliveryStatus;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,20 @@ public class OrderService {
         order.cancelOrder();
     }
 
+    //주문 수락
+    @Transactional
+    public void acceptOrder(Long orderId) {
+        Order order = orderJpaRepository.findById(orderId).get();
+        order.acceptOrder();
+    }
+
+    //주문 거절
+    @Transactional
+    public void rejectOrder(Long orderId) {
+        Order order = orderJpaRepository.findById(orderId).get();
+        order.rejectOrder();
+    }
+
     //주문 전체 조회
     public List<Order> findAll() {
         return orderJpaRepository.findAll();
@@ -96,10 +111,14 @@ public class OrderService {
         return orderItemJpaRepository.findByOrder_Id(orderId);
     }
 
-    //판매자 ID로 주문 상품 조회
-    public List<OrderedItemDto> findBySeller_Id(Long sellerId) {
-        List<OrderedItemDto> orderedItems = orderJpaRepository.searchOrderItemBySellerId(sellerId);
-        return orderedItems;
+    //판매자 ID로 주문 상품 전체 조회
+    public List<OrderedItemDto> findOrderItemBySeller_Id(Long sellerId, OrderedItemSearchCond cond) {
+
+//        List<OrderedItemDto> orderedList = orderJpaRepository.searchOrderItemBySellerId(sellerId);
+
+        List<OrderedItemDto> orderedList = orderJpaRepository.searchOrderItemBySellerId_Cond(sellerId, cond);
+
+        return orderedList;
     }
 
 }

@@ -69,15 +69,16 @@
       <button class="btn btn-primary me-1"
               th:onclick="|location.href='@{/item-list}'|"
               type="button">상품 목록</button>
-      <button class="btn btn-success me-1" th:if="${session.types} != 'seller'"
+      <button class="btn btn-success me-1"
+              th:if="${session.types} == 'master' or ${session.types} == 'team'"
               th:onclick="|location.href='@{/order-list}'|"
               type="button">주문 목록</button>
-      <button class="btn btn-warning" th:if="${session.types != 'seller'}"
+      <button class="btn btn-warning"
+              th:if="${session.types} == 'master' or ${session.types} == 'team'"
               th:onclick="|location.href='@{/cart-list}'|"
               type="button">장바구니</button>
     </div>
 
-    <!-- 상단 버튼들 -->
     <div class="d-flex mb-3">
       <div class="col">
         <div class="float-start mt-3">
@@ -135,7 +136,8 @@
     <div class="row my-3">
       <div class="col">
         <div class="float-end">
-          <button class="btn btn-secondary me-2" th:onclick="deleteOrder('[[${order.id}]]')" type="button">주문 취소</button>
+          <button class="btn btn-secondary me-2"
+                  th:onclick="deleteOrder('[[${order.id}]]')" type="button">주문 취소</button>
         </div>
       </div>
     </div>
@@ -180,9 +182,7 @@
           console.error('Error sending data', error);
         }
       });
-
     }
-
   }
 
   //스크롤 위치 이동

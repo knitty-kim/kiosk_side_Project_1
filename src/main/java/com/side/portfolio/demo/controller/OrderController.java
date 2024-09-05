@@ -5,6 +5,7 @@ import com.side.portfolio.demo.domain.Delivery;
 import com.side.portfolio.demo.domain.Order;
 import com.side.portfolio.demo.domain.OrderItem;
 import com.side.portfolio.demo.dto.condition.OrderedItemDto;
+import com.side.portfolio.demo.dto.condition.OrderedItemSearchCond;
 import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -45,6 +49,7 @@ public class OrderController {
 
         if (types.equals("team") || types.equals("master")) {
             Long teamId = (Long) session.getAttribute("id");
+
             Page<Order> orders = orderService.findByTeam_Id(teamId, pageable);
             model.addAttribute("orders", orders);
 
@@ -178,19 +183,42 @@ public class OrderController {
         return "OK";
     }
 
+    //주문 수락
+    @ResponseBody
+    @PostMapping("/orders/accept/{orderId}")
+    public String acceptOrder(@PathVariable Long orderId) {
+        orderService.acceptOrder(orderId);
+        return "OK";
+    }
+
+    //상세 주문 거절
+    @ResponseBody
+    @PostMapping("/orders/reject/{orderId}")
+    public String rejectOrder(@PathVariable Long orderId) {
+        orderService.rejectOrder(orderId);
+        return "OK";
+    }
+
     //판매자 ID로 주문 상품 조회
     @GetMapping("/ordered-list/{sellerId}")
     public String orderedList(Model model, HttpServletRequest request,
-                              @PathVariable Long sellerId) {
+                              @PathVariable Long sellerId, OrderedItemSearchCond cond) {
 
         if (logInService.invalidAccess(request.getSession(), sellerId)) {
             model.addAttribute("data", new Message("잘못된 접근입니다!", "/"));
             return "message";
         }
 
-        List<OrderedItemDto> orderedList = orderService.findBySeller_Id(sellerId);
+        List<OrderedItemDto> content = orderService.findOrderItemBySeller_Id(sellerId, cond);
+        
+        //Map<주문자명, 주문내용>으로 그룹화
+        Map<String, List<OrderedItemDto>> groupedOrders = content.stream()
+                .collect(Collectors.groupingBy(OrderedItemDto::getTeamName));
 
-        model.addAttribute("orders", orderedList);
+
+        model.addAttribute("groupedOrders", groupedOrders);
+
+        model.addAttribute("cond", cond);
 
         return "basic/sellerOrders";
     }

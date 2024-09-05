@@ -73,6 +73,45 @@ public class Order {
 
     }
 
+    //주문 수락
+    public void acceptOrder() {
+        if (delivery.getStatus() == DeliveryStatus.DELIVERING) {
+            throw new IllegalStateException("can't accept Order : delivery status is DELIVERING");
+        } else if (delivery.getStatus() == DeliveryStatus.DELIVERED) {
+            throw new IllegalStateException("can't accept Order : delivery status is DELIVERED");
+        } else if (delivery.getStatus() == DeliveryStatus.CANCELED) {
+            throw new IllegalStateException("can't accept Order : delivery status is CANCELED");
+        }
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.acceptOrderItem();
+        }
+
+        this.setUpStatus(OrderStatus.ACCEPTED);
+        this.setUpModifiedDate(LocalDateTime.now());
+
+    }
+
+    //주문 거절
+    public void rejectOrder() {
+        if (delivery.getStatus() == DeliveryStatus.DELIVERING) {
+            throw new IllegalStateException("can't reject Order : delivery status is DELIVERING");
+        } else if (delivery.getStatus() == DeliveryStatus.DELIVERED) {
+            throw new IllegalStateException("can't reject Order : delivery status is DELIVERED");
+        } else if (delivery.getStatus() == DeliveryStatus.CANCELED) {
+            throw new IllegalStateException("can't reject Order : delivery status is CANCELED");
+        }
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.rejectOrderItem();
+        }
+
+        this.delivery.setUpStatus(DeliveryStatus.CANCELED);
+        this.setUpStatus(OrderStatus.REJECTED);
+        this.setUpModifiedDate(LocalDateTime.now());
+
+    }
+
     //주문 전체 가격 계산
     public BigDecimal calTotalPrice() {
         BigDecimal totalPrice = new BigDecimal("0");

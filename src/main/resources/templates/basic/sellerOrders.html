@@ -2,22 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
     <title>K&Y Kiosk Project</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <link rel="icon" th:href="@{/assets/favicon.ico}" type="image/x-icon"/>
     <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"
+          type="text/css"/>
     <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
-    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
-    <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
-    <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
-    <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
-    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-grid.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-reboot.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-utilities.css}"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -38,6 +44,45 @@
         .table th, .table td {
             vertical-align: middle;
         }
+
+        .group-header-custom {
+            display: flex;
+            align-items: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .group-header-custom h5 {
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .group-header-custom .btn-toggle {
+            background-color: #0431B4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .group-header-custom .btn-toggle:hover {
+            color: #0056b3;
+        }
+
+        .group-content-custom {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
     </style>
 </head>
 <body>
@@ -51,84 +96,166 @@
 </div>
 
 <section class="features-icons" id="scroll-target">
-<div class="container-fluid" style="max-width: 1100px;">
+    <div class="container-fluid" style="max-width: 1150px;">
 
-    <!-- 메뉴 명 -->
-    <div class="text-center mb-xl-4">
-        <h2>주문된 목록</h2>
-    </div>
+        <!-- 메뉴 명 -->
+        <div class="text-center mb-xl-4">
+            <h2>주문된 목록</h2>
+        </div>
 
-    <!-- 상단 버튼들 -->
-    <div class="d-flex justify-content-end mb-4">
-<!--        <button class="btn btn-secondary me-1" onclick="redirectionHome()"-->
-<!--                type="button">홈</button>-->
-<!--        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"-->
-<!--                th:onclick="|location.href='@{/item/add}'|"-->
-<!--                type="button">상품 등록</button>-->
-        <button class="btn btn-primary"
-                th:if="${session.types == 'seller'}"
-                th:onclick="|location.href='@{/item-list}'|"
-                type="button">상품 목록</button>
-    </div>
+        <!-- 상단 버튼들 -->
+        <div class="d-flex justify-content-end mb-4">
+<!--                    <button class="btn btn-secondary me-1" onclick="redirectionHome()"-->
+<!--                            type="button">홈</button>-->
+<!--                    <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"-->
+<!--                            th:onclick="|location.href='@{/item/add}'|"-->
+<!--                            type="button">상품 등록</button>-->
+            <button class="btn btn-primary"
+                    th:if="${session.types == 'seller'}"
+                    th:onclick="|location.href='@{/item-list}'|"
+                    type="button">상품 목록
+            </button>
+        </div>
 
-    <!-- 테이블 영역 -->
-    <div class="table-wrapper">
-        <input type="hidden" id="sessionId" th:value="${session.id}">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>상품명</th>
-                    <th>주문 수량</th>
-                    <th>주문자</th>
-                    <th>주문 상태</th>
-                    <th>주문 일자</th>
-                    <th>수정 일자</th>
-                    <th th:if="${session.types == 'seller'}"></th>
-                    <th th:if="${session.types == 'seller'}"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="order : ${orders}">
-                    <td><a th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemId}">상품 ID</a></td>
 
-                    <td class="w-25">
-                        <a class="text-wrap" th:href="@{'/item-list/' + ${order.itemId}}" th:text="${order.itemName}">상품명</a></td>
+        <!-- 검색창 폼 -->
+        <div class="d-flex mb-3">
+            <form action="#" method="GET" th:object="${cond}" th:action="@{${session.id}}">
+                <div class="row g-2">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="상품 ID" name="itemId" th:field="*{itemId}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="상품 명" name="itemName" th:field="*{itemName}">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="주문자 명" name="teamName" th:field="*{teamName}">
+                    </div>
+                    <div class="col">
+                        <select class="form-select" name="orderStatus">
+                            <option value="" th:selected="*{orderStatus == null}">상태 선택</option>
+                            <option value="ORDERED" th:selected="*{orderStatus != null and orderStatus.toString() == 'ORDERED'}">ORDERED</option>
+                            <option value="ACCEPTED" th:selected="*{orderStatus != null and orderStatus.toString() == 'ACCEPTED'}">ACCEPTED</option>
+                            <option value="REJECTED" th:selected="*{orderStatus != null and orderStatus.toString() == 'REJECTED'}">REJECTED</option>
+                            <option value="CANCELED" th:selected="*{orderStatus != null and orderStatus.toString() == 'CANCELED'}">CANCELED</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" placeholder="첫 날짜" name="startDate" th:field="*{startDate}">
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" placeholder="끝 날짜" name="endDate" th:field="*{endDate}">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary w-100" type="submit">검색</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-                    <td th:text="${order.orderedCount}">주문 수량</td>
-                    <td th:text="${order.teamName}">주문자 명</td>
-                    <td class="fw-bolder"
-                        th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
-                        th:text="${order.orderStatus}">주문 상태</td>
+        <!-- 테이블 영역 -->
+        <div class="table-wrapper">
+            <input id="sessionId" th:value="${session.id}" type="hidden">
 
-                    <td th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">주문 일자</td>
-                    <td th:text="${#temporals.format(order.modifiedDate, 'yyyy-MM-dd HH:mm')}">수정 일자</td>
+            <div class="mb-4" th:each="entry : ${groupedOrders.entrySet()}">
 
-                    <td th:if="${session.types == 'seller'}">
-                        <a class="btn btn-primary" role="button"
-                           href="#" onclick="notYet()">Accept</a></td>
+                <!-- 그룹 헤더 (주문자 명) -->
+                <div class="group-header-custom">
+                    <h5>
+                        <span th:text="|주문자 : ${entry.key}|"></span>
+                    </h5>
 
-                    <td th:if="${session.types == 'seller'}">
-                        <a class="btn btn-secondary" role="button"
-                           href="#" onclick="notYet()">Reject</a></td>
+                    <button class="btn btn-success me-1"
+                            th:data-orderId="${entry.value.get(0).orderId}"
+                            th:data-orderStatus="${entry.value.get(0).orderStatus}"
+                            onclick="acceptOrder(this)"
+                            type="button">수락</button>
 
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    <button class="btn btn-danger me-1"
+                            th:data-orderId="${entry.value.get(0).orderId}"
+                            th:data-orderStatus="${entry.value.get(0).orderStatus}"
+                            onclick="rejectOrder(this)"
+                            type="button">거절</button>
 
-<!-- 페이징 바 -->
-<!--<div class="row" id="pageSection">-->
-<!--    <ul class="pagination justify-content-center">-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasPrev == true}" th:href="@{/item-list(page=${prev})}">Prev</a></li>-->
-<!--        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'" th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
-<!--            <a class="page-link" th:href="@{/item-list(page=${pageNumber})}" th:text="${pageNumber}">current</a>-->
-<!--        </li>-->
-<!--        <li class="page-item"><a class="page-link" th:if="${hasNext == true}" th:href="@{/item-list(page=${next})}">Next</a></li>-->
-<!--    </ul>-->
-<!--</div>-->
+                    <!-- 펼치기/접기 버튼 -->
+                    <button class="btn-toggle" data-bs-toggle="collapse"
+                            th:href="'#group-' + ${entry.key}">열기/접기</button>
+                </div>
 
-</div> <!-- /container -->
+
+                <!-- 그룹 내용 (주문 내역) -->
+                <div class="collapse show group-content-custom" th:id="'group-' + ${entry.key}">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>상품명</th>
+                            <th>주문 수량</th>
+                            <th>주문자</th>
+                            <th>주문 상태</th>
+                            <th>주문 일자</th>
+                            <th>최종 처리 일자</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order : ${entry.value}">
+                            <td>
+                                <a th:href="@{'/item-list/' + ${order.itemId}}"
+                                   th:text="${order.itemId}">상품 ID</a></td>
+
+                            <td>
+                                <a class="text-break"
+                                   th:href="@{'/item-list/' + ${order.itemId}}"
+                                   th:text="${order.itemName}">상품명</a></td>
+
+                            <td th:text="${order.orderedCount}">주문 수량</td>
+                            <td th:text="${order.teamName}">주문자 명</td>
+                            <td class="fw-bolder"
+                                th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
+                                th:text="${order.orderStatus}">주문 상태
+                            </td>
+
+                            <td th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">주문 일자</td>
+                            <td th:text="${#temporals.format(order.modifiedDate, 'yyyy-MM-dd HH:mm')}">처리 일자</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이징 바 -->
+<!--        <div class="row mt-4" id="pageSection">-->
+<!--            <ul class="pagination justify-content-center">-->
+<!--                <li class="page-item">-->
+<!--                    <a class="page-link" th:href="@{{sellerId}(sellerId=${session.id},-->
+<!--                       page=${prev}, itemId=${cond.itemId}, itemName=${cond.itemName},-->
+<!--                       teamName=${cond.teamName}, orderStatus=${cond.getOrderStatus()},-->
+<!--                       startDate=${cond.getStartDate()}, endDate=${cond.getEndDate()})}"-->
+<!--                       th:if="${hasPrev == true}">Prev</a>-->
+<!--                </li>-->
+
+<!--                <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"-->
+<!--                    th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">-->
+<!--                    <a class="page-link" th:href="@{{sellerId}(sellerId=${session.id},-->
+<!--                       page=${pageNumber}, itemId=${cond.itemId}, itemName=${cond.itemName},-->
+<!--                       teamName=${cond.teamName}, orderStatus=${cond.getOrderStatus()},-->
+<!--                       startDate=${cond.getStartDate()}, endDate=${cond.getEndDate()})}"-->
+<!--                       th:text="${pageNumber}">current</a>-->
+<!--                </li>-->
+
+<!--                <li class="page-item">-->
+<!--                    <a class="page-link" th:if="${hasNext == true}"-->
+<!--                       th:href="@{{sellerId}(sellerId=${session.id},-->
+<!--                       page=${prev}, itemId=${cond.itemId}, itemName=${cond.itemName},-->
+<!--                       teamName=${cond.teamName}, orderStatus=${cond.getOrderStatus()},-->
+<!--                       startDate=${cond.getStartDate()}, endDate=${cond.getEndDate()})}">Next</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+    </div> <!-- /container -->
 </section>
 
 <div th:replace="~{footer :: common-footer}">
@@ -143,10 +270,98 @@
     function notYet() {
         alert("작업중입니다..");
     }
+
+    //스크롤 위치 이동
+    window.addEventListener('load', function() {
+        const targetElement = document.getElementById('scroll-target');
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+
+    function acceptOrder(button) {
+
+        let status = button.getAttribute('data-orderStatus');
+        let orderId = button.getAttribute('data-orderId');
+        let sellerId = $("#sessionId").val();
+
+        if (status == "ACCEPTED") {
+            alert("이미 수락된 주문입니다!");
+            return false;
+        } else if (status == "REJECTED") {
+            alert("거절된 주문입니다!");
+            return false;
+        }
+
+        if (confirm("현재 주문을 수락하시겠습니까?")) {
+            let order_id = orderId;
+
+            $.ajax({
+                url: '/orders/accept/' + order_id,
+                type: 'POST',
+                data: {},
+                success: function (response) {
+                    if (response == "OK") {
+                        location.href = '/ordered-list/' + sellerId;
+                    }
+                },
+                error: function (error) {
+                    console.error('Error sending data', error);
+                }
+            });
+        }
+    }
+
+    function rejectOrder(button) {
+
+        let status = button.getAttribute('data-orderStatus');
+        let orderId = button.getAttribute('data-orderId');
+        let sellerId = $("#sessionId").val();
+
+        if (status == "REJECTED") {
+            alert("이미 거절된 주문입니다!");
+            return false;
+        } else if (status == "ACCEPTED") {
+            alert("수락된 주문입니다!");
+            return false;
+        }
+
+        if (confirm("현재 주문을 거절하시겠습니까?")) {
+            let order_id = orderId;
+
+            $.ajax({
+                url: '/orders/reject/' + order_id,
+                type: 'POST',
+                data: {},
+                success: function (response) {
+                    if (response == "OK") {
+                        location.href = '/ordered-list/' + sellerId;
+                    }
+                },
+                error: function (error) {
+                    console.error('Error sending data', error);
+                }
+            });
+        }
+    }
+
 </script>
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#startDate", {
+        dateFormat: "Y-m-d",
+    });
+    flatpickr("#endDate", {
+        dateFormat: "Y-m-d",
+    });
+</script>
+
 </body>
 </html>

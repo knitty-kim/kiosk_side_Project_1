@@ -84,7 +84,7 @@
     <!-- 상품 이미지 -->
     <div class="col-md-6">
       <img th:if="${item.getImg1()}" th:src="|/images/${item.getImg1()}|" class="img-fluid" alt="상품 이미지 1">
-      <img th:unless="${item.getImg1()}" src="https://via.placeholder.com/500" alt="상품 이미지" class="img-fluid">
+      <img th:unless="${item.getImg1()}" th:src="@{/img/items/tempFoodImage.png}" alt="상품 이미지" class="img-fluid">
     </div>
 
     <!-- 상품 정보 -->

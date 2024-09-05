@@ -78,6 +78,7 @@
                     th:onclick="|location.href='@{/cart-list}'|"
                     type="button">장바구니</button>
             <button class="btn btn-primary"
+                    th:if="${session.types} == 'master' or ${session.types} == 'team'"
                     th:onclick="|location.href='@{/item-list}'|"
                     type="button">상품 목록</button>
         </div>

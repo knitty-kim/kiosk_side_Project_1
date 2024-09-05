@@ -46,6 +46,17 @@ public class OrderItem {
         setUpModifiedDate(LocalDateTime.now());
     }
 
+    //주문상품 수락
+    public void acceptOrderItem() {
+        setUpModifiedDate(LocalDateTime.now());
+    }
+
+    //주문상품 거절
+    public void rejectOrderItem() {
+        getItem().addQty(count);
+        setUpModifiedDate(LocalDateTime.now());
+    }
+    
     //==변경 메서드 시작==//
     public void setUpOrder(Order order) {
         this.order = order;

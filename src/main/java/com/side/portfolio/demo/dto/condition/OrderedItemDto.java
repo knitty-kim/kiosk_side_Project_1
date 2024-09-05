@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class OrderedItemDto {
 
+    private Long orderId;
     private Long itemId;
     private String itemName;
     private int orderedCount;
@@ -20,9 +21,10 @@ public class OrderedItemDto {
     private LocalDateTime modifiedDate;
 
     @QueryProjection
-    public OrderedItemDto(Long itemId, String itemName, int orderedCount,
+    public OrderedItemDto(Long orderId, Long itemId, String itemName, int orderedCount,
                           Long teamId, String teamName, OrderStatus orderStatus,
                           LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        this.orderId = orderId;
         this.itemId = itemId;
         this.itemName = itemName;
         this.orderedCount = orderedCount;
