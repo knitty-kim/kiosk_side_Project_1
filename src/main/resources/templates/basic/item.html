@@ -83,8 +83,8 @@
   <div class="row my-3">
     <!-- 상품 이미지 -->
     <div class="col-md-6">
-      <img th:if="${item.getImg1()}" th:src="|/images/${item.getImg1()}|" class="img-fluid" alt="상품 이미지 1">
-      <img th:unless="${item.getImg1()}" th:src="@{/img/items/tempFoodImage.png}" alt="상품 이미지" class="img-fluid">
+      <img th:if="${item.getImg1()}" th:src="|/images/${item.getImg1()}|" alt="상품 이미지 1" class="img-fluid">
+      <img th:unless="${item.getImg1()}" th:src="@{${randomImages.get(0)}}" alt="랜덤 이미지1" class="img-fluid">
     </div>
 
     <!-- 상품 정보 -->
@@ -189,27 +189,29 @@
 <!--              <img th:src="@{${img1}}" class="img-fluid" alt="상품 이미지 1" style="max-width: 100%; height: auto;">-->
 <!--            </div>-->
             <div class="mb-3">
-              <img class="img-fluid" alt="상품 이미지 2" style="max-width: 100%; height: auto;"
+              <img class="img-fluid" alt="상품 이미지 2" style="width: 700px; height: 700px;"
                    th:if="${item.getImg2()}" th:src="|/images/${item.getImg2()}|">
-              <img class="img-fluid" alt="상품 이미지 2" style="max-width: 100%; height: auto;"
-                   th:unless="${item.getImg2()}" src="https://via.placeholder.com/500">
+              <img class="img-fluid" alt="랜덤 이미지 2" style="width: 700px; height: 700px;"
+                   th:unless="${item.getImg2()}" th:src="@{${randomImages.get(1)}}">
             </div>
             <div class="mb-3">
-              <img class="img-fluid" alt="상품 이미지 3" style="max-width: 100%; height: auto;"
+              <img class="img-fluid" alt="상품 이미지 3" style="width: 700px; height: 700px;"
                    th:if="${item.getImg3()}" th:src="|/images/${item.getImg3()}|">
-              <img class="img-fluid" alt="상품 이미지 3" style="max-width: 100%; height: auto;"
-                   th:unless="${item.getImg3()}" src="https://via.placeholder.com/500">
+              <img class="img-fluid" alt="랜덤 이미지 3" style="width: 700px; height: 700px;"
+                   th:unless="${item.getImg3()}" th:src="@{${randomImages.get(2)}}">
             </div>
             <div class="mb-3">
-              <img class="img-fluid" alt="상품 이미지 4" style="max-width: 100%; height: auto;"
+              <img class="img-fluid" alt="상품 이미지 4" style="width: 700px; height: 700px;"
                    th:if="${item.getImg4()}" th:src="|/images/${item.getImg4()}|">
+              <img class="img-fluid" alt="랜덤 이미지 4" style="width: 700px; height: 700px;"
+                   th:unless="${item.getImg4()}" th:src="@{${randomImages.get(3)}}">
             </div>
             <div class="mb-3">
-              <img class="img-fluid" alt="상품 이미지 5" style="max-width: 100%; height: auto;"
+              <img class="img-fluid" alt="상품 이미지 5" style="width: 700px; height: 700px;"
                    th:if="${item.getImg5()}" th:src="|/images/${item.getImg5()}|">
             </div>
             <div class="mb-3">
-              <img class="img-fluid" alt="상품 이미지 6" style="max-width: 100%; height: auto;"
+              <img class="img-fluid" alt="상품 이미지 6" style="width: 700px; height: 700px;"
                    th:if="${item.getImg6()}" th:src="|/images/${item.getImg6()}|">
             </div>
           </div>

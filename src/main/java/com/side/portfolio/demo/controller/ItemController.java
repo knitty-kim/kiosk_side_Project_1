@@ -12,6 +12,7 @@ import com.side.portfolio.demo.service.SellerService;
 import com.side.portfolio.demo.status.ItemStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,9 +27,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -91,10 +97,37 @@ public class ItemController {
 
     //상품 상세
     @GetMapping("/item-list/{itemId}")
-    public String itemDetail(@PathVariable Long itemId, Model model) {
+    public String itemDetail(@PathVariable Long itemId, Model model) throws IOException {
 
+        //상세 상품 로드
         Item item = itemService.findById(itemId);
         model.addAttribute(item);
+
+        if (item.getImg1() == null) {
+
+            // 이미지 폴더 경로 설정
+            File imageFolder = new ClassPathResource("static/img/items").getFile();
+            String[] imageFiles = imageFolder.list();
+
+            if (imageFiles != null && imageFiles.length > 0) {
+
+                // 이미지 리스트를 섞고 상위 4개만 선택
+                List<String> imageList = new ArrayList<>();
+                for (String imageFile : imageFiles) {
+                    imageList.add("/img/items/" + imageFile);
+                }
+
+                // 이미지 섞기
+                Collections.shuffle(imageList);
+
+                // 상위 4개의 이미지 선택
+                List<String> randomImages = imageList.subList(0, Math.min(4, imageList.size()));
+
+                // 모델에 이미지 리스트 추가
+                model.addAttribute("randomImages", randomImages);
+            }
+
+        }
 
         return "basic/item";
     }

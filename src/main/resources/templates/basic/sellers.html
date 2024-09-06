@@ -112,8 +112,8 @@
           <th>판매자 명</th>
           <th>연락처</th>
           <th>이메일</th>
-          <th>생성일</th>
-          <th>수정일</th>
+          <th th:if="${session.types == 'master'}">생성일</th>
+          <th th:if="${session.types == 'master'}">수정일</th>
           <th>상태</th>
           <th>remark</th>
           <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
@@ -121,17 +121,18 @@
         </thead>
         <tbody>
           <tr th:each="seller : ${sellers}">
-            <td><a href="#" th:text="${seller.id}"
-                   onclick="notYet()">판매자 ID</a></td>
+            <td><a th:href="@{/item-list(sellerName=${seller.name})}"
+                   th:text="${seller.id}">판매자 ID</a></td>
 
-            <td><a href="#"
-                   th:text="${seller.name}"
-                   onclick="notYet()">판매자 명</a></td>
+            <td><a th:href="@{/item-list(sellerName=${seller.name})}"
+                   th:text="${seller.name}">판매자 명</a></td>
 
             <td th:text="${seller.phNumber}">333-333-3333</td>
             <td th:text="${seller.email}">kiosk@kiosk.or</td>
-            <td th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>
-            <td th:text="${#temporals.format(seller.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
+            <td th:if="${session.types == 'master'}"
+                th:text="${#temporals.format(seller.createdDate, 'yyyy-MM-dd')}">생성일</td>
+            <td th:if="${session.types == 'master'}"
+                th:text="${#temporals.format(seller.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
             <td class="fw-bolder"
                 th:classappend="${seller.status.toString() == 'OPEN'} ? 'text-success' :
                                 (${seller.status.toString() == 'CLOSED'} ? 'text-danger' :

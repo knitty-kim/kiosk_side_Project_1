@@ -139,8 +139,8 @@
         </thead>
         <tbody>
           <tr th:each="team : ${teams}" th:if="${team.status.toString()} != 'MASTER'">
-            <td><a href="#" th:text="${team.id}" onclick="notYet()">팀 ID</a></td>
-            <td><a href="#" th:text="${team.name}" onclick="notYet()">팀 명</a></td>
+            <td th:text="${team.id}">팀 ID</td>
+            <td th:text="${team.name}">팀 명</td>
             <td th:text="${team.phNumber}">333-333-3333</td>
             <td th:text="${team.email}">us@us.or</td>
             <td th:text="${team.tickets}">3000</td>
