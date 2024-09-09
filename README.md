@@ -1,16 +1,18 @@
+# 키오스크 연동 주문 플랫폼 웹 애플리케이션 😲
+팀 : 김기태, 김유빈  <br>
+웹 담당 : 김기태 <br>
+하드웨어 담당 : 김유빈  
+기간: 2024.05 ~ 진행중  
+<br>
+<br>
+
+
+
 <div align=center>
 	<img src="https://github.com/user-attachments/assets/a1882efd-4c4e-4de4-9960-73d2423ba5d4" />
 </div>
 
 
-
-
-<br>
-<br>
-<br>
-<br>
-
-# 키오스크 연동 주문 플랫폼 웹 애플리케이션
 
 </br>
 </br>
