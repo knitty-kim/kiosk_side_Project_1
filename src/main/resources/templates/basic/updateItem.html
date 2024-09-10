@@ -61,6 +61,12 @@
       margin-top: 40px;
       margin-bottom: 40px;
     }
+
+    .readonly-select {
+      pointer-events: none; /* 클릭 이벤트를 무시 */
+      background-color: #e9ecef; /* 비활성화된 배경 색상 */
+      color: #6c757d; /* 비활성화된 텍스트 색상 */
+    }
   </style>
 </head>
 <body>
@@ -131,7 +137,8 @@
 
     <div class="form-group mb-2">
       <label th:for="sellerId">판매자</label>
-      <select th:field="*{sellerId}" class="form-control">
+      <select th:classappend="${session.types == 'seller'} ? 'readonly-select'"
+              th:field="*{sellerId}" class="form-control">
         <option value="">판매자를 선택하세요</option>
         <option th:each="seller : ${sellers}" th:value="${seller.id}" th:text="${seller.name}"
                 th:selected="${seller.getId()} == ${itemUpdateForm.getSellerId()}"/>
@@ -223,7 +230,7 @@
     document.getElementById('deleteImages').value = deleteImageIds.join(',');
   });
 
-  //추가 버튼
+  //이미지 추가 버튼
   document.getElementById('add-image-button').addEventListener('click', function() {
 
     // Get the image upload container

@@ -61,6 +61,12 @@
       margin-top: 40px;
       margin-bottom: 40px;
     }
+
+    .readonly-select {
+      pointer-events: none; /* 클릭 이벤트를 무시 */
+      background-color: #e9ecef; /* 비활성화된 배경 색상 */
+      color: #6c757d; /* 비활성화된 텍스트 색상 */
+    }
   </style>
 </head>
 <body>
@@ -127,9 +133,17 @@
     <!-- 판매자 -->
     <div class="form-group mb-2">
       <label th:for="sellerId">판매자</label>
-      <select th:field="*{sellerId}" class="form-control" th:errorclass="is-invalid">
-        <option value="">판매자를 선택하세요</option>
-        <option th:each="seller : ${sellers}" th:value="${seller.id}" th:text="${seller.name}"/>
+      <select class="form-control" th:errorclass="is-invalid"
+              th:classappend="${session.types == 'seller'} ? 'readonly-select'"
+              th:field="*{sellerId}">
+        <option th:if="${session.types == 'seller'}"
+                th:value="${session.id}" th:text="${session.name}">판매자 명</option>
+        <option th:if="${session.types == 'master'}"
+                value="">판매자를 선택하세요</option>
+        <option th:if="${session.types == 'master'}"
+                th:each="seller : ${sellers}"
+                th:value="${seller.id}"
+                th:text="${seller.name}">
       </select>
       <div class="invalid-feedback" th:errors="*{sellerId}">판매자 오류</div>
     </div>

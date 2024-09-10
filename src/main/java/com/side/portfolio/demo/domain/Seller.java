@@ -45,6 +45,34 @@ public class Seller {
     @OneToMany(mappedBy = "seller")
     private List<Partner> partners = new ArrayList<>();
 
+    public void setUpName(String name) {
+        this.name = name;
+    }
+
+    public void setUpPw(String pw) {
+        this.pw = pw;
+    }
+
+    public void setUpStatus(SellerStatus status) {
+        this.status = status;
+    }
+
+    public void setUpPhNumber(String phNumber) {
+        this.phNumber = phNumber;
+    }
+
+    public void setUpEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUpAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setUpModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
     public void setUpPartner(Partner partner) {
         partners.add(partner);
     }

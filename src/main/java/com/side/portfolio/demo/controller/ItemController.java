@@ -1,7 +1,9 @@
 package com.side.portfolio.demo.controller;
 
+import com.side.portfolio.demo.SessionConst;
 import com.side.portfolio.demo.domain.FileNameTable;
 import com.side.portfolio.demo.domain.Item;
+import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.dto.ItemCreateForm;
 import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.dto.condition.ItemDto;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -45,34 +49,24 @@ public class ItemController {
     private final SellerService sellerService;
     private final FileService fileService;
 
-//    //전체 상품 목록
-//    @GetMapping("/item-list")
-//    public String itemList(Model model,
-//                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-//
-//        Page<Item> items = itemService.findAll(pageable);
-//        model.addAttribute("items", items);
-//
-//        model.addAttribute("prev", items.getPageable().previousOrFirst().getPageNumber());
-//        model.addAttribute("next", items.getPageable().next().getPageNumber());
-//
-//        model.addAttribute("hasPrev", items.hasPrevious());
-//        model.addAttribute("hasNext", items.hasNext());
-//
-//        int groupSize = 3; //화면에 보여질 페이지 개수
-//        int curPageGrp = (int) Math.floor((double) items.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
-//        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
-//        model.addAttribute("endPage", Math.min(items.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
-//
-//        model.addAttribute("curPage", items.getNumber());
-//
-//        return "basic/items";
-//    }
-
     //전체 상품 검색 조회 목록
     @GetMapping("/item-list")
-    public String itemList(Model model, ItemSearchCond cond,
+    public String itemList(Model model, ItemSearchCond cond, HttpServletRequest request,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        HttpSession session = request.getSession();
+
+        String type = (String) session.getAttribute(SessionConst.LOGIN_TYPES);
+        log.info("type={}", type);
+
+        //로그인 한 회원이 seller인 경우, cond 조건에 판매자명으로 sellerName 강제 세팅
+        if (type.equals("seller")) {
+            Long sellerId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
+            Seller seller = sellerService.findById(sellerId);
+
+            cond.setSellerName(seller.getName());
+            log.info("sellerName 세팅됨={}", cond.getSellerName());
+        }
 
         Page<ItemDto> items = itemService.findItemByCond(cond, pageable);
         model.addAttribute("items", items);
@@ -103,42 +97,47 @@ public class ItemController {
         Item item = itemService.findById(itemId);
         model.addAttribute(item);
 
-        if (item.getImg1() == null) {
+        // 이미지 폴더 경로 설정
+        File imageFolder = new ClassPathResource("static/img/items").getFile();
+        String[] imageFiles = imageFolder.list();
 
-            // 이미지 폴더 경로 설정
-            File imageFolder = new ClassPathResource("static/img/items").getFile();
-            String[] imageFiles = imageFolder.list();
+        if (imageFiles != null && imageFiles.length > 0) {
 
-            if (imageFiles != null && imageFiles.length > 0) {
-
-                // 이미지 리스트를 섞고 상위 4개만 선택
-                List<String> imageList = new ArrayList<>();
-                for (String imageFile : imageFiles) {
-                    imageList.add("/img/items/" + imageFile);
-                }
-
-                // 이미지 섞기
-                Collections.shuffle(imageList);
-
-                // 상위 4개의 이미지 선택
-                List<String> randomImages = imageList.subList(0, Math.min(4, imageList.size()));
-
-                // 모델에 이미지 리스트 추가
-                model.addAttribute("randomImages", randomImages);
+            // 랜덤 이미지 리스트 경로
+            List<String> imageList = new ArrayList<>();
+            for (String imageFile : imageFiles) {
+                imageList.add("/img/items/" + imageFile);
             }
 
+            // 이미지 섞기
+            Collections.shuffle(imageList);
+
+            // 각각의 이미지가 없는 경우, 랜덤 이미지 생성
+            if (item.getImg1() == null) {
+                model.addAttribute("randomImage1", imageList.get(0));
+            }
+            if (item.getImg2() == null) {
+                model.addAttribute("randomImage2", imageList.get(1));
+            }
+            if (item.getImg3() == null) {
+                model.addAttribute("randomImage3", imageList.get(2));
+            }
+            if (item.getImg4() == null) {
+                model.addAttribute("randomImage4", imageList.get(3));
+            }
         }
 
         return "basic/item";
     }
-    
+
     //상품 등록 폼
     @GetMapping("/item/add")
     public String createItemForm(Model model) {
 
+        model.addAttribute("itemCreateForm", new ItemCreateForm());
+
         model.addAttribute("itemStatuses", ItemStatus.values());
         model.addAttribute("sellers", sellerService.findAll());
-        model.addAttribute("itemCreateForm", new ItemCreateForm());
 
         return "basic/addItem";
     }

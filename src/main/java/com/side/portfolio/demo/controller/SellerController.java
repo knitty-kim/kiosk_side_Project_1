@@ -1,25 +1,32 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.Message;
+import com.side.portfolio.demo.domain.Address;
+import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.dto.SellerUpdateForm;
 import com.side.portfolio.demo.dto.condition.PartnerDto;
 import com.side.portfolio.demo.dto.condition.PartnerSearchCond;
 import com.side.portfolio.demo.dto.condition.SellerDto;
 import com.side.portfolio.demo.dto.condition.SellerSearchCond;
 import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.SellerService;
+import com.side.portfolio.demo.status.SellerStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/seller")
@@ -27,30 +34,6 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final LogInService logInService;
-
-    //전체 판매자 목록
-//    @GetMapping("/seller-list")
-//    public String sellerList(Model model,
-//                             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-//
-//        Page<Seller> sellers = sellerService.findByPagination(pageable);
-//        model.addAttribute("sellers", sellers);
-//
-//        model.addAttribute("prev", sellers.getPageable().previousOrFirst().getPageNumber());
-//        model.addAttribute("next", sellers.getPageable().next().getPageNumber());
-//
-//        model.addAttribute("hasPrev", sellers.hasPrevious());
-//        model.addAttribute("hasNext", sellers.hasNext());
-//
-//        int groupSize = 3; //화면에 보여질 페이지 개수
-//        int curPageGrp = (int) Math.floor((double) sellers.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
-//        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
-//        model.addAttribute("endPage", Math.min(sellers.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
-//
-//        model.addAttribute("curPage", sellers.getNumber());
-//
-//        return "basic/sellers";
-//    }
 
     //전체 판매자 검색 조회 목록
     @GetMapping("/seller-list")
@@ -126,4 +109,59 @@ public class SellerController {
         return "main";
     }
 
+    //판매자 수정 폼
+    @GetMapping("/update/{sellerId}")
+    public String updateSellerForm(@PathVariable Long sellerId, Model model) {
+
+        Seller seller = sellerService.findById(sellerId);
+        SellerUpdateForm form = new SellerUpdateForm();
+        form.setName(seller.getName());
+        form.setStatus(seller.getStatus());
+        form.setPw(seller.getPw());
+        form.setPhNumber(seller.getPhNumber());
+        form.setEmail(seller.getEmail());
+
+        Address address = seller.getAddress();
+        form.setCity(address.getCity());
+        form.setStreet(address.getStreet());
+        form.setZipcode(address.getZipcode());
+
+        form.setCreatedDate(seller.getCreatedDate());
+        form.setModifiedDate(seller.getModifiedDate());
+
+        model.addAttribute("sellerStatuses", SellerStatus.values());
+        model.addAttribute("sellerUpdateForm", form);
+        model.addAttribute("sellerId", sellerId);
+
+        return "basic/updateSeller";
+    }
+
+    //판매자 수정
+    @PostMapping("/update/{sellerId}")
+    public String updateSeller(Model model, @PathVariable Long sellerId,
+                               @Validated @ModelAttribute SellerUpdateForm form,
+                               BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            model.addAttribute("sellerStatuses", SellerStatus.values());
+            return "basic/updateSeller";
+        }
+
+        Seller seller = sellerService.findById(sellerId);
+        seller.setUpName(form.getName());
+        seller.setUpPw(form.getPw());
+        seller.setUpStatus(form.getStatus());
+        seller.setUpPhNumber(form.getPhNumber());
+        seller.setUpEmail(form.getEmail());
+
+        Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+        seller.setUpAddress(address);
+        seller.setUpModifiedDate(LocalDateTime.now());
+
+        sellerService.signUp(seller);
+
+        return "redirect:/seller/update/" + sellerId;
+
+    }
 }

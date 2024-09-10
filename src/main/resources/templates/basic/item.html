@@ -84,7 +84,7 @@
     <!-- 상품 이미지 -->
     <div class="col-md-6">
       <img th:if="${item.getImg1()}" th:src="|/images/${item.getImg1()}|" alt="상품 이미지 1" class="img-fluid">
-      <img th:unless="${item.getImg1()}" th:src="@{${randomImages.get(0)}}" alt="랜덤 이미지1" class="img-fluid">
+      <img th:unless="${item.getImg1()}" th:src="${randomImage1}" alt="랜덤 이미지1" class="img-fluid">
     </div>
 
     <!-- 상품 정보 -->
@@ -134,7 +134,7 @@
 
     <div class="d-flex justify-content-end mt-3 mb-2">
       <button class="btn btn-secondary me-1"
-              th:if="${session.types == 'master'}"
+              th:if="${session.types == 'master'} or ${session.types} == 'seller'"
               th:onclick="|location.href='@{/item/update/{itemId}(itemId=${item.id})}'|"
               type="button">수정</button>
       <button class="btn btn-success me-1"
@@ -192,19 +192,22 @@
               <img class="img-fluid" alt="상품 이미지 2" style="width: 700px; height: 700px;"
                    th:if="${item.getImg2()}" th:src="|/images/${item.getImg2()}|">
               <img class="img-fluid" alt="랜덤 이미지 2" style="width: 700px; height: 700px;"
-                   th:unless="${item.getImg2()}" th:src="@{${randomImages.get(1)}}">
+                   th:unless="${item.getImg2()}"
+                   th:src="${randomImage2}">
             </div>
             <div class="mb-3">
               <img class="img-fluid" alt="상품 이미지 3" style="width: 700px; height: 700px;"
                    th:if="${item.getImg3()}" th:src="|/images/${item.getImg3()}|">
               <img class="img-fluid" alt="랜덤 이미지 3" style="width: 700px; height: 700px;"
-                   th:unless="${item.getImg3()}" th:src="@{${randomImages.get(2)}}">
+                   th:unless="${item.getImg3()}"
+                   th:src="${randomImage3}">
             </div>
             <div class="mb-3">
               <img class="img-fluid" alt="상품 이미지 4" style="width: 700px; height: 700px;"
                    th:if="${item.getImg4()}" th:src="|/images/${item.getImg4()}|">
               <img class="img-fluid" alt="랜덤 이미지 4" style="width: 700px; height: 700px;"
-                   th:unless="${item.getImg4()}" th:src="@{${randomImages.get(3)}}">
+                   th:unless="${item.getImg4()}"
+                   th:src="${randomImage4}">
             </div>
             <div class="mb-3">
               <img class="img-fluid" alt="상품 이미지 5" style="width: 700px; height: 700px;"

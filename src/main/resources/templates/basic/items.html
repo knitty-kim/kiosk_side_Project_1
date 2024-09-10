@@ -38,6 +38,12 @@
         .table th, .table td {
             vertical-align: middle;
         }
+
+        .readonly-select {
+            pointer-events: none; /* 클릭 이벤트를 무시 */
+            background-color: #e9ecef; /* 비활성화된 배경 색상 */
+            color: #6c757d; /* 비활성화된 텍스트 색상 */
+        }
     </style>
 </head>
 <body>
@@ -62,7 +68,7 @@
         <div class="d-flex justify-content-end mb-3">
 <!--            <button class="btn btn-secondary me-1" onclick="redirectionHome()" type="button">홈</button>-->
             <button class="btn btn-primary me-1"
-                    th:if="${session.types == 'master'}"
+                    th:if="${session.types} == 'master' or ${session.types} == 'seller'"
                     th:onclick="|location.href='@{/item/add}'|"
                     type="button">상품 등록</button>
             <button class="btn btn-success me-1"
@@ -88,19 +94,22 @@
             <form action="#" method="GET" th:object="${cond}" th:action="@{item-list}">
                 <div class="row g-2">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="ID" name="id" th:field="*{id}">
+                        <input type="text" class="form-control" placeholder="ID" th:field="*{id}">
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="상품 명" name="name" th:field="*{name}">
+                        <input type="text" class="form-control" placeholder="상품 명" th:field="*{name}">
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="가격" name="price" th:field="*{price}">
+                        <input type="text" class="form-control" placeholder="가격" th:field="*{price}">
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="재고" name="qty" th:field="*{qty}">
+                        <input type="text" class="form-control" placeholder="재고" th:field="*{qty}">
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="판매자 명" name="sellerName" th:field="*{sellerName}">
+<!--                        th:disabled="${session.types == 'seller'} ? 'disabled'"-->
+                        <input type="text" class="form-control" placeholder="판매자 명"
+                               th:classappend="${session.types == 'seller'} ? 'readonly-select'"
+                               th:field="*{sellerName}">
                     </div>
                     <div class="col">
                         <select class="form-select" name="status">
@@ -129,18 +138,19 @@
                         <th>판매자</th>
                         <th>상태</th>
                         <th th:if="${session.types == 'team' or session.types == 'master'}"></th>
-                        <th th:if="${session.types == 'master'}"></th>
+                        <th th:if="${session.types == 'master'  or session.types == 'seller'}"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="item : ${items}">
-                        <td><a th:href="@{'/item-list/' + ${item.id}}" th:text="${item.id}">상품 ID</a></td>
+                        <td><a th:href="@{'/item-list/' + ${item.id}}"
+                               th:text="${item.id}">상품 ID</a></td>
                         <td class="text-break">
                             <a th:href="@{'/item-list/' + ${item.id}}"
                                th:text="${item.name}">상품명</a></td>
                         <td th:text="${item.price}">10</td>
                         <td th:text="${item.qty}">10</td>
-                        <td th:text="${item.sellerName}">판매자</td>
+                        <td th:text="${item.sellerName}">판매자 명</td>
                         <td class="fw-bolder"
                             th:classappend="${item.status.toString() == 'OPEN'} ? 'text-success' : 'text-danger'"
                             th:text="${item.status}">상태</td>
@@ -160,6 +170,12 @@
                         <td th:if="${session.types == 'master'}">
                             <a class="btn btn-primary" role="button"
                                th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a>
+                        </td>
+                        <td th:if="${session.types == 'seller'} and ${item.sellerId == session.id}">
+                            <a class="btn btn-primary" role="button"
+                               th:href="@{/item/update/{itemId}(itemId=${item.id})}">수정</a>
+                        </td>
+                        <td th:if="${session.types == 'seller'} and ${item.sellerId != session.id}">
                         </td>
                     </tr>
                 </tbody>
