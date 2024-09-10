@@ -135,7 +135,7 @@
 
 ## 🧀 Master-Flow
 <p align="center">
-	<img src="https://github.com/user-attachments/assets/0c110f93-3842-4b34-85a0-a0cb6ec57713" />
+	<img src="https://github.com/user-attachments/assets/5f362b8a-754a-4fbc-97ef-151dcc32c45e" />
 </p>
 
 <hr>
@@ -143,7 +143,7 @@
 
 ## 🧀 Team-Flow
 <p align="center">
-	<img src="https://github.com/user-attachments/assets/0d5147e8-90d9-4343-b5ad-f406c6c80b85" />
+	<img src="https://github.com/user-attachments/assets/cdfd6e3b-eefa-449a-9cb5-d1239220f172" />
 </p>
 
 <hr>
@@ -151,7 +151,7 @@
 
 ## 🧀 Seller-Flow
 <p align="center">
-	<img src="https://github.com/user-attachments/assets/f818e01d-7670-4b03-b1ab-c7cf08a6f10e" />
+	<img src="https://github.com/user-attachments/assets/c50c54f2-574e-4465-99b4-bb98b292a7be" />
 </p>
 
 <hr>
