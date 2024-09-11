@@ -22,6 +22,7 @@ public class SellerUpdateForm {
     //@NotBlank(message = "비밀번호는 필수입니다")
     private String pw;
 
+    //@NotBlank(message = "상태 선택은 필수입니다")
     private SellerStatus status;
 
     //@NotBlank(message = "연락처는 필수입니다")
