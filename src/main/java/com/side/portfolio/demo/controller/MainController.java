@@ -63,6 +63,69 @@ public class MainController {
     @PostMapping("/signup")
     public String signUp(@Validated SignUpForm form, BindingResult bindingResult) {
 
+        if (formHasError(form, bindingResult)) {
+            return "signup";
+        }
+
+        if (form.getTypes().equals("team")) {
+
+            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+
+            Team team = Team.builder()
+                    .name(form.getName())
+                    .pw(form.getPw())
+                    .phNumber(form.getPhNumber())
+                    .email(form.getEmail())
+                    .status(TeamStatus.DORMANT)
+                    .createdDate(LocalDateTime.now())
+                    .modifiedDate(LocalDateTime.now())
+                    .address(address)
+                    .build();
+
+            teamService.save(team);
+
+            return "redirect:/";
+
+        } else if (form.getTypes().equals("seller")) {
+
+            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+
+            Seller seller = Seller.builder()
+                    .name(form.getName())
+                    .pw(form.getPw())
+                    .phNumber(form.getPhNumber())
+                    .email(form.getEmail())
+                    .status(SellerStatus.DORMANT)
+                    .createdDate(LocalDateTime.now())
+                    .modifiedDate(LocalDateTime.now())
+                    .address(address)
+                    .build();
+
+            sellerService.save(seller);
+
+            return "redirect:/";
+
+        }
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/about")
+    public String about() {
+        log.info("about page");
+        return "about";
+    }
+
+    //상세 페이지 로드 시, 이미지 파일 불러오기
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        String fullDir = fileService.getFullDir(filename);
+        return new UrlResource("file:" + fullDir);
+    }
+
+    //가입 정보 필수 필드 체크
+    private Boolean formHasError(SignUpForm form, BindingResult bindingResult) {
         if (form.getTypes() == null) {
             bindingResult.reject("Type is required",
                     "가입 유형을 선택해야합니다!");
@@ -104,65 +167,11 @@ public class MainController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "signup";
+            return true;
         }
 
-        if (form.getTypes().equals("team")) {
-
-            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
-
-            Team team = Team.builder()
-                    .name(form.getName())
-                    .pw(form.getPw())
-                    .phNumber(form.getPhNumber())
-                    .email(form.getEmail())
-                    .status(TeamStatus.DORMANT)
-                    .createdDate(LocalDateTime.now())
-                    .modifiedDate(LocalDateTime.now())
-                    .address(address)
-                    .build();
-
-            teamService.signUp(team);
-
-            return "redirect:/";
-
-        } else if (form.getTypes().equals("seller")) {
-
-            Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
-
-            Seller seller = Seller.builder()
-                    .name(form.getName())
-                    .pw(form.getPw())
-                    .phNumber(form.getPhNumber())
-                    .email(form.getEmail())
-                    .status(SellerStatus.DORMANT)
-                    .createdDate(LocalDateTime.now())
-                    .modifiedDate(LocalDateTime.now())
-                    .address(address)
-                    .build();
-
-            sellerService.signUp(seller);
-
-            return "redirect:/";
-
-        }
-
-        return "redirect:/";
+        return false;
     }
 
-    @GetMapping("/about")
-    public String about() {
-        log.info("about page");
-        return "about";
-    }
-
-
-    //상세 페이지 로드 시, 이미지 파일 불러오기
-    @ResponseBody
-    @GetMapping("/images/{filename}")
-    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        String fullDir = fileService.getFullDir(filename);
-        return new UrlResource("file:" + fullDir);
-    }
 }
 

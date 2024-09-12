@@ -40,8 +40,8 @@ class TeamServiceTest {
         Team testB = Team.builder().name("testB")
                 .pw("5678")
                 .build();
-        teamService.signUp(testA);
-        teamService.signUp(testB);
+        teamService.save(testA);
+        teamService.save(testB);
 
         //판매자 추가
         Seller panda = Seller.builder()
@@ -52,8 +52,8 @@ class TeamServiceTest {
                 .name("ari")
                 .pw("1234")
                 .build();
-        sellerService.signUp(panda);
-        sellerService.signUp(ari);
+        sellerService.save(panda);
+        sellerService.save(ari);
     }
 
 

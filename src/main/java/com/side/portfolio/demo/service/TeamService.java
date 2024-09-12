@@ -28,7 +28,7 @@ public class TeamService {
 
     //팀 가입
     @Transactional
-    public void signUp(Team team) {
+    public void save(Team team) {
         validateTeam(team);
         teamJpaRepository.save(team);
     }

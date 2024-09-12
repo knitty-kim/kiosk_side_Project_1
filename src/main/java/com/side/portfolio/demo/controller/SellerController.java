@@ -20,11 +20,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -32,6 +35,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/seller")
 public class SellerController {
 
+    private final EntityManager em;
     private final SellerService sellerService;
     private final LogInService logInService;
 
@@ -53,8 +57,6 @@ public class SellerController {
         int curPageGrp = (int) Math.floor((double) sellers.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
         model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
         model.addAttribute("endPage", Math.min(sellers.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
-
-
 
         model.addAttribute("curPage", sellers.getNumber());
 
@@ -105,7 +107,6 @@ public class SellerController {
     @GetMapping("/seller-list/{sellerId}")
     public String sellerDetail(@PathVariable Long sellerId, Model model) {
 
-
         return "main";
     }
 
@@ -115,9 +116,10 @@ public class SellerController {
 
         Seller seller = sellerService.findById(sellerId);
         SellerUpdateForm form = new SellerUpdateForm();
+//        form.setId(sellerId);
         form.setName(seller.getName());
+//        form.setPw(seller.getPw());
         form.setStatus(seller.getStatus());
-        form.setPw(seller.getPw());
         form.setPhNumber(seller.getPhNumber());
         form.setEmail(seller.getEmail());
 
@@ -139,18 +141,17 @@ public class SellerController {
     //판매자 수정
     @PostMapping("/update/{sellerId}")
     public String updateSeller(Model model, @PathVariable Long sellerId,
-                               @Validated @ModelAttribute SellerUpdateForm form,
+                               @ModelAttribute SellerUpdateForm form,
                                BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
+        if (formHasError(form, bindingResult)) {
             model.addAttribute("sellerStatuses", SellerStatus.values());
             return "basic/updateSeller";
         }
 
         Seller seller = sellerService.findById(sellerId);
         seller.setUpName(form.getName());
-        seller.setUpPw(form.getPw());
+//        seller.setUpPw(form.getPw());
         seller.setUpStatus(form.getStatus());
         seller.setUpPhNumber(form.getPhNumber());
         seller.setUpEmail(form.getEmail());
@@ -159,9 +160,74 @@ public class SellerController {
         seller.setUpAddress(address);
         seller.setUpModifiedDate(LocalDateTime.now());
 
-        sellerService.signUp(seller);
+        sellerService.save(seller);
 
         return "redirect:/seller/update/" + sellerId;
 
     }
+
+    @ResponseBody
+    @GetMapping("/validate")
+    public List<Object> validateName(Long id, String name) {
+        log.info("validate Seller");
+
+        Map<Boolean, String> result = sellerService.validateDuplicity(id, name);
+        List<Object> response = new ArrayList<>();
+
+        if (result.containsKey(false)) {
+            response.add(false);
+            response.add(result.get(false));
+        } else {
+            response.add(true);
+            response.add(result.get(true));
+        }
+
+        return response;
+
+    }
+
+    private Boolean formHasError(SellerUpdateForm form, BindingResult bindingResult) {
+
+        if (form.getName() == null) {
+            bindingResult.reject("Name is required",
+                    "아이디는 필수입니다!");
+        }
+
+//        if (form.getPw() == null) {
+//            bindingResult.reject("Password is required",
+//                    "비밀번호는 필수입니다!");
+//        }
+
+        if (form.getPhNumber() == null) {
+            bindingResult.reject("PhNumber is required",
+                    "연락처는 필수입니다!");
+        }
+
+        if (form.getEmail() == null) {
+            bindingResult.reject("Email is required",
+                    "이메일은 필수입니다!");
+        }
+
+        if (form.getCity() == null) {
+            bindingResult.reject("City is required",
+                    "City는 필수입니다!");
+        }
+
+        if (form.getStreet() == null) {
+            bindingResult.reject("Street is required",
+                    "Street은 필수입니다!");
+        }
+
+        if (form.getZipcode() == null) {
+            bindingResult.reject("Zipcode is required",
+                    "Zipcode는 필수입니다!");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -10,14 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @Getter @Setter
 public class SignUpForm {
 
-    /**
-     * 커맨드 객체(Command Object)
-     * "VO 또는 DTO" 와 같다
-     * Getter, Setter 필수
-     *
-     * xxForm과 같은 작명법은 화면단에서 서버로 넘어온
-     * Form 객체임을 명확히 할 수 있다!
-     */
     @NotBlank(message = "가입 유형은 필수입니다")
     private String types;
 

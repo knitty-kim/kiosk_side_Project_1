@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 public class SellerUpdateForm {
 
     //@NotBlank(message = "ID는 필수입니다")
-    private String id;
+//    private Long id;
 
     //@NotBlank(message = "가입 유형은 필수입니다")
-    private String types;
+//    private String types;
 
     //@NotBlank(message = "이름은 필수입니다")
     private String name;
 
     //@NotBlank(message = "비밀번호는 필수입니다")
-    private String pw;
+//    private String pw;
 
     //@NotBlank(message = "상태 선택은 필수입니다")
     private SellerStatus status;
