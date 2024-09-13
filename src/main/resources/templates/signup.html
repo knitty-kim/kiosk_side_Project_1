@@ -1,158 +1,200 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta name="description" content=""/>
-  <meta name="author" content=""/>
-  <title>K&Y Kiosk Project</title>
-  <!-- Favicon-->
-  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
-  <!-- Bootstrap icons-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css"/>
-  <!-- Google fonts-->
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"/>
-  <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
-  <link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"/>
-  <link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"/>
-  <link th:href="@{/css/bootstrap-utilities.css}" rel="stylesheet"/>
-  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <title>K&Y Kiosk Project</title>
+    <!-- Favicon-->
+    <link rel="icon" th:href="@{/assets/favicon.ico}" type="image/x-icon"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"
+          type="text/css"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-grid.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-reboot.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-utilities.css}"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-    h2 {
-      font-weight: bold;
-      color: #343a40;
-    }
+        h2 {
+            font-weight: bold;
+            color: #343a40;
+        }
 
-    .btn-gray {
-      background-color: #6c757d;
-      border-color: #6c757d;
-      color: white;
-    }
+        .btn-gray {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
 
-    .custom-section {
-      position: relative;
-      padding-top: 3rem;
-      padding-bottom: 5rem;
-    }
-  </style>
+        .custom-section {
+            position: relative;
+            padding-top: 3rem;
+            padding-bottom: 5rem;
+        }
+    </style>
 </head>
 
 <body>
 
 <div th:replace="~{header :: common-nav}">
-  <p>레이아웃 네비</p>
+    <p>레이아웃 네비</p>
 </div>
 
 <div th:replace="~{header :: common-header}">
-  <p>레이아웃 헤더</p>
+    <p>레이아웃 헤더</p>
 </div>
 
 <section class="features-icons" id="scroll-target">
 
-  <div class="container-fluid bg-light" style="max-width: 1200px">
+    <div class="container-fluid bg-light" style="max-width: 1200px">
 
-    <!-- 메뉴 명 -->
-    <div class="text-center mb-xl-4">
-      <h2>회원가입</h2>
-    </div>
+        <!-- 메뉴 명 -->
+        <div class="text-center mb-xl-4">
+            <h2>회원가입</h2>
+        </div>
 
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-6">
-        <section class="custom-section">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <section class="custom-section">
 
-            <form action="/signup" th:object="${signUpForm}" method="post">
+                    <form action="/signup" method="post" th:object="${signUpForm}">
 
-              <div class="text-center" th:if="${#fields.hasGlobalErrors()}">
-                <p class="global-err fw-bold" th:each="err : ${#fields.globalErrors()}"
-                   th:text="${err}">글로벌 오류 메시지</p>
-              </div>
+                        <div class="text-center" th:if="${#fields.hasGlobalErrors()}">
+                            <p class="global-err fw-bold" th:each="err : ${#fields.globalErrors()}"
+                               th:text="${err}">글로벌 오류 메시지</p>
+                        </div>
 
-              <div class="mb-3">
-                <label th:for="types" class="form-label">가입 유형</label>
-                <select class="form-select" th:field="*{types}" th:errorclass="is-invalid">
-                  <option value="">가입 유형을 선택하세요</option>
-                  <option value="team">팀으로 가입</option>
-                  <option value="seller">판매자로 가입</option>
-                </select>
-                <div class="invalid-feedback" th:errors="*{types}">가입 유형 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="name" class="form-label">아이디</label>
-                <input type="text" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{name}" placeholder="아이디를 입력하세요">
-                <div class="invalid-feedback" th:errors="*{name}">아이디 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="pw" class="form-label">비밀번호</label>
-                <input type="password" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{pw}" placeholder="비밀번호를 입력하세요">
-                <div class="invalid-feedback" th:errors="*{pw}">비밀번호 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="phNumber" class="form-label">연락처</label>
-                <input type="tel" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{phNumber}" placeholder="연락처를 입력하세요">
-                <div class="invalid-feedback" th:errors="*{phNumber}">연락처 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="email" class="form-label">메일</label>
-                <input type="email" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{email}" placeholder="메일을 입력하세요">
-                <div class="invalid-feedback" th:errors="*{email}">메일 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="city" class="form-label">City</label>
-                <input type="text" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{city}" placeholder="put City">
-                <div class="invalid-feedback" th:errors="*{city}">City 오류</div>
-              </div>
-              <div class="mb-3">
-                <label th:for="street" class="form-label">Street</label>
-                <input type="text" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{street}" placeholder="put Street">
-                <div class="invalid-feedback" th:errors="*{street}">Street 오류</div>
-              </div>  <div class="mb-3">
-                <label th:for="zipcode" class="form-label">Zipcode</label>
-                <input type="text" class="form-control"
-                       th:errorclass="is-invalid"
-                       th:field="*{zipcode}" placeholder="put Zipcode">
-                <div class="invalid-feedback" th:errors="*{zipcode}">Zipcode 오류</div>
-              </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="types">가입 유형</label>
+                            <select class="form-select" oninput="validateTypes('types', 'validateTypesResult')"
+                                    th:errorclass="is-invalid" th:field="*{types}">
+                                <option value="">가입 유형을 선택하세요</option>
+                                <option value="team">팀으로 가입</option>
+                                <option value="seller">판매자로 가입</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{types}">가입 유형 오류</div>
+                            <span id="validateTypesResult"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="name">아이디</label>
+                            <small class="form-text text-danger">*(영문자 또는 숫자만 가능)</small>
+                            <input class="form-control" placeholder="아이디를 입력하세요"
+                                   th:errorclass="is-invalid" th:field="*{name}" type="text"
+                                   oninput="validateName('-1', $('#types').val(), 'name', 'validateNameResult')">
+                            <div class="invalid-feedback" th:errors="*{name}">아이디 오류</div>
+                            <span id="validateNameResult"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="pw">비밀번호</label>
+                            <input class="form-control" placeholder="비밀번호를 입력하세요"
+                                   th:errorclass="is-invalid"
+                                   th:field="*{pw}" type="password">
+                            <div class="invalid-feedback" th:errors="*{pw}">비밀번호 오류</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="phNumber">연락처</label>
+                          <input class="form-control" placeholder="연락처를 입력하세요"
+                                 th:errorclass="is-invalid" th:field="*{phNumber}" type="tel"
+                                 oninput="validatePhNumber('phNumber', 'validatePhNumberResult')">
+                          <div class="invalid-feedback" th:errors="*{phNumber}">연락처 오류</div>
+                          <span id="validatePhNumberResult"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="email">이메일</label>
+                            <input class="form-control" oninput="validateEmail('email', 'validateEmailResult')"
+                                   placeholder="이메일을 입력하세요" th:errorclass="is-invalid" th:field="*{email}"
+                                   type="email">
+                            <div class="invalid-feedback" th:errors="*{email}">이메일 오류</div>
+                            <span id="validateEmailResult"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="city">City</label>
+                            <input class="form-control" placeholder="put City"
+                                   th:errorclass="is-invalid"
+                                   th:field="*{city}" type="text">
+                            <div class="invalid-feedback" th:errors="*{city}">City 오류</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="street">Street</label>
+                            <input class="form-control" placeholder="put Street"
+                                   th:errorclass="is-invalid"
+                                   th:field="*{street}" type="text">
+                            <div class="invalid-feedback" th:errors="*{street}">Street 오류</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="zipcode">Zipcode</label>
+                            <input class="form-control" placeholder="put Zipcode"
+                                   th:errorclass="is-invalid"
+                                   th:field="*{zipcode}" type="text">
+                            <div class="invalid-feedback" th:errors="*{zipcode}">Zipcode 오류</div>
+                        </div>
 
-              <div class="d-flex justify-content-end mb-3">
-                <button type="submit" class="btn btn-gray btn-md">가입</button>
-              </div>
+                        <div class="d-flex justify-content-end mb-3">
+                            <button class="btn btn-gray btn-md" type="button"
+                                    onclick="confirmSignUp()">가입</button>
+                        </div>
 
-            </form>
-        </section>
-      </div>
-    </div>
+                    </form>
+                </section>
+            </div>
+        </div>
 
-  </div> <!-- /container -->
+    </div> <!-- /container -->
 </section>
 
 <div th:replace="~{footer :: common-footer}">
-  <p>레이아웃 푸터</p>
+    <p>레이아웃 푸터</p>
 </div>
 
 <script>
-  function notYet() {
-    alert("작업중입니다..");
-  }
-</script>
+    //가입 확정
+    function confirmSignUp() {
+        let hasInvalidField = $('form').find('input').is('.is-invalid');
 
+        if (hasInvalidField) {
+            alert('올바르지 않은 값이 있습니다!');
+            return;
+        }
+
+        let emptyFields = $('form').find('input').filter(function() {
+            return $(this).val().trim() === '';  // 빈 값 또는 공백만 포함된 값
+        });
+
+        if (emptyFields.length > 0) {
+            alert('입력되지 않은 값이 있습니다!');
+            return;
+        }
+
+        if (confirm("가입 하시겠습니까?")) {
+            //아래 코드로 submit하는 경우, submit 이벤트 핸들러가 호출되지 않는다
+            //document.querySelector('form').submit();
+            $('form').submit();
+        }
+    }
+
+    function notYet() {
+        alert("작업중입니다..");
+    }
+
+    //스크롤 위치 이동
+    window.addEventListener('load', function () {
+      const targetElement = document.getElementById('scroll-target');
+      if (targetElement) {
+        targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    });
+</script>
+<script src="/js/commonfunc.js"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

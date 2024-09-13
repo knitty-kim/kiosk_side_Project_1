@@ -12,6 +12,5 @@ public interface SellerJpaRepository extends JpaRepository<Seller, Long>, Seller
 
 //    List<Seller> findByName(String name);
     Optional<Seller> findByName(String name);
-
     boolean existsByName(String name);
 }

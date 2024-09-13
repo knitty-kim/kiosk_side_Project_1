@@ -1,3 +1,29 @@
+//가입 유형 검사
+function validateTypes(id, text) {
+
+    let types = $("#" + id);
+    let typesText = $("#" + text);
+
+    if (types.val() == '') {
+        typesText.removeClass('text-success');
+        types.removeClass('is-valid');
+
+        typesText.addClass('text-danger');
+        types.addClass('is-invalid');
+        typesText.text("가입 유형이 선택되지 않았습니다").show();
+
+    } else {
+        typesText.removeClass('text-danger');
+        types.removeClass('is-invalid');
+
+        typesText.addClass('text-success');
+        types.addClass('is-valid');
+        typesText.hide();
+
+    }
+
+}
+
 //판매자 Name 중복 검사
 function validateName(dbId, type, id, text) {
 
@@ -5,6 +31,12 @@ function validateName(dbId, type, id, text) {
     let clientType = type;
     let clientName = $("#" + id);
     let clientNameText = $("#" + text);
+
+    if (!clientType) {
+        clientName.val('');
+        validateTypes('types', 'validateTypesResult');
+        return;
+    }
 
     //영문자 또는 숫자만 가능
     let namePattern = /^[a-zA-Z0-9]+$/;
@@ -16,7 +48,7 @@ function validateName(dbId, type, id, text) {
 
         clientNameText.addClass('text-danger');
         clientName.addClass('is-invalid');
-        clientNameText.text("아이디는 영문자 또는 숫자만 가능합니다");
+        clientNameText.text("아이디는 영문자 또는 숫자만 가능합니다").show();
         return;
     }
 
@@ -43,7 +75,7 @@ function validateName(dbId, type, id, text) {
                     clientName.addClass('is-invalid');
                     clientName.focus();
                 }
-                clientNameText.text(response[1]);
+                clientNameText.text(response[1]).show();
             },
             error: function (error) {
                 console.error('Error sending data', error);
@@ -67,7 +99,7 @@ function validatePhNumber(id, text) {
 
         phNumberText.addClass('text-danger');
         phNumber.addClass('is-invalid');
-        phNumberText.text("연락처 형식이 올바르지 않습니다");
+        phNumberText.text("연락처 형식이 올바르지 않습니다").show();
 
     } else {
 
@@ -94,7 +126,7 @@ function validateEmail(id, text) {
 
         emailText.addClass('text-danger');
         email.addClass('is-invalid');
-        emailText.text("이메일 형식이 올바르지 않습니다");
+        emailText.text("이메일 형식이 올바르지 않습니다").show();
 
     } else {
 
@@ -106,4 +138,21 @@ function validateEmail(id, text) {
         emailText.hide();
     }
 
+}
+
+//수정 확정
+function confirmEdit() {
+
+    let hasInvalidField = $('form').find('input').is('.is-invalid');
+
+    if (hasInvalidField) {
+        alert('올바르지 않은 값이 있습니다!');
+        return;
+    }
+
+    if (confirm("수정을 확정하시겠습니까?")) {
+        //document.querySelector('form').submit();
+        //위 코드로 submit하는 경우, submit 이벤트 핸들러가 호출되지 않는다
+        $('form').submit();
+    }
 }

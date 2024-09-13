@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TeamJpaRepository extends JpaRepository<Team, Long>, TeamCustomRepository {
 
     Optional<Team> findByName(String name);
+    boolean existsByName(String name);
 }

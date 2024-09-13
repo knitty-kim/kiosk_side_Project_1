@@ -23,6 +23,7 @@ public class Team {
     @Column(name = "team_name")
     private String name;
 
+    //관리자만 수정할 수 있는 정보
     @Column(name = "team_tickets")
     private int tickets;
 
@@ -30,6 +31,8 @@ public class Team {
     private String phNumber;
 
     private String email;
+
+    //관리자만 수정할 수 있는 정보
     private String remark;
 
     private LocalDateTime createdDate;
@@ -57,9 +60,47 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Partner> partners = new ArrayList<>();
 
+    public void setUpName(String name) {
+        this.name = name;
+    }
+
+    public void setUpPw(String pw) {
+        this.pw = pw;
+    }
+
+    public void setUpStatus(TeamStatus status) {
+        this.status = status;
+    }
+
+    public void setUpPhNumber(String phNumber) {
+        this.phNumber = phNumber;
+    }
+
+    public void setUpEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUpAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setUpModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public void setUpTickets(int tickets) {
+        this.tickets = tickets;
+    }
+
+    public void setUpRemark(String remark) {
+        this.remark = remark;
+    }
+
     public void setUpPartner(Partner partner) {
         partners.add(partner);
     }
+
+
 
     @Builder
     public Team(String pw, String name, int tickets, String phNumber,

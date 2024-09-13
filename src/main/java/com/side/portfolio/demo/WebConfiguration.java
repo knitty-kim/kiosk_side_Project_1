@@ -16,14 +16,16 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(new Log_Interceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/assets/**", "/css/**", "/*.ico", "/error");
+                .excludePathPatterns("/assets/**", "/css/**", "/img/**", "/js/**", "/*.ico",
+                        "/error");
 
         //로그인 인터셉터
         registry.addInterceptor(new LogIn_Interceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/assets/**", "/css/**", "/*.ico", "/error",
-                        "/", "/login", "/logout", "/signup",
+                .excludePathPatterns("/assets/**", "/css/**", "/img/**", "/js/**", "/*.ico",
+                        "/error", "/", "/login", "/logout", "/signup",
+                        "/seller/validate", "/team/validate",
                         "/notice-list/**", "/images/**", "/about",
                         "/api/**");
     }

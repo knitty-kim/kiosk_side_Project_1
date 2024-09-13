@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,7 +31,6 @@ public class TeamService {
     //팀 가입
     @Transactional
     public void save(Team team) {
-        validateTeam(team);
         teamJpaRepository.save(team);
     }
 
@@ -58,12 +59,29 @@ public class TeamService {
         }
     }
 
-    //중복 팀 검증
-    private void validateTeam(Team team) {
-        Optional<Team> byName = teamJpaRepository.findByName(team.getName());
-        if (byName.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 팀입니다");
+    //팀 Name 중복 검사
+    public Map<Boolean, String> validateName(Long id, String newName) {
+
+        Map<Boolean, String> result = new HashMap<>();
+
+        //newName으로 조회가 된다면
+        if (teamJpaRepository.existsByName(newName)) {
+
+            Team currTeam = teamJpaRepository.findById(id).orElse(null);
+
+            // 회원가입인 경우 (id로 조회되지 않으면) || 팀 정보 수정 + newName이 기존 Name과 다르다면,
+            if (currTeam == null || !currTeam.getName().equals(newName)) {
+                result.put(false, "이미 존재하는 아이디입니다");
+            } else {        //newName이 기존 Name과 같다면
+                result.put(true, "사용 가능한 아이디입니다");
+            }
+
+        } else {
+            result.put(true, "사용 가능한 아이디입니다");
         }
+
+        return result;
+
     }
 
     //전체 팀 조회

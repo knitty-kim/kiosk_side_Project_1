@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import java.util.Map;
 @RequestMapping("/seller")
 public class SellerController {
 
-    private final EntityManager em;
     private final SellerService sellerService;
     private final LogInService logInService;
 
@@ -171,7 +169,7 @@ public class SellerController {
     public List<Object> validateName(Long id, String name) {
         log.info("validate Seller");
 
-        Map<Boolean, String> result = sellerService.validateDuplicity(id, name);
+        Map<Boolean, String> result = sellerService.validateName(id, name);
         List<Object> response = new ArrayList<>();
 
         if (result.containsKey(false)) {

@@ -61,7 +61,7 @@ public class MainController {
     }
 
     @PostMapping("/signup")
-    public String signUp(@Validated SignUpForm form, BindingResult bindingResult) {
+    public String signUp(SignUpForm form, BindingResult bindingResult) {
 
         if (formHasError(form, bindingResult)) {
             return "signup";

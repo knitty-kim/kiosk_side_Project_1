@@ -65,7 +65,6 @@ public class ItemController {
             Seller seller = sellerService.findById(sellerId);
 
             cond.setSellerName(seller.getName());
-            log.info("sellerName 세팅됨={}", cond.getSellerName());
         }
 
         Page<ItemDto> items = itemService.findItemByCond(cond, pageable);
