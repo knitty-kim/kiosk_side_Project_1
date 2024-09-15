@@ -77,6 +77,7 @@ public class MainController {
                     .phNumber(form.getPhNumber())
                     .email(form.getEmail())
                     .status(TeamStatus.DORMANT)
+                    .tickets(0)
                     .createdDate(LocalDateTime.now())
                     .modifiedDate(LocalDateTime.now())
                     .address(address)

@@ -55,7 +55,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
                 .join(item.seller, seller)
                 .join(orderItem.order, order)
                 .join(order.team, team)
-                .where(seller.id.eq(sellerId),
+                .where(seller.id.eq(sellerId), orderIdEq(cond.getOrderId()),
                         itemIdEq(cond.getItemId()), itemNameEq(cond.getItemName()),
                         teamNameEq(cond.getTeamName()), statusEq(cond.getOrderStatus()),
                         startDateGoe(cond.getStartDate()),
@@ -63,6 +63,10 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
                 .fetch();
 
         return content;
+    }
+
+    private BooleanExpression orderIdEq(Long id) {
+        return id == null ? null : order.id.eq(id);
     }
 
     private BooleanExpression itemIdEq(Long id) {

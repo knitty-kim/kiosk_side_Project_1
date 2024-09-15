@@ -150,6 +150,15 @@ function confirmEdit() {
         return;
     }
 
+    let emptyFields = $('form').find('input').filter(function() {
+        return $(this).val().trim() === '';  // 빈 값 또는 공백만 포함된 값
+    });
+
+    if (emptyFields.length > 0) {
+        alert('입력되지 않은 값이 있습니다!');
+        return;
+    }
+
     if (confirm("수정을 확정하시겠습니까?")) {
         //document.querySelector('form').submit();
         //위 코드로 submit하는 경우, submit 이벤트 핸들러가 호출되지 않는다

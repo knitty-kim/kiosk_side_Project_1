@@ -36,7 +36,6 @@ public class OrderService {
         Team team = teamJpaRepository.findById(teamId).get();
         List<Cart> carts = cartJpaRepository.findByTeam_Id(teamId);
 
-
         List<OrderItem> orderItems = new ArrayList<>();
         for (Cart cart : carts) {
 
@@ -47,6 +46,9 @@ public class OrderService {
             //상품 재고 변경
             //TODO 주문상품 생성 시, 상품 재고보다 많이 주문 시, 에러 처리!
             item.subtractQty(cart.getQty());
+
+            //팀 티켓 감소
+            team.subtractTickets(cart.getQty());
 
             //주문 상품 생성
             orderItems.add(OrderItem.createOrderItem(item, cart.getPrice(), cart.getQty()));

@@ -1,13 +1,16 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.Message;
+import com.side.portfolio.demo.SessionConst;
 import com.side.portfolio.demo.domain.Delivery;
 import com.side.portfolio.demo.domain.Order;
 import com.side.portfolio.demo.domain.OrderItem;
+import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.condition.OrderedItemDto;
 import com.side.portfolio.demo.dto.condition.OrderedItemSearchCond;
 import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.OrderService;
+import com.side.portfolio.demo.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final LogInService logInService;
+    private final TeamService teamService;
 
     //주문 목록
     @GetMapping("/order-list")
@@ -45,10 +48,15 @@ public class OrderController {
 
         HttpSession session = request.getSession();
 
-        String types = (String) session.getAttribute("types");
+        String types = (String) session.getAttribute(SessionConst.LOGIN_TYPES);
 
         if (types.equals("team") || types.equals("master")) {
-            Long teamId = (Long) session.getAttribute("id");
+            Long teamId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
+
+            if (types.equals("team")) {
+                Team team = teamService.findById(teamId);
+                model.addAttribute("tickets", team.getTickets());
+            }
 
             Page<Order> orders = orderService.findByTeam_Id(teamId, pageable);
             model.addAttribute("orders", orders);
@@ -73,7 +81,7 @@ public class OrderController {
             model.addAttribute("curPage", orders.getNumber());
 
         } else if (types.equals("seller") || types.equals("master")) {
-            Long sellerId = (Long) session.getAttribute("id");
+            Long sellerId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
 
             Page<Order> orders = orderService.findByTeam_Id(sellerId, pageable);
             model.addAttribute("orders", orders);
@@ -111,8 +119,8 @@ public class OrderController {
 
         HttpSession session = request.getSession();
 
-        String types = (String) session.getAttribute("types");
-        Long teamId = (Long) session.getAttribute("id");
+        String types = (String) session.getAttribute(SessionConst.LOGIN_TYPES);
+        Long teamId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
 
         if (types.equals("team") || types.equals("master")) {
 
@@ -199,6 +207,7 @@ public class OrderController {
         return "OK";
     }
 
+    //주문된 목록
     //판매자 ID로 주문 상품 조회
     @GetMapping("/ordered-list/{sellerId}")
     public String orderedList(Model model, HttpServletRequest request,
@@ -211,16 +220,15 @@ public class OrderController {
 
         List<OrderedItemDto> content = orderService.findOrderItemBySeller_Id(sellerId, cond);
         
-        //Map<주문자명, 주문내용>으로 그룹화
-        Map<String, List<OrderedItemDto>> groupedOrders = content.stream()
-                .collect(Collectors.groupingBy(OrderedItemDto::getTeamName));
+        //Map<주문번호, 주문내용>으로 그룹화
+        Map<Long, List<OrderedItemDto>> groupedOrders = content.stream()
+                .collect(Collectors.groupingBy(OrderedItemDto::getOrderId));
 
 
         model.addAttribute("groupedOrders", groupedOrders);
-
         model.addAttribute("cond", cond);
 
-        return "basic/sellerOrders";
+        return "pay/sellerOrders";
     }
 
 }

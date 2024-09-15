@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class SellerUpdateForm {
 
     //@NotBlank(message = "ID는 필수입니다")
-//    private Long id;
+    private Long id;
 
     //@NotBlank(message = "가입 유형은 필수입니다")
 //    private String types;

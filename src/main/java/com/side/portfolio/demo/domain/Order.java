@@ -64,6 +64,7 @@ public class Order {
         }
 
         for (OrderItem orderItem : orderItems) {
+            team.addTickets(orderItem.getCount());
             orderItem.cancelOrderItem();
         }
 

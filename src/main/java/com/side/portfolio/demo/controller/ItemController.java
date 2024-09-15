@@ -4,6 +4,7 @@ import com.side.portfolio.demo.SessionConst;
 import com.side.portfolio.demo.domain.FileNameTable;
 import com.side.portfolio.demo.domain.Item;
 import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.ItemCreateForm;
 import com.side.portfolio.demo.dto.ItemUpdateForm;
 import com.side.portfolio.demo.dto.condition.ItemDto;
@@ -11,6 +12,7 @@ import com.side.portfolio.demo.dto.condition.ItemSearchCond;
 import com.side.portfolio.demo.service.FileService;
 import com.side.portfolio.demo.service.ItemService;
 import com.side.portfolio.demo.service.SellerService;
+import com.side.portfolio.demo.service.TeamService;
 import com.side.portfolio.demo.status.ItemStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final TeamService teamService;
     private final SellerService sellerService;
     private final FileService fileService;
 
@@ -65,6 +68,13 @@ public class ItemController {
             Seller seller = sellerService.findById(sellerId);
 
             cond.setSellerName(seller.getName());
+        }
+
+        if (type.equals("team")) {
+            Long teamId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
+            Team team = teamService.findById(teamId);
+
+            model.addAttribute("tickets", team.getTickets());
         }
 
         Page<ItemDto> items = itemService.findItemByCond(cond, pageable);

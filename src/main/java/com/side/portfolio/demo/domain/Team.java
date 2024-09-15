@@ -1,5 +1,6 @@
 package com.side.portfolio.demo.domain;
 
+import com.side.portfolio.demo.exception.NotEnoughStockException;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.*;
 
@@ -89,7 +90,24 @@ public class Team {
     }
 
     public void setUpTickets(int tickets) {
+        if (tickets < 0) {
+            throw new NotEnoughStockException("quantity can't be below ZERO");
+        }
         this.tickets = tickets;
+    }
+
+    public void addTickets(int tickets) {
+        this.tickets += tickets;
+        this.modifiedDate = LocalDateTime.now();
+    }
+
+    public void subtractTickets(int tickets) {
+        int tempTickets = this.tickets - tickets;
+        if (tempTickets < 0) {
+            throw new NotEnoughStockException("can't subtract Quantity below ZERO");
+        }
+        this.tickets = tempTickets;
+        this.modifiedDate = LocalDateTime.now();
     }
 
     public void setUpRemark(String remark) {

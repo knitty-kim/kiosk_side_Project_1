@@ -111,7 +111,7 @@
                 <small class="form-text text-danger">*(영문자 또는 숫자만 가능)</small>
                 <input class="form-control" placeholder="아이디를 입력하세요"
                        th:errorclass="is-invalid" th:field="*{name}" type="text"
-                       th:oninput="|validateName('${session.id}', 'team', 'name', 'validateNameResult')|">
+                       th:oninput="|validateName('${teamUpdateForm.id}', 'team', 'name', 'validateNameResult')|">
                 <div class="invalid-feedback" th:errors="*{name}">아이디 오류</div>
                 <span id="validateNameResult"></span>
             </div>
@@ -123,7 +123,7 @@
                             th:each="teamStatus : ${teamStatuses}"
                             th:selected="${teamUpdateForm.status} == ${teamStatus}" th:text="${teamStatus}"
                             th:value="${teamStatus}"/>
-                    <option th:if="${session.types == 'seller'} and ${teamStatus ne T(com.side.portfolio.demo.status.TeamStatus).DORMANT}"
+                    <option th:if="${session.types == 'team'} and ${teamStatus ne T(com.side.portfolio.demo.status.TeamStatus).MASTER}"
                             th:each="teamStatus : ${teamStatuses}"
                             th:selected="${teamUpdateForm.status} == ${teamStatus}" th:text="${teamStatus}"
                             th:value="${teamStatus}"/>
@@ -171,27 +171,26 @@
                 <div class="invalid-feedback" th:errors="*{street}">Street 오류</div>
             </div>
 
-            <div class="form-group mb-5">
+            <div class="form-group mb-2">
                 <label th:for="zipcode">Zipcode</label>
                 <input class="form-control" placeholder="put Zipcode"
                        th:errorclass="is-invalid" th:field="*{zipcode}" type="text">
                 <div class="invalid-feedback" th:errors="*{zipcode}">Zipcode 오류</div>
             </div>
 
-            <div class="form-group mb-5">
-                <label th:for="tickets">Tickets</label>
-                <input class="form-control" placeholder="put Tickets"
-                       th:classappend="${session.types == 'seller'} ? 'readonly-select'"
-                       th:errorclass="is-invalid" th:field="*{tickets}" type="text">
-                <div class="invalid-feedback" th:errors="*{tickets}">Tickets 오류</div>
+            <div class="form-group mb-2" th:if="${session.types == 'master'}">
+                <label th:for="remark">Remark</label>
+                <input class="form-control" placeholder="put Remark"
+                       th:errorclass="is-invalid" th:field="*{remark}" type="text">
+                <div class="invalid-feedback" th:errors="*{remark}">Remark 오류</div>
             </div>
 
             <div class="form-group mb-5">
-                <label th:for="remark">Remark</label>
-                <input class="form-control" placeholder="put Remark"
-                       th:classappend="${session.types == 'seller'} ? 'readonly-select'"
-                       th:errorclass="is-invalid" th:field="*{remark}" type="text">
-                <div class="invalid-feedback" th:errors="*{remark}">Remark 오류</div>
+                <label th:for="tickets">Tickets</label>
+                <input class="form-control" placeholder="put Tickets"
+                       th:classappend="${session.types == 'team'} ? 'readonly-select'"
+                       th:errorclass="is-invalid" th:field="*{tickets}" type="number">
+                <div class="invalid-feedback" th:errors="*{tickets}">Tickets 오류</div>
             </div>
 
             <div class="row mb-3">
@@ -199,9 +198,16 @@
                     <button class="w-100 btn btn-primary btn-lg" type="button"
                             onclick="confirmEdit()">수정 확정</button>
                 </div>
-                <div class="col">
+
+                <div class="col" th:if="${session.types == 'team'}">
                     <button class="w-100 btn btn-secondary btn-lg"
-                            th:onclick="|location.href='@{/seller/seller-list}'|" type="button">취소
+                            onclick="location.href='/'" type="button">취소
+                    </button>
+                </div>
+
+                <div class="col" th:if="${session.types == 'master'}">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='/team/team-list'" type="button">취소
                     </button>
                 </div>
             </div>

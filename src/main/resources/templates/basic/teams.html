@@ -134,7 +134,7 @@
           <th>Street</th>
           <th>City</th>
           <th>Zipcode</th>
-          <!--        <th>비고</th>-->
+          <th th:if="${session.types == 'master'}"></th>
         </tr>
         </thead>
         <tbody>
@@ -153,6 +153,10 @@
             <td th:text="${team.getCity()}">City</td>
             <td th:text="${team.getZipcode()}">Zipcode</td>
   <!--          <td th:text="${team.remark}">비고</td>-->
+            <td th:if="${session.types == 'master'}">
+              <button class="btn btn-primary" type="button" id="button-addon3"
+                      th:onclick="|location.href='@{/team/update/{teamId}(teamId=${team.id})}'|">수정</button>
+            </td>
           </tr>
         </tbody>
       </table>

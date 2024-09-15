@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter @Setter
 public class OrderedItemSearchCond {
 
+    private Long orderId;
     private Long itemId;
     private String itemName;
     private String teamName;

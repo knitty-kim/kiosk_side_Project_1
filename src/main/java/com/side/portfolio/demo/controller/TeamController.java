@@ -35,30 +35,6 @@ public class TeamController {
 
     private final TeamService teamService;
 
-//    //전체 팀 목록
-//    @GetMapping("/team-list")
-//    public String teamList(Model model,
-//                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-//
-//        Page<Team> teams = teamService.findAll(pageable);
-//        model.addAttribute("teams", teams);
-//
-//        model.addAttribute("prev", teams.getPageable().previousOrFirst().getPageNumber());
-//        model.addAttribute("next", teams.getPageable().next().getPageNumber());
-//
-//        model.addAttribute("hasPrev", teams.hasPrevious());
-//        model.addAttribute("hasNext", teams.hasNext());
-//
-//        int groupSize = 3; //화면에 보여질 페이지 개수
-//        int curPageGrp = (int) Math.floor((double) teams.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
-//        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
-//        model.addAttribute("endPage", Math.min(teams.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1));
-//
-//        model.addAttribute("curPage", teams.getNumber());
-//
-//        return "basic/teams";
-//    }
-
     //전체 팀 검색 조회 목록
     @GetMapping("/team-list")
     public String teamList(Model model, TeamSearchCond cond,
@@ -113,7 +89,7 @@ public class TeamController {
 
         Team team = teamService.findById(teamId);
         TeamUpdateForm form = new TeamUpdateForm();
-//        form.setId(sellerId);
+        form.setId(teamId);
         form.setName(team.getName());
 //        form.setPw(seller.getPw());
         form.setStatus(team.getStatus());

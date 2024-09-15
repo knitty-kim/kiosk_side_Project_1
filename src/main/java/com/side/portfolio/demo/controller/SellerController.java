@@ -114,7 +114,7 @@ public class SellerController {
 
         Seller seller = sellerService.findById(sellerId);
         SellerUpdateForm form = new SellerUpdateForm();
-//        form.setId(sellerId);
+        form.setId(sellerId);
         form.setName(seller.getName());
 //        form.setPw(seller.getPw());
         form.setStatus(seller.getStatus());

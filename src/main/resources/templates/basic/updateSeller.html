@@ -111,7 +111,7 @@
                 <small class="form-text text-danger">*(영문자 또는 숫자만 가능)</small>
                 <input class="form-control" placeholder="아이디를 입력하세요"
                        th:errorclass="is-invalid" th:field="*{name}" type="text"
-                       th:oninput="|validateName('${session.id}', 'seller', 'name', 'validateNameResult')|">
+                       th:oninput="|validateName('${sellerUpdateForm.id}', 'seller', 'name', 'validateNameResult')|">
                 <div class="invalid-feedback" th:errors="*{name}">아이디 오류</div>
                 <span id="validateNameResult"></span>
             </div>
@@ -183,9 +183,16 @@
                     <button class="w-100 btn btn-primary btn-lg" type="button"
                             onclick="confirmEdit()">수정 확정</button>
                 </div>
-                <div class="col">
+
+                <div class="col" th:if="${session.types == 'seller'}">
                     <button class="w-100 btn btn-secondary btn-lg"
-                            th:onclick="|location.href='@{/seller/seller-list}'|" type="button">취소
+                            onclick="location.href='/'" type="button">취소
+                    </button>
+                </div>
+
+                <div class="col" th:if="${session.types == 'master'}">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='/seller/seller-list'" type="button">취소
                     </button>
                 </div>
             </div>

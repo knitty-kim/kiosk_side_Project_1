@@ -58,25 +58,38 @@
       <h2>주문 목록</h2>
     </div>
 
-    <!-- 상단 버튼들 -->
-    <div class="d-flex justify-content-end mb-4">
-<!--          <button class="btn btn-secondary me-1" onclick="redirectionHome()"-->
-<!--                  type="button">홈</button>-->
-      <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
-              th:onclick="|location.href='@{/item/add}'|"
-              type="button">상품 등록</button>
-      <button class="btn btn-success me-1"
-              th:if="${session.types} == 'master' or ${session.types} == 'team'"
-              th:onclick="|location.href='@{/order-list}'|"
-              type="button">주문 목록</button>
-      <button class="btn btn-warning me-1"
-              th:if="${session.types} == 'master' or ${session.types} == 'team'"
-              th:onclick="|location.href='@{/cart-list}'|"
-              type="button">장바구니</button>
-      <button class="btn btn-primary"
-              th:onclick="|location.href='@{/item-list}'|"
-              type="button">상품 목록</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="float-start">
+        <p class="d-inline me-lg-3" th:if="${session.types} == 'team'">잔여 티켓 수 :
+          <strong class="text-success" th:text="${tickets}"></strong>
+        </p>
+        <p class="d-inline me-lg-3" th:if="${session.types} == 'master'">관리자 :
+          <strong class="text-success">Master</strong>
+        </p>
+      </div>
+
+      <!-- 상단 버튼들 -->
+      <div class="d-flex justify-content-end">
+        <!--          <button class="btn btn-secondary me-1" onclick="redirectionHome()"-->
+        <!--                  type="button">홈</button>-->
+        <button class="btn btn-primary me-1" th:if="${session.types == 'master'}"
+                th:onclick="|location.href='@{/item/add}'|"
+                type="button">상품 등록</button>
+        <button class="btn btn-success me-1"
+                th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                th:onclick="|location.href='@{/order-list}'|"
+                type="button">주문 목록</button>
+        <button class="btn btn-warning me-1"
+                th:if="${session.types} == 'master' or ${session.types} == 'team'"
+                th:onclick="|location.href='@{/cart-list}'|"
+                type="button">장바구니</button>
+        <button class="btn btn-primary"
+                th:onclick="|location.href='@{/item-list}'|"
+                type="button">상품 목록</button>
+      </div>
+
     </div>
+
 
     <!-- 테이블 영역 -->
     <div class="table-wrapper">

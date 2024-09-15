@@ -123,10 +123,8 @@
           <tr th:each="seller : ${sellers}">
             <td><a th:href="@{/item-list(sellerName=${seller.name})}"
                    th:text="${seller.id}">판매자 ID</a></td>
-
             <td><a th:href="@{/item-list(sellerName=${seller.name})}"
                    th:text="${seller.name}">판매자 명</a></td>
-
             <td th:text="${seller.phNumber}">333-333-3333</td>
             <td th:text="${seller.email}">kiosk@kiosk.or</td>
             <td th:if="${session.types == 'master'}"

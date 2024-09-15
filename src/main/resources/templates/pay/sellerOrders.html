@@ -83,6 +83,10 @@
             background-color: #f8f9fa;
         }
 
+        .btn-custom {
+            height: 33px;
+            padding: 3px 12px;
+        }
     </style>
 </head>
 <body>
@@ -123,6 +127,9 @@
             <form action="#" method="GET" th:object="${cond}" th:action="@{${session.id}}">
                 <div class="row g-2">
                     <div class="col">
+                        <input type="text" class="form-control" placeholder="주문 ID" name="orderId" th:field="*{orderId}">
+                    </div>
+                    <div class="col">
                         <input type="text" class="form-control" placeholder="상품 ID" name="itemId" th:field="*{itemId}">
                     </div>
                     <div class="col">
@@ -162,22 +169,24 @@
                 <!-- 그룹 헤더 (주문자 명) -->
                 <div class="group-header-custom">
                     <h5>
-                        <span th:text="|주문자 : ${entry.key}|"></span>
+                        <span th:text="|주문번호 : ${entry.key}|"></span>
                     </h5>
 
-                    <button class="btn btn-success me-1"
-                            th:data-orderId="${entry.value.get(0).orderId}"
+                    <button class="btn btn-success btn-custom me-1"
+                            th:if="${entry.value.get(0).orderStatus.toString() == 'ORDERED'}"
+                            th:data-orderId="${entry.key}"
                             th:data-orderStatus="${entry.value.get(0).orderStatus}"
                             onclick="acceptOrder(this)"
                             type="button">수락</button>
 
-                    <button class="btn btn-danger me-1"
-                            th:data-orderId="${entry.value.get(0).orderId}"
+                    <button class="btn btn-danger btn-custom me-1"
+                            th:if="${entry.value.get(0).orderStatus.toString() == 'ORDERED'}"
+                            th:data-orderId="${entry.key}"
                             th:data-orderStatus="${entry.value.get(0).orderStatus}"
                             onclick="rejectOrder(this)"
                             type="button">거절</button>
 
-                    <!-- 펼치기/접기 버튼 -->
+                    <!-- 열기/접기 버튼 -->
                     <button class="btn-toggle" data-bs-toggle="collapse"
                             th:href="'#group-' + ${entry.key}">열기/접기</button>
                 </div>
@@ -211,7 +220,8 @@
                             <td th:text="${order.orderedCount}">주문 수량</td>
                             <td th:text="${order.teamName}">주문자 명</td>
                             <td class="fw-bolder"
-                                th:classappend="${order.orderStatus.toString() == 'ORDERED'} ? 'text-success' : 'text-danger'"
+                                th:classappend="${order.orderStatus.toString() == 'ORDERED'
+                                or order.orderStatus.toString() == 'ACCEPTED'} ? 'text-success' : 'text-danger'"
                                 th:text="${order.orderStatus}">주문 상태
                             </td>
 
@@ -291,6 +301,9 @@
         } else if (status == "REJECTED") {
             alert("거절된 주문입니다!");
             return false;
+        } else if (status == "CANCELED") {
+            alert("취소된 주문입니다!");
+            return false;
         }
 
         if (confirm("현재 주문을 수락하시겠습니까?")) {
@@ -323,6 +336,9 @@
             return false;
         } else if (status == "ACCEPTED") {
             alert("수락된 주문입니다!");
+            return false;
+        } else if (status == "CANCELED") {
+            alert("취소된 주문입니다!");
             return false;
         }
 
