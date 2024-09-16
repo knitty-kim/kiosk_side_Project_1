@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <title>K&Y Kiosk Project</title>
+    <!-- Favicon-->
+    <link rel="icon" th:href="@{/assets/favicon.ico}" type="image/x-icon"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"
+          type="text/css"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-grid.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-reboot.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-utilities.css}"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <style>
+        .custom-section {
+            position: relative;
+            padding-top: 2rem;
+            padding-bottom: 5rem;
+        }
+
+        .global-err {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h2 {
+            font-weight: bold;
+            color: #343a40;
+        }
+    </style>
+
+</head>
+<body>
+
+<div th:replace="~{header :: common-nav}">
+    <p>레이아웃 네비</p>
+</div>
+
+<div th:replace="~{header :: common-header}">
+    <p>레이아웃 헤더</p>
+</div>
+
+<section class="features-icons" id="scroll-target">
+
+    <div class="container-fluid bg-light" style="max-width: 1300px">
+        <!-- 메뉴 명 -->
+        <div class="text-center mb-xl-4">
+            <h2>비밀번호 변경</h2>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <section class="custom-section">
+
+                    <div class="text-center" th:if="${session.get('redirectURI') != '/'}">
+                        <p class="global-err fw-bold">로그인이 필요합니다!</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="input-pw" class="form-label">새 비밀번호</label>
+                        <small class="form-text text-danger">*(공백을 제외한 숫자/영대문자/특수문자 1개 이상 포함, 최소 8글자 이상)</small>
+                        <input class="form-control" id="input-pw" placeholder="비밀번호를 입력하세요" type="password"
+                               oninput="validatePw()">
+                        <span id="validatePwResult"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="input-pw2" class="form-label">새 비밀번호 확인</label>
+                        <input class="form-control" placeholder="새 비밀번호를 한 번 더 입력하세요" type="password" id="input-pw2"
+                               oninput="checkPw()">
+                        <span id="validatePwResult2"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="w-100 btn btn-primary btn-lg" type="button"
+                                th:data-id="${session.id}"
+                                th:data-types="${session.types}"
+                                onclick="confirmPw(this)">확인</button>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+
+    </div> <!-- /container -->
+</section>
+
+<div th:replace="~{footer :: common-footer}">
+    <p>레이아웃 푸터</p>
+</div>
+
+<script>
+    function notYet() {
+        alert("작업중입니다..");
+    }
+
+    function confirmPw(button) {
+
+        let clientType = button.getAttribute("data-types");
+        let clientId = button.getAttribute("data-id");
+        let newPw = $("#input-pw");
+        let checkNewPw = $("#input-pw2");
+
+        validatePw();
+        if (newPw.hasClass('is-invalid')) {
+            alert('새 비밀번호의 형식이 올바르지 않습니다');
+            return;
+        }
+
+        checkPw();
+        if (checkNewPw.hasClass('is-invalid')) {
+            alert('새 비밀번호와 동일하지 않습니다');
+            return;
+        }
+
+        if (clientType == 'seller' || clientType == 'team') {
+
+            const url = clientType === 'seller' ? '/seller/updatePw' : '/team/updatePw';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    id: clientId,
+                    pw: newPw.val()
+                },
+                success: function (response) {
+                    if (response == 'ok') {
+                        alert('비밀번호가 변경되었습니다! 다시 로그인 해주세요');
+                        window.location.href = '/';
+                    }
+                },
+                error: function (error) {
+                    console.error('Error sending data', error);
+                }
+            });
+
+        }
+
+    }
+
+    function validatePw(){
+
+        let pw = $("#input-pw");
+        let pwText= $("#validatePwResult");
+
+        //비밀번호 유효성 검사 ; 숫자/영대문자/특수문자 1개 이상 포함, 공백 제외, 최소 8글자
+        let passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])\S{8,}$/;
+
+        if (!passwordPattern.test(pw.val())) {
+            pwText.removeClass('text-success');
+            pw.removeClass('is-valid');
+
+            pwText.addClass('text-danger');
+            pw.addClass('is-invalid');
+
+            pwText.text("비밀번호 형식이 올바르지 않습니다").show();
+
+        } else {
+            pwText.removeClass('text-danger');
+            pw.removeClass('is-invalid');
+
+            pwText.addClass('text-success');
+            pw.addClass('is-valid');
+
+            pwText.text("사용 가능한 비밀번호입니다").show();
+
+        }
+
+    }
+
+    function checkPw() {
+
+        let pw = $("#input-pw");
+        let checkPw = $("#input-pw2");
+        let checkPwText= $("#validatePwResult2");
+
+        if (pw.val() !== checkPw.val()) {
+            checkPwText.removeClass('text-success');
+            checkPw.removeClass('is-valid');
+
+            checkPwText.addClass('text-danger');
+            checkPw.addClass('is-invalid');
+
+            checkPwText.text("새 비밀번호와 동일하지 않습니다").show();
+            return false;
+
+        } else {
+            checkPwText.removeClass('text-danger');
+            checkPw.removeClass('is-invalid');
+
+            checkPwText.addClass('text-success');
+            checkPw.addClass('is-valid');
+
+            checkPwText.text("새 비밀번호와 동일합니다").show();
+            return true;
+
+        }
+
+    }
+
+
+</script>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

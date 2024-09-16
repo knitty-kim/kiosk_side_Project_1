@@ -16,15 +16,13 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -115,6 +113,51 @@ public class MainController {
     public String about() {
         log.info("about page");
         return "about";
+    }
+
+    //비밀번호 변경 가능 여부 확인 폼
+    @GetMapping("/checkPwForm")
+    public String checkPwForm(@RequestParam(defaultValue = "/") String redirectURI,
+                           HttpServletRequest request) {
+
+        request.getSession().setAttribute("redirectURI", redirectURI);
+        return "basic/checkPw";
+    }
+
+    //비밀번호 변경 가능 여부 확인
+    @ResponseBody
+    @PostMapping("/checkPw")
+    public Boolean checkPw(Long id, String type, String pw) {
+
+        if (type.equals("team")) {
+            Team team = teamService.findById(id);
+
+            if (team.getPw().equals(pw)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            Seller seller = sellerService.findById(id);
+
+            if (seller.getPw().equals(pw)) {
+                return true;
+            } else {
+                return false;
+
+            }
+        }
+
+    }
+
+    //비밀번호 변경 폼
+    @GetMapping("/updatePwForm")
+    public String updatePwForm(@RequestParam(defaultValue = "/") String redirectURI,
+                              HttpServletRequest request) {
+
+        request.getSession().setAttribute("redirectURI", redirectURI);
+        return "basic/updatePw";
     }
 
     //상세 페이지 로드 시, 이미지 파일 불러오기

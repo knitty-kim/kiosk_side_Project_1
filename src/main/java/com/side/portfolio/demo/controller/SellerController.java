@@ -3,6 +3,7 @@ package com.side.portfolio.demo.controller;
 import com.side.portfolio.demo.Message;
 import com.side.portfolio.demo.domain.Address;
 import com.side.portfolio.demo.domain.Seller;
+import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.SellerUpdateForm;
 import com.side.portfolio.demo.dto.condition.PartnerDto;
 import com.side.portfolio.demo.dto.condition.PartnerSearchCond;
@@ -23,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,6 +166,28 @@ public class SellerController {
 
     }
 
+    //판매자 비밀번호 변경
+    @ResponseBody
+    @PostMapping("/updatePw")
+    public String updateSellerPw(Long id, String pw, HttpServletRequest request) {
+
+        Seller seller = sellerService.findById(id);
+
+        seller.setUpPw(pw);
+        seller.setUpModifiedDate(LocalDateTime.now());
+
+        sellerService.save(seller);
+
+        //세션 종료
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "ok";
+
+    }
+
     @ResponseBody
     @GetMapping("/validate")
     public List<Object> validateName(Long id, String name) {
@@ -190,11 +214,6 @@ public class SellerController {
             bindingResult.reject("Name is required",
                     "아이디는 필수입니다!");
         }
-
-//        if (form.getPw() == null) {
-//            bindingResult.reject("Password is required",
-//                    "비밀번호는 필수입니다!");
-//        }
 
         if (form.getPhNumber() == null) {
             bindingResult.reject("PhNumber is required",

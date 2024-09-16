@@ -96,6 +96,8 @@
             <div class="col text-end">
                 <p th:utext="'<strong>가입일 :</strong> ' + ${#temporals.format(teamUpdateForm.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                 <p th:utext="'<strong>수정일 :</strong> ' + ${#temporals.format(teamUpdateForm.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
+                <button type="button" class="btn btn-primary"
+                        onclick="location.href='/checkPwForm'">비밀번호 변경</button>
             </div>
         </div>
 
@@ -131,13 +133,6 @@
                 </select>
                 <div class="invalid-feedback" th:errors="*{status}">상태 오류</div>
             </div>
-
-<!--            <div class="form-group mb-2">-->
-<!--                <label th:for="pw">비밀번호</label>-->
-<!--                <input class="form-control" placeholder="비밀번호를 입력하세요"-->
-<!--                       th:errorclass="is-invalid" th:field="*{pw}" type="text">-->
-<!--                <div class="invalid-feedback" th:errors="*{pw}">비밀번호 오류</div>-->
-<!--            </div>-->
 
             <div class="form-group mb-2">
                 <label th:for="phNumber">연락처</label>

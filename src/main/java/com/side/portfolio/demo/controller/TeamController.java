@@ -1,15 +1,12 @@
 package com.side.portfolio.demo.controller;
 
 import com.side.portfolio.demo.domain.Address;
-import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.PartnerCreateForm;
-import com.side.portfolio.demo.dto.SellerUpdateForm;
 import com.side.portfolio.demo.dto.TeamUpdateForm;
 import com.side.portfolio.demo.dto.condition.TeamDto;
 import com.side.portfolio.demo.dto.condition.TeamSearchCond;
 import com.side.portfolio.demo.service.TeamService;
-import com.side.portfolio.demo.status.SellerStatus;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +127,6 @@ public class TeamController {
 
         Team team = teamService.findById(teamId);
         team.setUpName(form.getName());
-//        seller.setUpPw(form.getPw());
         team.setUpStatus(form.getStatus());
         team.setUpPhNumber(form.getPhNumber());
         team.setUpEmail(form.getEmail());
@@ -144,6 +142,28 @@ public class TeamController {
         teamService.save(team);
 
         return "redirect:/team/update/" + teamId;
+
+    }
+
+    //팀 비밀번호 변경
+    @ResponseBody
+    @PostMapping("/updatePw")
+    public String updatePw(Long id, String pw, HttpServletRequest request) {
+
+        Team team = teamService.findById(id);
+
+        team.setUpPw(pw);
+        team.setUpModifiedDate(LocalDateTime.now());
+
+        teamService.save(team);
+
+        //세션 종료
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "ok";
 
     }
 
@@ -173,11 +193,6 @@ public class TeamController {
             bindingResult.reject("Name is required",
                     "아이디는 필수입니다!");
         }
-
-//        if (form.getPw() == null) {
-//            bindingResult.reject("Password is required",
-//                    "비밀번호는 필수입니다!");
-//        }
 
         if (form.getPhNumber() == null) {
             bindingResult.reject("PhNumber is required",
