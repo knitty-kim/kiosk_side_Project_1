@@ -96,10 +96,13 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label" th:for="pw">비밀번호</label>
+                            <small class="form-text text-danger">*(공백을 제외한 숫자/영대문자/특수문자 1개 이상 포함, 최소 8글자 이상)</small>
                             <input class="form-control" placeholder="비밀번호를 입력하세요"
                                    th:errorclass="is-invalid"
-                                   th:field="*{pw}" type="password">
+                                   th:field="*{pw}" type="password"
+                                   oninput="validatePw()">
                             <div class="invalid-feedback" th:errors="*{pw}">비밀번호 오류</div>
+                            <span id="validatePwResult"></span>
                         </div>
                         <div class="mb-3">
                             <label class="form-label" th:for="phNumber">연락처</label>
@@ -157,6 +160,37 @@
 </div>
 
 <script>
+    //비밀번호 유효성 검사
+    function validatePw(){
+
+        let pw = $("#pw");
+        let pwText= $("#validatePwResult");
+
+        //비밀번호 유효성 검사 ; 숫자/영대문자/특수문자 1개 이상 포함, 공백 제외, 최소 8글자
+        let passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])\S{8,}$/;
+
+        if (!passwordPattern.test(pw.val())) {
+            pwText.removeClass('text-success');
+            pw.removeClass('is-valid');
+
+            pwText.addClass('text-danger');
+            pw.addClass('is-invalid');
+
+            pwText.text("비밀번호 형식이 올바르지 않습니다").show();
+
+        } else {
+            pwText.removeClass('text-danger');
+            pw.removeClass('is-invalid');
+
+            pwText.addClass('text-success');
+            pw.addClass('is-valid');
+
+            pwText.text("사용 가능한 비밀번호입니다").show();
+
+        }
+
+    }
+
     //가입 확정
     function confirmSignUp() {
         let hasInvalidField = $('form').find('input').is('.is-invalid');
