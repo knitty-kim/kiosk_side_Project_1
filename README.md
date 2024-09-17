@@ -149,6 +149,11 @@
 
 <hr>
 <br>
+
+## ⛱️ 개발 환경
+<p align="center">
+	<img src="https://github.com/user-attachments/assets/222bfaff-84e0-4d98-a5ab-dc0f56a6559c"/>
+</p>
 <br>
 <br>
 <br>
@@ -769,8 +774,6 @@
 	  </div>
 	</details>
      </li>    
-	    
-     
     </ul>
   </div>
 </details>
@@ -783,14 +786,23 @@
 
 
 # 4. 트러블 슈팅
-<details>
-  <summary><b>임시</b></summary>
-  <div markdown="1">
-    <ul>
-      <li>이미지</li>
-    </ul>
-  </div>
-</details>
+| # | Issue | Cause | Resolution |
+|:---:|:---:|:---:|:---:|
+| 1 | 연관관계가 있는 객체 간 left join이 걸림 | 일대다에서 "다"에 해당하는 객체가 Optional로 반환되기 때문에 left join이 걸림 | 연관관계 주인 객체의 외래키 필드에 "optional=false", "nullable=false"를 추가 |
+| 2 | float이나 double 타입의 필드들은 update 시, 값의 유실 발생 | float, double은 저장할 때, 이진수의 근사치를 저장하기 때문에 십진수로 되돌릴 때 오차가 발생 | 타입을 BigDecimal로 변경 |
+| 3 | 비즈니스 로직의 작성 위치를 어디로 둘지 | 도메인 주도 설계 ; 도메인이 비즈니스 로직의 주도권을 가지는 설계 | 엔티티 한 곳에서 처리가능하면 엔티티에서 처리, 엔티티의 처리 범위를 넘어가면 서비스에서 처리 |
+| 4 | 다대일 관계에서 연관관계 편의 메서드의 위치를 어디로 둘지 |  | "다"쪽과 "일"쪽 모두 관계 없으나, 유지보수 하기 쉬운쪽에 두는 것이 좋다 |
+| 5 | BindingResult를 파라미터로 받을 때, bindingResult가 동작하지 않는 현상 발생 | BindingResult가 검증할 객체 파라미터보다 앞에 있기 때문 | BindingResult는 검증할 객체 파라미터 바로 다음 순서로 와야 하며, 여러 파라미터를 검증하는 경우, 각 파라미터 바로 뒤에 BindingResult를 지정해주면 된다 |
+| 6 | 애플리케이션 실행 시, 테이블 삭제 및 생성 과정에서 오류 발생 | application.yml에서 jpa: ddl-auto : create과 sql: init : data-locations간 충돌이 원인 | sql: init : data-locations 부분 주석 처리, sql: init은 지양하는것이 권장된다 |
+| 7 | 리눅스 내에서 명령어가 실행되지 않는 경우 | 권한이 필요한 명령어를 실행했기 때문 | 명령어 앞에 "sudo"를 붙여 실행 |
+| 8 | AWS의 EC2, RDS를 프리티어로 사용 중임에도 과금되는 현상 | 1. RDS에 퍼블릭 액세스 허용 | 1. RDS에 허용된 퍼블랙 엑세스 제한 |
+|  |  | 2. EC2와 RDS가 서로 다른 Region에 존재 | 2. EC2와 RDS를 같은 Region으로 생성 |
+| 9 | QueryDSL에서 엔티티 조회 시, 무한 루프 발생 | 양방향 연관 관계에서 서로를 참조하는 것이 원인 | DTO를 사용하여 연관 관계 제거 |
+| 10 | QueryDSL을 사용하여 조회 시, Cross Join 발생 | join()으로 직접 명시를 하지 않아 모든 결과를 조회하기 위해 Cross join 실행 | join()으로 조인할 필드 직접 명시 |
+| 11 | ReferenceError: $ is not defined 에러 발생 | Jquery 관련 소스코드가 없는 것이 원인 | script 태그 소스코드 추가 src="http://code.jquery.com/jquery-latest.js" |
+| 12 | 뷰단에서 폼 제출 시, 제출이 안되고 자동 로그아웃되는 현상 발생 | document.querySelector('form').submit(); 사용 시, submit 이벤트 리스너 미동작 | $('form').submit();으로 수정 후 submit 동작 확인 |
+
+
 <br>
 <br>
 
