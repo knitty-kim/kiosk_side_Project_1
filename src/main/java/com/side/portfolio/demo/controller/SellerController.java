@@ -3,9 +3,8 @@ package com.side.portfolio.demo.controller;
 import com.side.portfolio.demo.Message;
 import com.side.portfolio.demo.domain.Address;
 import com.side.portfolio.demo.domain.Seller;
-import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.SellerUpdateForm;
-import com.side.portfolio.demo.dto.condition.PartnerDto;
+import com.side.portfolio.demo.dto.condition.PartnerSellerDto;
 import com.side.portfolio.demo.dto.condition.PartnerSearchCond;
 import com.side.portfolio.demo.dto.condition.SellerDto;
 import com.side.portfolio.demo.dto.condition.SellerSearchCond;
@@ -69,7 +68,7 @@ public class SellerController {
 
     //제휴 판매자 목록
     @GetMapping("/partner-list/{teamId}")
-    public String partnerList(Model model, HttpServletRequest request,
+    public String partnerSellerList(Model model, HttpServletRequest request,
                               @PathVariable Long teamId, PartnerSearchCond cond,
                               @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
@@ -78,7 +77,7 @@ public class SellerController {
             return "message";
         }
 
-        Page<PartnerDto> partners = sellerService.findPartnerByTeam_Id(teamId, cond, pageable);
+        Page<PartnerSellerDto> partners = sellerService.findPartnerByTeam_Id(teamId, cond, pageable);
         model.addAttribute("partners", partners);
 
         model.addAttribute("prev", partners.getPageable().previousOrFirst().getPageNumber());
@@ -100,7 +99,7 @@ public class SellerController {
         model.addAttribute("curPage", partners.getNumber());
         model.addAttribute("cond", cond);
 
-        return "basic/partners";
+        return "basic/partnerSellers";
     }
 
     //판매자 상세

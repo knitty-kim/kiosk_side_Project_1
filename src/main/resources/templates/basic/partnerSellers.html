@@ -88,11 +88,14 @@
             <input type="text" class="form-control" placeholder="이메일" name="email" th:field="*{email}">
           </div>
           <div class="col">
-            <select class="form-select" name="status">
-              <option value="" th:selected="*{status == null}">상태 선택</option>
-              <option value="OPEN" th:selected="*{status != null and status.toString() == 'OPEN'}">OPEN</option>
-              <option value="CLOSED" th:selected="*{status != null and status.toString() == 'CLOSED'}">CLOSED</option>
-              <option value="DORMANT" th:selected="*{status != null and status.toString() == 'DORMANT'}">DORMANT</option>
+            <select class="form-select" name="sellerStatus">
+              <option value="" th:selected="*{sellerStatus == null}">상태 선택</option>
+              <option value="OPEN"
+                      th:selected="*{sellerStatus != null and sellerStatus.toString() == 'OPEN'}">OPEN</option>
+              <option value="CLOSED"
+                      th:selected="*{sellerStatus != null and sellerStatus.toString() == 'CLOSED'}">CLOSED</option>
+              <option value="DORMANT"
+                      th:selected="*{sellerStatus != null and sellerStatus.toString() == 'DORMANT'}">DORMANT</option>
             </select>
           </div>
           <div class="col">
@@ -112,7 +115,7 @@
           <th>파트너 명</th>
           <th>연락처</th>
           <th>이메일</th>
-          <th>생성일</th>
+<!--          <th>생성일</th>-->
           <th>제휴일</th>
           <th>상태</th>
           <th>제휴</th>
@@ -120,17 +123,15 @@
         </thead>
         <tbody>
           <tr th:each="partner : ${partners}">
-            <td><a href="#"
-                   th:text="${partner.sellerId}"
-                   onclick="notYet()">판매자 ID</a></td>
+            <td><a th:href="@{/item-list(sellerName=${partner.sellerName})}"
+                   th:text="${partner.sellerId}">판매자 ID</a></td>
 
-            <td><a href="#"
-                   th:text="${partner.sellerName}"
-                   onclick="notYet()">판매자 명</a></td>
+            <td><a th:href="@{/item-list(sellerName=${partner.sellerName})}"
+                   th:text="${partner.sellerName}">판매자 명</a></td>
 
             <td th:text="${partner.sellerPhNumber}">333-333-3333</td>
             <td th:text="${partner.sellerEmail}">us@us.or</td>
-            <td th:text="${#temporals.format(partner.sellerCreatedDate, 'yyyy-MM-dd')}">생성일</td>
+<!--            <td th:text="${#temporals.format(partner.sellerCreatedDate, 'yyyy-MM-dd')}">생성일</td>-->
             <td th:text="${#temporals.format(partner.partnerCreatedDate, 'yyyy-MM-dd')}">제휴일</td>
             <td class="fw-bolder"
                 th:classappend="${partner.sellerStatus.toString() == 'OPEN'} ? 'text-success' :
@@ -148,22 +149,34 @@
     <!-- 페이징 바 -->
     <div class="row mt-4" id="pageSection">
       <ul class="pagination justify-content-center">
+
         <li class="page-item">
-          <a class="page-link" th:if="${hasPrev == true}"
+          <a class="page-link"
+             th:if="${hasPrev == true}"
              th:href="@{{teamId}(teamId=${session.id},
              page=${prev}, id=${cond.id}, name=${cond.name},
-             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Prev</a></li>
-        <li class="page-item" th:classappend="${pageNumber == curPage} ? 'active'"
-            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
-          <a class="page-link" th:href="@{{teamId}(teamId=${session.id},
-             page=${pageNumber}, id=${cond.id}, name=${cond.name},
-             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}" th:text="${pageNumber}">current</a>
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.sellerStatus})}">Prev</a>
         </li>
+
+        <li class="page-item"
+            th:classappend="${pageNumber == curPage} ? 'active'"
+            th:each="pageNumber : ${#numbers.sequence(startPage,endPage)}">
+
+          <a class="page-link"
+             th:href="@{{teamId}(teamId=${session.id},
+             page=${pageNumber}, id=${cond.id}, name=${cond.name},
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.sellerStatus})}"
+             th:text="${pageNumber}">current</a>
+        </li>
+
         <li class="page-item">
-          <a class="page-link" th:if="${hasNext == true}"
+          <a class="page-link"
+             th:if="${hasNext == true}"
              th:href="@{{teamId}(teamId=${session.id},
              page=${next}, id=${cond.id}, name=${cond.name},
-             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.status})}">Next</a></li>
+             phNumber=${cond.phNumber}, email=${cond.email}, status=${cond.sellerStatus})}">Next</a>
+        </li>
+
       </ul>
     </div>
 

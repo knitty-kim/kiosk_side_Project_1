@@ -3,12 +3,10 @@ package com.side.portfolio.demo.repository.custom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.side.portfolio.demo.domain.Partner;
 import com.side.portfolio.demo.dto.condition.*;
 import com.side.portfolio.demo.status.SellerStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -27,10 +25,10 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<PartnerDto> searchPartnerByTeamId(Long teamId, PartnerSearchCond cond, Pageable pageable) {
+    public Page<PartnerSellerDto> searchPartnerByTeamId(Long teamId, PartnerSearchCond cond, Pageable pageable) {
 
-        List<PartnerDto> content = queryFactory
-                .select(new QPartnerDto(seller.id, seller.name, team.id,
+        List<PartnerSellerDto> content = queryFactory
+                .select(new QPartnerSellerDto(seller.id, seller.name, team.id,
                         seller.phNumber, seller.email, seller.status, partner.status,
                         seller.createdDate, partner.createdDate))
                 .from(partner)
@@ -39,7 +37,7 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
                 .where(partner.team.id.eq(teamId),
                         idEq(cond.getId()), nameEq(cond.getName()),
                         phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
-                        statusEq(cond.getStatus()))
+                        statusEq(cond.getSellerStatus()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -52,7 +50,7 @@ public class SellerCustomRepositoryImpl implements SellerCustomRepository {
                 .where(partner.team.id.eq(teamId),
                         idEq(cond.getId()), nameEq(cond.getName()),
                         phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
-                        statusEq(cond.getStatus()));
+                        statusEq(cond.getSellerStatus()));
 
         return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
 

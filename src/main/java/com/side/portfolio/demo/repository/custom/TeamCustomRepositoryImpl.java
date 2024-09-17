@@ -3,9 +3,7 @@ package com.side.portfolio.demo.repository.custom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.side.portfolio.demo.dto.condition.QTeamDto;
-import com.side.portfolio.demo.dto.condition.TeamDto;
-import com.side.portfolio.demo.dto.condition.TeamSearchCond;
+import com.side.portfolio.demo.dto.condition.*;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +14,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.side.portfolio.demo.domain.QPartner.partner;
+import static com.side.portfolio.demo.domain.QSeller.seller;
 import static com.side.portfolio.demo.domain.QTeam.team;
 
 @Repository
@@ -24,6 +24,35 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository{
 
     private final JPAQueryFactory queryFactory;
 
+    @Override
+    public Page<PartnerTeamDto> searchPartnerBySellerId(Long sellerId, PartnerSearchCond cond, Pageable pageable) {
+        List<PartnerTeamDto> content = queryFactory
+                .select(new QPartnerTeamDto(team.id, team.name, seller.id,
+                        team.phNumber, team.email, team.status, partner.status,
+                        team.createdDate, partner.createdDate))
+                .from(partner)
+                .join(partner.team, team)
+                .join(partner.seller, seller)
+                .where(partner.seller.id.eq(sellerId),
+                        idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getTeamStatus()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(partner.count())
+                .from(partner)
+                .join(partner.team, team)
+                .join(partner.seller, seller)
+                .where(partner.seller.id.eq(sellerId),
+                        idEq(cond.getId()), nameEq(cond.getName()),
+                        phNumberEq(cond.getPhNumber()), emailEq(cond.getEmail()),
+                        statusEq(cond.getTeamStatus()));
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
+    }
 
     @Override
     public Page<TeamDto> searchTeam(TeamSearchCond cond, Pageable pageable) {
@@ -91,4 +120,6 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository{
     private BooleanExpression zipcodeEq(String zipcode) {
         return StringUtils.hasText(zipcode) ? team.address.zipcode.eq(zipcode) : null;
     }
+
+
 }

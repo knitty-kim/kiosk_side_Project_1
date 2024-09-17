@@ -1,6 +1,7 @@
 package com.side.portfolio.demo.dto.condition;
 
 import com.side.portfolio.demo.status.SellerStatus;
+import com.side.portfolio.demo.status.TeamStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,6 @@ public class PartnerSearchCond {
     private String name;
     private String phNumber;
     private String email;
-    private SellerStatus status;
-
+    private SellerStatus sellerStatus;
+    private TeamStatus teamStatus;
 }

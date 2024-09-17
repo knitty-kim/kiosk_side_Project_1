@@ -73,7 +73,7 @@
             <a th:if="${session.types} == 'master'"
                th:href="@{/team/team-list}" class="dropdown-item">전체 팀 목록</a>
 
-            <a th:if="${session.types} == 'master'"
+            <a th:if="${session.types} == 'master' or ${session.types} == 'team'"
                th:href="@{/seller/seller-list}" class="dropdown-item">전체 판매자 목록</a>
 
             <a th:if="${session.types} == 'team'"
@@ -82,8 +82,8 @@
             <a th:if="${session.types} == 'team'"
                th:href="@{/team/update/{teamId}(teamId=${session.id})}" class="dropdown-item">팀 정보 수정</a>
 
-<!--            <a th:if="${session.types} == 'seller'"-->
-<!--               th:href="@{/team/partner-team-list/{sellerId}(sellerId=${session.id})}" class="dropdown-item">제휴 팀 목록</a>-->
+            <a th:if="${session.types} == 'seller'"
+               th:href="@{/team/partner-list/{sellerId}(sellerId=${session.id})}" class="dropdown-item">제휴 팀 목록</a>
 
             <a th:if="${session.types} == 'seller'"
                th:href="@{/seller/update/{sellerId}(sellerId=${session.id})}" class="dropdown-item">판매자 정보 수정</a>

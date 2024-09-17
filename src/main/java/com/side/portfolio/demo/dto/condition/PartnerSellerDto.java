@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class PartnerDto {
+public class PartnerSellerDto {
 
     private Long sellerId;
     private String sellerName;
@@ -22,10 +22,10 @@ public class PartnerDto {
     private LocalDateTime partnerCreatedDate;
 
     @QueryProjection
-    public PartnerDto(Long sellerId, String sellerName, Long teamId,
-                      String sellerPhNumber, String sellerEmail,
-                      SellerStatus sellerStatus, PartnerStatus partnerStatus,
-                      LocalDateTime sellerCreatedDate, LocalDateTime partnerCreatedDate) {
+    public PartnerSellerDto(Long sellerId, String sellerName, Long teamId,
+                            String sellerPhNumber, String sellerEmail,
+                            SellerStatus sellerStatus, PartnerStatus partnerStatus,
+                            LocalDateTime sellerCreatedDate, LocalDateTime partnerCreatedDate) {
         this.sellerId = sellerId;
         this.sellerName = sellerName;
         this.teamId = teamId;

@@ -128,8 +128,8 @@
           <th>연락처</th>
           <th>이메일</th>
           <th>티켓 수</th>
-          <th>생성일</th>
-          <th>수정일</th>
+          <th th:if="${session.types == 'master'}">생성일</th>
+          <th th:if="${session.types == 'master'}">수정일</th>
           <th>상태</th>
           <th>Street</th>
           <th>City</th>
@@ -144,8 +144,10 @@
             <td th:text="${team.phNumber}">333-333-3333</td>
             <td th:text="${team.email}">us@us.or</td>
             <td class="text-success fw-bold" th:text="${team.tickets}">3000</td>
-            <td th:text="${#temporals.format(team.createdDate, 'yyyy-MM-dd')}">생성일</td>
-            <td th:text="${#temporals.format(team.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
+            <td th:if="${session.types == 'master'}"
+                th:text="${#temporals.format(team.createdDate, 'yyyy-MM-dd')}">생성일</td>
+            <td th:if="${session.types == 'master'}"
+                th:text="${#temporals.format(team.modifiedDate, 'yyyy-MM-dd')}">수정일</td>
             <td class="fw-bolder"
                 th:classappend="${team.status != null and team.status.toString() == 'ACTIVE'} ? 'text-success' : 'text-secondary'"
                 th:text="${team.status}">상태</td>

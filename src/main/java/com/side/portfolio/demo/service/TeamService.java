@@ -3,8 +3,7 @@ package com.side.portfolio.demo.service;
 import com.side.portfolio.demo.domain.Partner;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
-import com.side.portfolio.demo.dto.condition.TeamDto;
-import com.side.portfolio.demo.dto.condition.TeamSearchCond;
+import com.side.portfolio.demo.dto.condition.*;
 import com.side.portfolio.demo.repository.PartnerJpaRepository;
 import com.side.portfolio.demo.repository.SellerJpaRepository;
 import com.side.portfolio.demo.repository.TeamJpaRepository;
@@ -82,6 +81,12 @@ public class TeamService {
 
         return result;
 
+    }
+
+    //제휴 팀 검색 조회
+    public Page<PartnerTeamDto> findPartnerBySeller_Id(Long sellerId, PartnerSearchCond cond, Pageable pageable) {
+        Page<PartnerTeamDto> partners = teamJpaRepository.searchPartnerBySellerId(sellerId, cond, pageable);
+        return partners;
     }
 
     //전체 팀 조회

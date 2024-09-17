@@ -137,20 +137,22 @@
                                 'text-secondary')"
                 th:text="${seller.status}">상태</td>
             <td th:text="${seller.remark}">비고</td>
-            <td th:if="${session.types == 'team'}">
+            <td th:if="${session.types == 'team'} and ${seller.status.toString() == 'OPEN'}">
               <button class="btn btn-primary" type="button" id="button-addon2"
                       th:data-id="${seller.id}"
                       th:data-status="${seller.status}"
                       onclick="addConnection(this)">제휴 맺기</button>
             </td>
+
+            <!-- CSS 용 빈 태그 -->
+            <td th:if="${session.types == 'team'} and ${seller.status.toString() != 'OPEN'}">
+            </td>
+
             <td th:if="${session.types == 'master'}">
-<!--              th:data-id="${seller.id}"-->
-<!--              th:data-status="${seller.status}"-->
               <button class="btn btn-primary" type="button" id="button-addon3"
                       th:onclick="|location.href='@{/seller/update/{sellerId}(sellerId=${seller.id})}'|">수정</button>
             </td>
-  <!--            <a class="btn btn-primary" role="button" onclick="addConnection(this)">제휴 맺기</a>-->
-  <!--               th:href="@{/team/partners/add/{teamId}(teamId=${session.id})}"-->
+
           </tr>
         </tbody>
       </table>

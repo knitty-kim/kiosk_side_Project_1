@@ -1,11 +1,12 @@
 package com.side.portfolio.demo.controller;
 
+import com.side.portfolio.demo.Message;
 import com.side.portfolio.demo.domain.Address;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.PartnerCreateForm;
 import com.side.portfolio.demo.dto.TeamUpdateForm;
-import com.side.portfolio.demo.dto.condition.TeamDto;
-import com.side.portfolio.demo.dto.condition.TeamSearchCond;
+import com.side.portfolio.demo.dto.condition.*;
+import com.side.portfolio.demo.service.LogInService;
 import com.side.portfolio.demo.service.TeamService;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class TeamController {
 
     private final TeamService teamService;
+    private final LogInService logInService;
 
     //전체 팀 검색 조회 목록
     @GetMapping("/team-list")
@@ -70,7 +72,7 @@ public class TeamController {
 
         if (teamService.isPartner(form.getTeamId(), form.getSellerId())) {
             result.add(false);
-            result.add("the seller is already connected!");
+            result.add("이미 제휴된 판매자입니다");
         } else {
             //제휴 파트너 생성
             teamService.createPartner(form.getTeamId(), form.getSellerId());
@@ -80,6 +82,42 @@ public class TeamController {
         }
 
         return result;
+    }
+
+    //제휴 팀 목록
+    @GetMapping("/partner-list/{sellerId}")
+    public String partnerTeamList(Model model, HttpServletRequest request,
+                              @PathVariable Long sellerId, PartnerSearchCond cond,
+                              @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        if (logInService.invalidAccess(request.getSession(), sellerId)) {
+            model.addAttribute("data", new Message("잘못된 접근입니다!", "/"));
+            return "message";
+        }
+
+        Page<PartnerTeamDto> partners = teamService.findPartnerBySeller_Id(sellerId, cond, pageable);
+        model.addAttribute("partners", partners);
+
+        model.addAttribute("prev", partners.getPageable().previousOrFirst().getPageNumber());
+        model.addAttribute("next", partners.getPageable().next().getPageNumber());
+
+        model.addAttribute("hasPrev", partners.hasPrevious());
+        model.addAttribute("hasNext", partners.hasNext());
+
+        int groupSize = 3; //화면에 보여질 페이지 개수
+        int curPageGrp = (int) Math.floor((double) partners.getNumber() / groupSize); //현재 페이지가 속한 그룹 번호
+        model.addAttribute("startPage", Math.max(0, ((curPageGrp) * groupSize)));
+
+        int endPage = Math.min(partners.getTotalPages() - 1, ((curPageGrp + 1) * groupSize) - 1);
+        if (endPage == -1) {
+            endPage = 0;
+        }
+
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("curPage", partners.getNumber());
+        model.addAttribute("cond", cond);
+
+        return "basic/partnerTeams";
     }
 
     //팀 수정 폼
