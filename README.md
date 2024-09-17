@@ -120,16 +120,9 @@
 # 2. 프로젝트 설명
 ## 🖥️ DB 설계
 <p align="center">
-	<img src="https://github.com/user-attachments/assets/bd08599f-dd50-4dce-95c0-2458f620df24" />
+	<img src="https://github.com/user-attachments/assets/73aa9adb-91dc-40ef-ba9a-542b1a2b00fe" />
 </p>
-<!-- <details>
-  <summary><b>DB 설계</b></summary>
-  <div markdown="1">
-    <ul>
-	
-    </ul>
-  </div>
-</details> -->
+
 <hr>
 <br>
 
@@ -601,6 +594,183 @@
 	  </div>
 	</details>
      </li>
+     <li>
+	<details>
+	  <summary><b>24.09.03 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>전체 페이지 Navigation, Header, Footer 추가</li>
+	      <li>전체 페이지 CSS 통일</li>
+	      <li>제휴 판매자 목록 내 페이징 버튼 및 기능 추가</li>
+	      <li>제휴 판매자 목록 페이지 내 검색창 추가</li>
+	      <li>제휴 판매자 목록 검색을 위한 PartnerSearchCond 객체 추가</li>
+	      <li>제휴 판매자 목록 검색 기능 추가</li>
+	      <li>제휴 판매자 목록 검색 버튼 동작 테스트</li>
+	      <li>상품 목록, 상품 상세, 주문 목록, 장바구니 목록 상단 버튼 통일</li>
+	      <li>팀 목록, 판매자 목록, 제휴 판매자 목록 상단 버튼 통일</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.05 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>주문된 목록 페이지 출력 시, "주문자 명" 기준 그룹화하여 보이도록 수정</li>
+	      <li>"주문자 명"에 대한 열기/접기 토글 버튼 추가</li>
+	      <li>주문된 목록 페이지 내 검색창 추가 및 기능 구현</li>
+	      <li>주문된 목록 날짜 조건 세팅을 위한 FlatPickr 라이브러리 추가</li>
+	      <li>주문된 목록 검색 기능 테스트</li>
+	      <li>주문된 목록 내 주문자 당 "수락, 거절" 기능 구현</li>
+	      <li>수락되거나 거절된 주문인 경우, 재수락 및 재거절 제한 기능 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.06 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>상품 상세 페이지용 이미지 파일들 추가</li>
+	      <li>상품 상세 페이지 로드 시, 랜덤 이미지가 출력되도록 수정</li>
+	      <li>팀 목록 내 팀 ID, 팀 명에 대한 링크 제거</li>
+	      <li>판매자 ID, 판매자 명 클릭 시, 해당 판매자가 판매중인 상품 목록 검색 링크 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.10 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>상품 상세 로드 시, 각 번호의 이미지가 없는 경우, 각각 랜덤 이미지를 출력하도록 수정</li>
+	      <li>판매자가 상품 등록/수정 시, 폼에 해당 판매자가 고정되도록 수정</li>
+	      <li>판매자는 자신의 상품만 변경 가능하도록 수정</li>
+	      <li>판매자는 상품 목록 조회 시, 자신의 상품만 보이도록 수정</li>
+	      <li>판매자는 상태 수정 시, "DORMANT"는 선택하지 못하도록 수정</li>
+	      <li>마스터는 판매자 상태 수정 시, 모든 상태가 선택 가능하도록 수정</li>
+	      <li>판매자 초기화 데이터 중 Address 추가</li>
+	      <li>마스터, 판매자 로그인 후, 정보 수정 테스트</li>
+	      <li>판매자 정보 수정 페이지 추가</li>
+	      <li>판매자 정보 수정 폼 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.11 Wed</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>회원가입 시, 모든 필드에 대한 필수 입력 유효성 검사(Bean Validation) 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.12 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>판매자 정보 수정 시, 비동기 아이디 중복 체크 및 유효성 검사 함수 추가</li>
+	      <li>판매자 정보 수정 시, 연락처, 이메일 유효성 검사 함수 추가</li>
+	      <li>아이디 중복 체크 및 아이디, 연락처, 이메일 유효성 검사 함수 공통 js 파일(commonfunc.js)로 추출</li>
+	      <li>판매자 정보 수정 시, 비밀번호 변경은 제외하도록 수정</li>
+	      <li>판매자 정보 수정 중, 유효성 검사 실패 시에 해당하는 CSS 및 출력 메시지 추가</li>
+	      <li>판매자 정보 수정 테스트</li>
+	      <li>teamService.signUp/sellerService.signUp 메서드 -> save로 이름 수정</li>
+	      <li>AWS에 애플리케이션 재배포</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.13 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>회원 가입 시, 가입 유형에 대한 유효성 검사 추가</li>
+	      <li>회원 가입 시, 비어있는 필드가 있는 경우, 가입 제한 기능 추가</li>
+	      <li>회원 가입 시, 가입 유형 미선택 시, 아이디 입력 불가 기능 추가</li>
+	      <li>팀 정보 수정 페이지, 팀 수정 폼, 팀 정보 수정 기능 추가</li>
+	      <li>회원 가입 및 팀 정보 수정 시, 비동기 아이디 중복 체크 및 아이디/연락처/이메일 유효성 검사 추가</li>
+	      <li>회원 가입 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>    
+     <li>
+	<details>
+	  <summary><b>24.09.15 Sun</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>팀 정보 수정 시, 비동기 아이디 중복 체크 및 아이디/연락처/이메일 유효성 검사 함수 추가</li>
+	      <li>팀 정보 페이지에 "티켓 수" 출력되도록 수정</li>
+	      <li>마스터만 "티켓 수"를 변경 가능하도록 수정</li>
+	      <li>팀 목록 페이지 내 "수정" 버튼 추가</li>
+	      <li>마스터의 특정 팀/판매자 정보 수정 기능 추가</li>
+	      <li>팀 정보 수정 테스트</li>
+	      <li>마스터의 팀/판매자 정보 수정 테스트</li>
+	      <li>팀이 주문하는 경우, 티켓 수가 감소하도록 수정</li>
+	      <li>팀이 주문 취소하는 경우, 티켓 수가 복구되도록 수정</li>
+	      <li>팀으로 로그인한 경우, 상품 목록/주문 목록 페이지에 "티켓 수"가 나타나도록 수정</li>
+	      <li>주문 테스트</li>
+	      <li>주문된 목록 페이지의 그룹 헤더를 "주문자" -> "주문번호"로 변경</li>
+	      <li>주문된 목록 페이지에서 "ORDERED"인 주문만 수락 또는 거절할 수 있도록 수정</li>
+	      <li>주문된 목록 페이지 내 주문 검색 조건으로 "주문 ID" 추가</li>
+	      <li>주문된 목록 페이지(sellerOrders.html) 경로 변경(basic -> pay)</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.16 Mon</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>비밀번호 변경 전 기존 비밀번호 확인 페이지 및 기능 추가</li>
+	      <li>비밀번호 변경 페이지 및 기능 추가</li>
+	      <li>비밀번호 변경 시, 새 비밀번호에 대한 형식 및 유효성 검사 추가</li>
+	      <li>비밀번호 변경 성공 시, 로그아웃 강제</li>
+	      <li>팀/판매자 정보 수정 내 "비밀번호 변경" 버튼 추가</li>
+	      <li>팀/판매자 비밀번호 변경 테스트</li>
+	      <li>회원가입 시, 비밀번호에 대한 유효성 검사 추가</li>
+	      <li>회원가입 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>        
+     <li>
+	<details>
+	  <summary><b>24.09.17 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>팀/판매자 회원탈퇴 페이지 및 기능 추가</li>
+	      <li>회원탈퇴 전 기존 비밀번호 확인 페이지를 경유하도록 구현</li>
+	      <li>회원탈퇴 시, 팀/판매자의 상태를 "DORMANT"로 하여 업데이트하도록 구현</li>
+	      <li>탈퇴한 계정은 로그인이 제한되도록 수정</li>
+	      <li>팀/판매자에게 진행중인 주문("ORDERED", "ACCEPTED")이 있다면 탈퇴 불가하도록 구현</li>
+	      <li>판매자 탈퇴 시, 판매중인 모든 상품이 CLOSED 되도록 구현</li>
+	      <li>회원탈퇴 테스트</li>
+	      <li>판매자가 주문 거절 시, 주문한 팀의 "티켓 수"가 복구되도록 수정</li>
+	      <li>판매자 용 "제휴 팀 목록(partnerTeams)" 페이지 및 조회 기능 추가</li>
+	      <li>"제휴 팀 목록", "제휴 판매자 목록" 내 "생성일" 필드 삭제</li>
+	      <li>제휴 팀 목록 내 "팀 ID", "팀 명" 클릭 시, 해당 팀 명으로 주문된 목록 조회하는 기능 추가</li>
+	      <li>전체 판매자 목록 내 판매자 상태가 "OPEN"인 경우에만 "제휴 맺기" 버튼이 출력되도록 수정</li>
+	      <li>제휴 판매자 목록 페이지 명을 "partners" -> "partnerSellers"로 변경</li>
+	      <li>제휴 판매자 목록 DTO 명을 "PartnerDto" -> "PartnerSellerDto"로 변경</li>
+	      <li>제휴 팀 목록 DTO를 "PartnerTeamDto"로 생성</li>
+	      <li>AWS에 애플리케이션 재배포</li>
+	      <li>리드미 업데이트 - DB 설계 사진 변경, 개발경과 업데이트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>    
+	    
+     
     </ul>
   </div>
 </details>
