@@ -4,9 +4,14 @@ import com.side.portfolio.demo.domain.Address;
 import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.SignUpForm;
+import com.side.portfolio.demo.dto.condition.OrderedItemDto;
+import com.side.portfolio.demo.dto.condition.OrderedItemSearchCond;
 import com.side.portfolio.demo.service.FileService;
+import com.side.portfolio.demo.service.OrderService;
 import com.side.portfolio.demo.service.SellerService;
 import com.side.portfolio.demo.service.TeamService;
+import com.side.portfolio.demo.status.ItemStatus;
+import com.side.portfolio.demo.status.OrderStatus;
 import com.side.portfolio.demo.status.SellerStatus;
 import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +24,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +37,7 @@ public class MainController {
     private final TeamService teamService;
     private final SellerService sellerService;
     private final FileService fileService;
+    private final OrderService orderService;
 //    private final LoginService loginService;
 
     @GetMapping("/")
@@ -115,13 +121,18 @@ public class MainController {
         return "about";
     }
 
-    //비밀번호 변경 가능 여부 확인 폼
-    @GetMapping("/checkPwForm")
+    //기존 비밀번호 확인 폼 -> 비밀번호 변경 / 회원탈퇴
+    @GetMapping("/checkPwForm/{action}")
     public String checkPwForm(@RequestParam(defaultValue = "/") String redirectURI,
-                           HttpServletRequest request) {
+                           @PathVariable String action, Model model, HttpServletRequest request) {
 
         request.getSession().setAttribute("redirectURI", redirectURI);
+
+        //action ; 'pw' or 'withdraw'
+        model.addAttribute("action", action);
+
         return "basic/checkPw";
+
     }
 
     //비밀번호 변경 가능 여부 확인
@@ -145,8 +156,8 @@ public class MainController {
                 return true;
             } else {
                 return false;
-
             }
+
         }
 
     }
@@ -155,11 +166,80 @@ public class MainController {
     @GetMapping("/updatePwForm")
     public String updatePwForm(@RequestParam(defaultValue = "/") String redirectURI,
                               HttpServletRequest request) {
-
         request.getSession().setAttribute("redirectURI", redirectURI);
         return "basic/updatePw";
     }
 
+    //회원탈퇴 폼
+    @GetMapping("/withdrawForm")
+    public String withdrawForm(@RequestParam(defaultValue = "/") String redirectURI,
+                               HttpServletRequest request) {
+        log.info("withdraw page");
+        request.getSession().setAttribute("redirectURI", redirectURI);
+        return "basic/withdraw";
+    }
+
+    //회원탈퇴 확정
+    @ResponseBody
+    @PostMapping("/withdraw")
+    public String withdraw(Long id, String type, HttpServletRequest request) {
+
+        if (type.equals("team")) {
+            Team team = teamService.findById(id);
+
+            //ORDERED, ACCEPTED
+            boolean checkOrdered = team.getOrders().stream()
+                    .anyMatch(order -> OrderStatus.ORDERED.equals(order.getStatus()));
+
+            boolean checkAccepted = team.getOrders().stream()
+                    .anyMatch(order -> OrderStatus.ACCEPTED.equals(order.getStatus()));
+
+            if (checkOrdered || checkAccepted) {
+                return "fail";
+
+            } else {
+                team.setUpStatus(TeamStatus.DORMANT);
+                team.setUpModifiedDate(LocalDateTime.now());
+                teamService.save(team);
+            }
+
+        } else {
+            Seller seller = sellerService.findById(id);
+
+            //ORDERED, ACCEPTED
+            List<OrderedItemDto> orderedItems = orderService.findOrderItemBySeller_Id(id, new OrderedItemSearchCond());
+
+            int orderedSize = (int) orderedItems.stream()
+                    .filter(orderedItem -> OrderStatus.ORDERED.equals(orderedItem.getOrderStatus()))
+                    .count();
+
+            int acceptedSize = (int) orderedItems.stream()
+                    .filter(orderedItem -> OrderStatus.ACCEPTED.equals(orderedItem.getOrderStatus()))
+                    .count();
+
+            if (orderedSize > 0 || acceptedSize > 0) {
+                return "fail";
+            }
+
+            //판매자의 모든 상품에 대해 "CLOSED" 처리
+            seller.getItems()
+                    .forEach(item -> item.setUpStatus(ItemStatus.CLOSED));
+
+            seller.setUpStatus(SellerStatus.DORMANT);
+            seller.setUpModifiedDate(LocalDateTime.now());
+            sellerService.save(seller);
+        }
+
+        //세션 종료
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "pass";
+
+    }
+    
     //상세 페이지 로드 시, 이미지 파일 불러오기
     @ResponseBody
     @GetMapping("/images/{filename}")

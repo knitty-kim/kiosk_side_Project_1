@@ -73,6 +73,7 @@ public class SellerService {
         return sellers;
     }
 
+    //판매자 id 조회
     public Seller findById(Long sellerId) {
         return sellerJpaRepository.findById(sellerId).get();
     }
@@ -82,8 +83,6 @@ public class SellerService {
         Page<Seller> result = sellerJpaRepository.findAll(pageable);
         return result;
     }
-    
-
 
 
 }

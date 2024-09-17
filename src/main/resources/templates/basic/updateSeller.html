@@ -96,7 +96,8 @@
             <div class="col text-end">
                 <p th:utext="'<strong>가입일 :</strong> ' + ${#temporals.format(sellerUpdateForm.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                 <p th:utext="'<strong>수정일 :</strong> ' + ${#temporals.format(sellerUpdateForm.modifiedDate, 'yyyy-MM-dd HH:mm')}"></p>
-                <button type="button" class="btn btn-primary" onclick="location.href='/checkPwForm'">비밀번호 변경</button>
+                <button type="button" class="btn btn-primary"
+                        onclick="location.href='/checkPwForm/pw'">비밀번호 변경</button>
             </div>
         </div>
 

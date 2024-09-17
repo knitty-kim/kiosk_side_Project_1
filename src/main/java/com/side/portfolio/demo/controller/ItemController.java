@@ -62,7 +62,7 @@ public class ItemController {
         String type = (String) session.getAttribute(SessionConst.LOGIN_TYPES);
         log.info("type={}", type);
 
-        //로그인 한 회원이 seller인 경우, cond 조건에 판매자명으로 sellerName 강제 세팅
+        //판매자인 경우, cond 조건에 판매자명으로 sellerName 강제 세팅
         if (type.equals("seller")) {
             Long sellerId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
             Seller seller = sellerService.findById(sellerId);
@@ -70,6 +70,7 @@ public class ItemController {
             cond.setSellerName(seller.getName());
         }
 
+        //팀인 경우, "티켓 수" 출력
         if (type.equals("team")) {
             Long teamId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
             Team team = teamService.findById(teamId);

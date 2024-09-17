@@ -58,7 +58,7 @@
     <div class="container-fluid bg-light" style="max-width: 1200px">
         <!-- 메뉴 명 -->
         <div class="text-center mb-xl-4">
-            <h2>비밀번호 변경</h2>
+            <h2>비밀번호 확인</h2>
         </div>
 
         <div class="row d-flex justify-content-center">
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="input-pw" class="form-label">비밀번호 확인</label>
+                        <label for="input-pw" class="form-label">기존 비밀번호 확인</label>
                         <input class="form-control" placeholder="비밀번호를 입력하세요" type="password" id="input-pw">
                     </div>
 
@@ -78,6 +78,7 @@
                         <button class="w-100 btn btn-primary btn-lg w-100" type="button"
                                 th:data-id="${session.id}"
                                 th:data-types="${session.types}"
+                                th:data-action="${action}"
                                 onclick="confirmPw(this)">확인</button>
                     </div>
 
@@ -99,8 +100,9 @@
 
     function confirmPw(button) {
 
-        let clientType = button.getAttribute("data-types");
         let clientId = button.getAttribute("data-id");
+        let clientType = button.getAttribute("data-types");
+        let clientAction = button.getAttribute("data-action");
         let pw = $("#input-pw").val();
 
         if (clientType == 'seller' || clientType == 'team') {
@@ -116,8 +118,16 @@
                 success: function (response) {
 
                     if (response) {
-                        window.location.href = "/updatePwForm";
+                        if (clientAction == "pw") {
+                            //비밀번호 변경 폼으로 이동
+                            window.location.href = "/updatePwForm";
+                        } else if (clientAction == "withdraw") {
+                            //회원탈퇴 페이지로 이동
+                            window.location.href = "/withdrawForm";
+                        }
+
                     } else {
+                        alert("비밀번호가 틀렸습니다!");
                         window.location.reload();
                     }
 

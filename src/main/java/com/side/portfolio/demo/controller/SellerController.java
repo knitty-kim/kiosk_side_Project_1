@@ -188,6 +188,7 @@ public class SellerController {
 
     }
 
+    //판매자 Name 중복 검사
     @ResponseBody
     @GetMapping("/validate")
     public List<Object> validateName(Long id, String name) {

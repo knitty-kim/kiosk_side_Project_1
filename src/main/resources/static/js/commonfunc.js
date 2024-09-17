@@ -24,7 +24,7 @@ function validateTypes(id, text) {
 
 }
 
-//판매자 Name 중복 검사
+//팀/판매자 Name 중복 검사
 function validateName(dbId, type, id, text) {
 
     let clientId = dbId;

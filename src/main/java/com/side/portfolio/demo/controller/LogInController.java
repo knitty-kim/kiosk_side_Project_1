@@ -4,6 +4,8 @@ import com.side.portfolio.demo.domain.Seller;
 import com.side.portfolio.demo.domain.Team;
 import com.side.portfolio.demo.dto.LogInForm;
 import com.side.portfolio.demo.service.LogInService;
+import com.side.portfolio.demo.status.SellerStatus;
+import com.side.portfolio.demo.status.TeamStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,10 @@ public class LogInController {
                 bindingResult.reject("ID or PW is Not Matched",
                         "아이디 또는 비밀번호가 맞지 않습니다!");
                 return "login";
+            } else if (team.getStatus().equals(TeamStatus.DORMANT)) {
+                bindingResult.reject("Account is DORMANT",
+                        "탈퇴한 계정입니다! 관리자에게 문의바랍니다");
+                return "login";
             }
 
             HttpSession session = request.getSession();
@@ -87,6 +93,10 @@ public class LogInController {
             if (seller == null) {
                 bindingResult.reject("ID or PW is Not Matched",
                         "아이디 또는 비밀번호가 맞지 않습니다!");
+                return "login";
+            } else if (seller.getStatus().equals(SellerStatus.DORMANT)) {
+                bindingResult.reject("Account is DORMANT",
+                        "탈퇴한 계정입니다! 관리자에게 문의바랍니다");
                 return "login";
             }
 
