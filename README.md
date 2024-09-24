@@ -120,16 +120,9 @@
 # 2. 프로젝트 설명
 ## 🖥️ DB 설계
 <p align="center">
-	<img src="https://github.com/user-attachments/assets/bd08599f-dd50-4dce-95c0-2458f620df24" />
+	<img src="https://github.com/user-attachments/assets/73aa9adb-91dc-40ef-ba9a-542b1a2b00fe" />
 </p>
-<!-- <details>
-  <summary><b>DB 설계</b></summary>
-  <div markdown="1">
-    <ul>
-	
-    </ul>
-  </div>
-</details> -->
+
 <hr>
 <br>
 
@@ -156,6 +149,11 @@
 
 <hr>
 <br>
+
+## ⛱️ 개발 환경
+<p align="center">
+	<img src="https://github.com/user-attachments/assets/222bfaff-84e0-4d98-a5ab-dc0f56a6559c"/>
+</p>
 <br>
 <br>
 <br>
@@ -601,6 +599,181 @@
 	  </div>
 	</details>
      </li>
+     <li>
+	<details>
+	  <summary><b>24.09.03 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>전체 페이지 Navigation, Header, Footer 추가</li>
+	      <li>전체 페이지 CSS 통일</li>
+	      <li>제휴 판매자 목록 내 페이징 버튼 및 기능 추가</li>
+	      <li>제휴 판매자 목록 페이지 내 검색창 추가</li>
+	      <li>제휴 판매자 목록 검색을 위한 PartnerSearchCond 객체 추가</li>
+	      <li>제휴 판매자 목록 검색 기능 추가</li>
+	      <li>제휴 판매자 목록 검색 버튼 동작 테스트</li>
+	      <li>상품 목록, 상품 상세, 주문 목록, 장바구니 목록 상단 버튼 통일</li>
+	      <li>팀 목록, 판매자 목록, 제휴 판매자 목록 상단 버튼 통일</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.05 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>주문된 목록 페이지 출력 시, "주문자 명" 기준 그룹화하여 보이도록 수정</li>
+	      <li>"주문자 명"에 대한 열기/접기 토글 버튼 추가</li>
+	      <li>주문된 목록 페이지 내 검색창 추가 및 기능 구현</li>
+	      <li>주문된 목록 날짜 조건 세팅을 위한 FlatPickr 라이브러리 추가</li>
+	      <li>주문된 목록 검색 기능 테스트</li>
+	      <li>주문된 목록 내 주문자 당 "수락, 거절" 기능 구현</li>
+	      <li>수락되거나 거절된 주문인 경우, 재수락 및 재거절 제한 기능 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.06 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>상품 상세 페이지용 이미지 파일들 추가</li>
+	      <li>상품 상세 페이지 로드 시, 랜덤 이미지가 출력되도록 수정</li>
+	      <li>팀 목록 내 팀 ID, 팀 명에 대한 링크 제거</li>
+	      <li>판매자 ID, 판매자 명 클릭 시, 해당 판매자가 판매중인 상품 목록 검색 링크 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>
+     <li>
+	<details>
+	  <summary><b>24.09.10 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>상품 상세 로드 시, 각 번호의 이미지가 없는 경우, 각각 랜덤 이미지를 출력하도록 수정</li>
+	      <li>판매자가 상품 등록/수정 시, 폼에 해당 판매자가 고정되도록 수정</li>
+	      <li>판매자는 자신의 상품만 변경 가능하도록 수정</li>
+	      <li>판매자는 상품 목록 조회 시, 자신의 상품만 보이도록 수정</li>
+	      <li>판매자는 상태 수정 시, "DORMANT"는 선택하지 못하도록 수정</li>
+	      <li>마스터는 판매자 상태 수정 시, 모든 상태가 선택 가능하도록 수정</li>
+	      <li>판매자 초기화 데이터 중 Address 추가</li>
+	      <li>마스터, 판매자 로그인 후, 정보 수정 테스트</li>
+	      <li>판매자 정보 수정 페이지 추가</li>
+	      <li>판매자 정보 수정 폼 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.11 Wed</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>회원가입 시, 모든 필드에 대한 필수 입력 유효성 검사(Bean Validation) 추가</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.12 Thu</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>판매자 정보 수정 시, 비동기 아이디 중복 체크 및 유효성 검사 함수 추가</li>
+	      <li>판매자 정보 수정 시, 연락처, 이메일 유효성 검사 함수 추가</li>
+	      <li>아이디 중복 체크 및 아이디, 연락처, 이메일 유효성 검사 함수 공통 js 파일(commonfunc.js)로 추출</li>
+	      <li>판매자 정보 수정 시, 비밀번호 변경은 제외하도록 수정</li>
+	      <li>판매자 정보 수정 중, 유효성 검사 실패 시에 해당하는 CSS 및 출력 메시지 추가</li>
+	      <li>판매자 정보 수정 테스트</li>
+	      <li>teamService.signUp/sellerService.signUp 메서드 -> save로 이름 수정</li>
+	      <li>AWS에 애플리케이션 재배포</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.13 Fri</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>회원 가입 시, 가입 유형에 대한 유효성 검사 추가</li>
+	      <li>회원 가입 시, 비어있는 필드가 있는 경우, 가입 제한 기능 추가</li>
+	      <li>회원 가입 시, 가입 유형 미선택 시, 아이디 입력 불가 기능 추가</li>
+	      <li>팀 정보 수정 페이지, 팀 수정 폼, 팀 정보 수정 기능 추가</li>
+	      <li>회원 가입 및 팀 정보 수정 시, 비동기 아이디 중복 체크 및 아이디/연락처/이메일 유효성 검사 추가</li>
+	      <li>회원 가입 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>    
+     <li>
+	<details>
+	  <summary><b>24.09.15 Sun</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>팀 정보 수정 시, 비동기 아이디 중복 체크 및 아이디/연락처/이메일 유효성 검사 함수 추가</li>
+	      <li>팀 정보 페이지에 "티켓 수" 출력되도록 수정</li>
+	      <li>마스터만 "티켓 수"를 변경 가능하도록 수정</li>
+	      <li>팀 목록 페이지 내 "수정" 버튼 추가</li>
+	      <li>마스터의 특정 팀/판매자 정보 수정 기능 추가</li>
+	      <li>팀 정보 수정 테스트</li>
+	      <li>마스터의 팀/판매자 정보 수정 테스트</li>
+	      <li>팀이 주문하는 경우, 티켓 수가 감소하도록 수정</li>
+	      <li>팀이 주문 취소하는 경우, 티켓 수가 복구되도록 수정</li>
+	      <li>팀으로 로그인한 경우, 상품 목록/주문 목록 페이지에 "티켓 수"가 나타나도록 수정</li>
+	      <li>주문 테스트</li>
+	      <li>주문된 목록 페이지의 그룹 헤더를 "주문자" -> "주문번호"로 변경</li>
+	      <li>주문된 목록 페이지에서 "ORDERED"인 주문만 수락 또는 거절할 수 있도록 수정</li>
+	      <li>주문된 목록 페이지 내 주문 검색 조건으로 "주문 ID" 추가</li>
+	      <li>주문된 목록 페이지(sellerOrders.html) 경로 변경(basic -> pay)</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>     
+     <li>
+	<details>
+	  <summary><b>24.09.16 Mon</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>비밀번호 변경 전 기존 비밀번호 확인 페이지 및 기능 추가</li>
+	      <li>비밀번호 변경 페이지 및 기능 추가</li>
+	      <li>비밀번호 변경 시, 새 비밀번호에 대한 형식 및 유효성 검사 추가</li>
+	      <li>비밀번호 변경 성공 시, 로그아웃 강제</li>
+	      <li>팀/판매자 정보 수정 내 "비밀번호 변경" 버튼 추가</li>
+	      <li>팀/판매자 비밀번호 변경 테스트</li>
+	      <li>회원가입 시, 비밀번호에 대한 유효성 검사 추가</li>
+	      <li>회원가입 테스트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>        
+     <li>
+	<details>
+	  <summary><b>24.09.17 Tue</b></summary>
+	  <div markdown="1">
+	    <ol>
+	      <li>팀/판매자 회원탈퇴 페이지 및 기능 추가</li>
+	      <li>회원탈퇴 전 기존 비밀번호 확인 페이지를 경유하도록 구현</li>
+	      <li>회원탈퇴 시, 팀/판매자의 상태를 "DORMANT"로 하여 업데이트하도록 구현</li>
+	      <li>탈퇴한 계정은 로그인이 제한되도록 수정</li>
+	      <li>팀/판매자에게 진행중인 주문("ORDERED", "ACCEPTED")이 있다면 탈퇴 불가하도록 구현</li>
+	      <li>판매자 탈퇴 시, 판매중인 모든 상품이 CLOSED 되도록 구현</li>
+	      <li>회원탈퇴 테스트</li>
+	      <li>판매자가 주문 거절 시, 주문한 팀의 "티켓 수"가 복구되도록 수정</li>
+	      <li>판매자 용 "제휴 팀 목록(partnerTeams)" 페이지 및 조회 기능 추가</li>
+	      <li>"제휴 팀 목록", "제휴 판매자 목록" 내 "생성일" 필드 삭제</li>
+	      <li>제휴 팀 목록 내 "팀 ID", "팀 명" 클릭 시, 해당 팀 명으로 주문된 목록 조회하는 기능 추가</li>
+	      <li>전체 판매자 목록 내 판매자 상태가 "OPEN"인 경우에만 "제휴 맺기" 버튼이 출력되도록 수정</li>
+	      <li>제휴 판매자 목록 페이지 명을 "partners" -> "partnerSellers"로 변경</li>
+	      <li>제휴 판매자 목록 DTO 명을 "PartnerDto" -> "PartnerSellerDto"로 변경</li>
+	      <li>제휴 팀 목록 DTO를 "PartnerTeamDto"로 생성</li>
+	      <li>AWS에 애플리케이션 재배포</li>
+	      <li>리드미 업데이트 - DB 설계 사진 변경, 개발경과 업데이트</li>
+	    </ol>
+	  </div>
+	</details>
+     </li>    
     </ul>
   </div>
 </details>
@@ -613,14 +786,23 @@
 
 
 # 4. 트러블 슈팅
-<details>
-  <summary><b>임시</b></summary>
-  <div markdown="1">
-    <ul>
-      <li>이미지</li>
-    </ul>
-  </div>
-</details>
+| # | Issue | Cause | Resolution |
+|:---:|:---:|:---:|:---:|
+| 1 | 연관관계가 있는 객체 간 left join이 걸림 | 일대다에서 "다"에 해당하는 객체가 Optional로 반환되기 때문에 left join이 걸림 | 연관관계 주인 객체의 외래키 필드에 "optional=false", "nullable=false"를 추가 |
+| 2 | float이나 double 타입의 필드들은 update 시, 값의 유실 발생 | float, double은 저장할 때, 이진수의 근사치를 저장하기 때문에 십진수로 되돌릴 때 오차가 발생 | 타입을 BigDecimal로 변경 |
+| 3 | 비즈니스 로직의 작성 위치를 어디로 둘지 | 도메인 주도 설계 ; 도메인이 비즈니스 로직의 주도권을 가지는 설계 | 엔티티 한 곳에서 처리가능하면 엔티티에서 처리, 엔티티의 처리 범위를 넘어가면 서비스에서 처리 |
+| 4 | 다대일 관계에서 연관관계 편의 메서드의 위치를 어디로 둘지 |  | "다"쪽과 "일"쪽 모두 관계 없으나, 유지보수 하기 쉬운쪽에 두는 것이 좋다 |
+| 5 | BindingResult를 파라미터로 받을 때, bindingResult가 동작하지 않는 현상 발생 | BindingResult가 검증할 객체 파라미터보다 앞에 있기 때문 | BindingResult는 검증할 객체 파라미터 바로 다음 순서로 와야 하며, 여러 파라미터를 검증하는 경우, 각 파라미터 바로 뒤에 BindingResult를 지정해주면 된다 |
+| 6 | 애플리케이션 실행 시, 테이블 삭제 및 생성 과정에서 오류 발생 | application.yml에서 jpa: ddl-auto : create과 sql: init : data-locations간 충돌이 원인 | sql: init : data-locations 부분 주석 처리, sql: init은 지양하는것이 권장된다 |
+| 7 | 리눅스 내에서 명령어가 실행되지 않는 경우 | 권한이 필요한 명령어를 실행했기 때문 | 명령어 앞에 "sudo"를 붙여 실행 |
+| 8 | AWS의 EC2, RDS를 프리티어로 사용 중임에도 과금되는 현상 | 1. RDS에 퍼블릭 액세스 허용 | 1. RDS에 허용된 퍼블랙 엑세스 제한 |
+|  |  | 2. EC2와 RDS가 서로 다른 Region에 존재 | 2. EC2와 RDS를 같은 Region으로 생성 |
+| 9 | QueryDSL에서 엔티티 조회 시, 무한 루프 발생 | 양방향 연관 관계에서 서로를 참조하는 것이 원인 | DTO를 사용하여 연관 관계 제거 |
+| 10 | QueryDSL을 사용하여 조회 시, Cross Join 발생 | join()으로 직접 명시를 하지 않아 모든 결과를 조회하기 위해 Cross join 실행 | join()으로 조인할 필드 직접 명시 |
+| 11 | ReferenceError: $ is not defined 에러 발생 | Jquery 관련 소스코드가 없는 것이 원인 | script 태그 소스코드 추가 src="http://code.jquery.com/jquery-latest.js" |
+| 12 | 뷰단에서 폼 제출 시, 제출이 안되고 자동 로그아웃되는 현상 발생 | document.querySelector('form').submit(); 사용 시, submit 이벤트 리스너 미동작 | $('form').submit();으로 수정 후 submit 동작 확인 |
+
+
 <br>
 <br>
 
