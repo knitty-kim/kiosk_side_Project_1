@@ -787,7 +787,7 @@
 
 # 4. 트러블 슈팅
 | # | Issue | Cause | Resolution |
-|:---:|:---:|:---:|:---:|
+|:---:|---|---|---|
 | 1 | 연관관계가 있는 객체 간 left join이 걸림 | 일대다에서 "다"에 해당하는 객체가 Optional로 반환되기 때문에 left join이 걸림 | 연관관계 주인 객체의 외래키 필드에 "optional=false", "nullable=false"를 추가 |
 | 2 | float이나 double 타입의 필드들은 update 시, 값의 유실 발생 | float, double은 저장할 때, 이진수의 근사치를 저장하기 때문에 십진수로 되돌릴 때 오차가 발생 | 타입을 BigDecimal로 변경 |
 | 3 | 비즈니스 로직의 작성 위치를 어디로 둘지 | 도메인 주도 설계 ; 도메인이 비즈니스 로직의 주도권을 가지는 설계 | 엔티티 한 곳에서 처리가능하면 엔티티에서 처리, 엔티티의 처리 범위를 넘어가면 서비스에서 처리 |
@@ -801,7 +801,7 @@
 | 10 | QueryDSL을 사용하여 조회 시, Cross Join 발생 | join()으로 직접 명시를 하지 않아 모든 결과를 조회하기 위해 Cross join 실행 | join()으로 조인할 필드 직접 명시 |
 | 11 | ReferenceError: $ is not defined 에러 발생 | Jquery 관련 소스코드가 없는 것이 원인 | script 태그 소스코드 추가 src="http://code.jquery.com/jquery-latest.js" |
 | 12 | 뷰단에서 폼 제출 시, 제출이 안되고 자동 로그아웃되는 현상 발생 | document.querySelector('form').submit(); 사용 시, submit 이벤트 리스너 미동작 | $('form').submit();으로 수정 후 submit 동작 확인 |
-
+| 13 | 배포된 애플리케이션에서 상품 상세 로드 시, FileNotFoundException 발생 | jar로 배포될 때, ClassPathResource로 설정된 경로에서 getFile 불가능 | ClassPathResource -> PathMatchingResourcePatternResolver 수정 |
 
 <br>
 <br>
