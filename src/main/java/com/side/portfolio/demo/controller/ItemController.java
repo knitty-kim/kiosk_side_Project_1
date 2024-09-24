@@ -16,7 +16,8 @@ import com.side.portfolio.demo.service.TeamService;
 import com.side.portfolio.demo.status.ItemStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -108,16 +108,19 @@ public class ItemController {
         model.addAttribute(item);
 
         // 이미지 폴더 경로 설정
-        File imageFolder = new ClassPathResource("static/img/items").getFile();
-        String[] imageFiles = imageFolder.list();
+        // jar로 배포되는 경우, ClassPathResource로 경로 설정 시 이미지를 불러올 수 없음
+        // -> FileNotFoundException
+        //File imageFolder = new ClassPathResource("static/img/items").getFile();
 
-        if (imageFiles != null && imageFiles.length > 0) {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources = resolver.getResources("classpath:/static/img/items/*");
 
-            // 랜덤 이미지 리스트 경로
-            List<String> imageList = new ArrayList<>();
-            for (String imageFile : imageFiles) {
-                imageList.add("/img/items/" + imageFile);
-            }
+        List<String> imageList = new ArrayList<>();
+        for (Resource resource : resources) {
+            imageList.add("/img/items/" + resource.getFilename());
+        }
+
+        if (!imageList.isEmpty()) {
 
             // 이미지 섞기
             Collections.shuffle(imageList);
